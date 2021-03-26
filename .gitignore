@@ -1,0 +1,16 @@
+﻿.idea
+*.log
+*.map
+node_modules/
+luff/d/
+luff-comp/d/
+luff-react-component/d/
+luff/package-lock.json
+luff-comp/package-lock.json
+luff-react-component/package-lock.json
+_dist/luff/*
+_dist/luff-comp/*
+_dist/luff-react-component/*
+!_dist/luff/package.json
+!_dist/luff-comp/package.json
+!_dist/luff-react-component/package.json
