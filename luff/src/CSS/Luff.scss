@@ -1,0 +1,48 @@
+@import "Common";
+@import "Palette";
+@import "Animations/Animations";
+
+
+.l-close{
+  height: 29px;
+  width: 29px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  background: url(../img/l-close-icon-x_white.svg) center / 80% no-repeat;
+  cursor: pointer;
+  &.green {background: url(../img/l-close-icon-x.svg) center / 80% no-repeat;}
+  &.black {
+    background: url(../img/l-close-icon-x.svg) center / 80% no-repeat;
+    filter: brightness(0);
+  }
+  &:hover {opacity: 0.7;}
+}
+
+.l-button{
+  background-color: var(--l-clr-button);
+  color: var(--l-clr-button-text);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--l-clr-button-hover);
+    color: var(--l-clr-button-hover-text);
+  }
+  &:disabled {
+    background-color: var(--l-clr-button-disabled);
+    color: var(--l-clr-button-disabled-text);
+    cursor: default;
+  }
+}
+
+
+//body:after {
+//  content: url(../img/l-icon-load.svg) url(../img/l-radio.svg);
+//  //display: none;
+//  visibility: hidden;
+//  z-index: -1000;
+//  width: 1px;
+//  height: 1px;
+//  position: absolute;
+//
+//}

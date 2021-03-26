@@ -1,0 +1,497 @@
+.l-chart.l-chart-2{
+  //width: 100%;
+  height: 100%;
+  //color: #111;
+  .l-chart-t{
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    th,td{
+
+      &:empty{
+        //magic crutch against phantom td padding on chart.pie (at least). TODO found out why this shit is happening
+        width: 0.1%;
+        padding: 0 1px;
+      }
+      //border: 1px rgba(222,0,0,0.2) solid;
+      //min-height: 20px;
+    }
+    .hook-chart{
+      position: relative;
+      height: 100%;
+      width: 100%;
+      //vertical-align: unset;
+    }
+
+  }
+  .chart-name{
+    font-size: 1.25rem;
+    padding: 7px;
+    text-align: center;
+  }
+  .hook{
+    position: relative;
+  }
+  .hook-chart{
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+
+  /* LEGEND */
+
+  .tr-hook-top,
+  .tr-hook-bottom{
+    .legend{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .legend-box{
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+  .hook-left,
+  .hook-right{
+    .legend{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .legend-box{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+  .legend-item{
+    align-items: center;
+    padding: 7px;
+    .legend-label{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .legend-icon{
+      width: 0.8rem;
+      height: 0.8rem;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .legend-checkbox{
+      position: absolute;
+      display: none;
+    }
+    .legend-checkbox:not(:checked) +.legend-label{
+      opacity: 0.5;
+    }
+  }
+
+
+  /* AXIS X */
+  .axis-x{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    font-size: 0.8em;
+    border-top: 1px solid #111;
+    --axis-x-label-rotation: 0deg;
+    --axis-x-label-translateX: 0;
+    --axis-x-label-translateY: 0;
+    --axis-x-label-height: auto;
+    .axis-x-label{
+      width: 0;
+      max-width: 0;
+      white-space: nowrap;
+      flex: 1;
+      position: relative;
+      padding: 10px 0 5px 0;
+      text-align: center;
+      height: var(--axis-x-label-height);
+      &.no-linear{
+        max-width: none;
+        width: auto;
+
+      }
+      &:not(.label-empty):before{
+        content: '';
+        width: 1px;
+        height: 7px;
+        background-color: #111;
+        position: absolute;
+        top: -1px;
+        left: -1px
+      }
+    }
+    .axis-x-label-text{
+      //color: #111;
+      background-color: transparent;
+      position: absolute; //position: relative;
+      left: -50%;
+      //transform-origin: 50% 50%;
+      transform: translate(var(--axis-x-label-translateX), var(--axis-x-label-translateY)) rotate(var(--axis-x-label-rotation)) ;
+      display: block;
+
+    }
+  }
+
+
+  /* AXIS Y */
+  .hook-axis-y{
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .hook-axis-y.right{
+    .axis-y{
+      height: 100%;
+      flex-direction: row-reverse;
+    }
+    .axis-y-labels{
+      text-align: left;
+      border-right: none;
+      border-left: 1px #111 solid;
+    }
+    .axis-y-label:before{
+      left: -1px;
+    }
+  }
+
+  .axis-y{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    font-size: 0.8em;
+
+    .axis-y-caption{
+      display: flex;
+      align-items: center;
+      .axis-y-caption-value{
+        transform: rotate(-90deg);
+      }
+    }
+    .axis-y-labels{
+      display: flex;
+      text-align: right;
+      border-right: 1px #111 solid;
+      flex: 1;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+
+    }
+    .axis-y-label{
+      height: 0;
+      overflow: visible;
+      position: relative;
+      &:before{
+        content: '';
+        width: 7px;
+        height: 1px;
+        background-color: #111;
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+      }
+    }
+    .axis-y-label-text{
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding-right: 10px;
+      height: 100%;
+      position: relative;
+      top: 25%;
+    }
+
+  }
+
+
+  /* SVG */
+  .svg-wrapper{
+    width: 100%;
+    height: 100%;
+  }
+  .chart-svg-wrapper{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .chart-svg{
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  .chart-bar-elem:hover,
+  .chart-bar-elem.active{
+    fill-opacity: 0.8;
+  }
+  .chart-bar-elem-gradient:hover,
+  .chart-bar-elem-gradient:active{
+    fill-opacity: 0.2;
+  }
+  .chart-hover{
+    &:hover,
+    &.active{
+      fill-opacity: 0.2;
+    }
+    &[data-type="pie"]:hover,
+    &[data-type="pie"].active{
+      stroke-opacity: 0.2;
+      fill-opacity: 0.2;
+    }
+  }
+
+
+  /* GRID */
+  .chart-grid{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    //border-right: 1px dashed rgba(0, 0, 0, 0.3);
+    &.no-right{
+      //border-right: none;
+      .chart-grid-cell:last-child{
+        border-right: none;
+      }
+    }
+  }
+  .chart-grid-line{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    border-top: 1px dashed rgba(0,0,0,0.3);
+    //border-right: 1px dashed rgba(0,0,0,0.3);
+  }
+  .chart-grid-cell{
+    position: relative;
+    border-right: 1px dashed rgba(0,0,0,0.3);
+    flex: 1;
+    &:last-child{
+      //border-right: none;
+    }
+  }
+
+  /* Sticks */
+  .v-stick{
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 1;
+    display: none;
+  }
+  .hook-chart:hover{
+    .v-stick.active{
+      display: block;
+    }
+  }
+  /* TOOLTIP */
+
+  .chart-tooltip{
+    position: absolute;
+    z-index: 1;
+    top: 10%;
+    left: 10%;
+    transition: all 100ms ease-in;
+    //border-radius: 10px 10px 10px 0;
+    color: #fff;
+    &.reverse{
+      //border-radius: 10px 10px 0 10px;
+      .tip-bg:before{
+        left: auto;
+        right: 20px;
+      }
+    }
+    .tip{
+      //padding: 10px;
+      //transition: all 100ms ease-in;
+      .tip-bg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background-color: #000;
+        opacity: 0.7;
+        &:before{
+          content: '';
+          position: absolute;
+          margin-left: 20px;
+          top: calc(100% - 10px);
+          width: 0px;
+          height: 0px;
+          border: 20px #000 solid;
+          border-top: transparent;
+          border-right: transparent;
+          transform: rotate(-45deg);
+        }
+      }
+      .tip-value{
+        padding: 10px;
+        position: relative;
+        z-index: 1;
+        white-space: nowrap;
+      }
+      .tip-icon{
+        width: 10px;
+        height: 10px;
+        margin-right: 5px;
+      }
+
+    }
+    &.l-appear{
+      animation-name: l-chart-tooltip-appear;
+      animation-duration: 200ms;
+      animation-timing-function: ease-in;
+      opacity: 1;
+    }
+    &.l-disappear{
+      animation-name: l-chart-tooltip-disappear;
+      animation-duration: 200ms;
+      animation-timing-function: ease-in;
+      opacity: 0;
+    }
+  }
+}
+
+
+
+
+@keyframes l-chart-tooltip-appear {
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+@keyframes l-chart-tooltip-disappear {
+  from{
+    opacity: 1;
+  }
+  to{
+    opacity: 0;
+  }
+}
+
+
+
+.wcha{
+  .l-chart-t{
+    height: 100%;
+    width: 100%;
+    th,td{
+      border: 1px rgba(0,0,0,0.8) solid;
+      min-height: 20px;
+    }
+    .hook-chart{
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+
+  }
+}
+
+.l-animate-svg-bar{
+  animation: 400ms ease-in-out l-animate-svg-bar;
+  transform-origin: 100% 100%;
+}
+@keyframes l-animate-svg-bar{
+  0%{
+    transform: scale(1,0);
+  }
+  90%{
+    transform: scale(1,1.05);
+  }
+  100%{
+    transform: scale(1,1);
+  }
+}
+.l-animate-svg-line{
+  animation: 800ms ease-in-out l-animate-svg-line;
+}
+@keyframes l-animate-svg-line{
+  0%{
+    stroke-dasharray: 100, 100%;
+    stroke-dashoffset: 50%
+  }
+  /*80%{
+      stroke-dasharray: 50, 50;
+        stroke-dashoffset: 25
+  }*/
+  100%{
+    stroke-dasharray: 100, 0;
+    stroke-dashoffset: 0
+  }
+  //0%{
+  //  stroke-dasharray: 50, 50;
+  //  stroke-dashoffset: 50%
+  //}
+  //80%{
+  //  stroke-dasharray: 50, 50;
+  //  stroke-dashoffset: 25
+  //}
+  //100%{
+  //  stroke-dasharray: 75, 0;
+  //  stroke-dashoffset: 0
+  //}
+}
+
+.l-animate-svg-mark{
+  animation: 800ms ease-in-out l-animate-svg-mark;
+}
+@keyframes l-animate-svg-mark{
+  0%{
+    transform: scale(1.5);
+    opacity: 0;
+  }
+
+  100%{
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.l-animate-svg-pie{
+  animation: 400ms ease-in-out l-animate-svg-pie;
+  transform-origin: 50% 50%;
+  animation-fill-mode: forwards;
+  opacity: 1;
+}
+@keyframes l-animate-svg-pie{
+
+  80%{
+    transform: scale(1.1) translate(0);
+    opacity: 1;
+  }
+  100%{
+    transform: scale(1) translate(0);
+    opacity: 1;
+  }
+}
+

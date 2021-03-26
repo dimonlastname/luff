@@ -1,0 +1,58 @@
+.l-checkbox {
+  position: relative;
+  opacity: 0;
+  display: none;
+}
+.l-checkbox-label {
+  position: relative;
+  //margin-left: 1.4em;
+  white-space: nowrap;
+  cursor: pointer;
+
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  //min-width: 23px;
+  &:before{
+    content: '';
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    display: block;
+    margin-right: 7px;
+    //position: absolute;
+    //left: 0;
+    //top: 50%;
+    //margin-top: -8px;
+    background-size: cover;
+    background-image: url("./img/l-checkbox-full.svg");
+  }
+  &:empty {
+    &:before {
+      margin-right: unset;
+    }
+  }
+}
+.l-checkbox:checked:not(:indeterminate) +.l-checkbox-label:before{
+  background-position: 0 0;
+}
+
+.l-checkbox:not(:checked) +.l-checkbox-label:before{
+  background-position: 0 40%;
+}
+.l-checkbox:indeterminate +.l-checkbox-label:before{
+  background-position: 0 20%;
+}
+
+
+.l-checkbox:not(:checked):disabled +.l-checkbox-label:before{
+  background-position: 0 100%;
+}
+.l-checkbox:checked:disabled +.l-checkbox-label:before{
+  background-position: 0 60%;
+}
+.l-checkbox:indeterminate:disabled +.l-checkbox-label:before{
+  background-position: 0 80%;
+}

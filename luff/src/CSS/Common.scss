@@ -1,0 +1,271 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  line-height: 1;
+  vertical-align: baseline;
+  font-family: 'Open Sans', sans-serif;
+  zoom:1;
+  outline: none;
+  color: inherit;
+  box-sizing: border-box;
+}
+sup{
+  vertical-align: super;
+  font-size: smaller;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header,  menu, nav, section {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  //content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  //background: #fff;
+}
+td, th{
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+strong{
+  font-weight: bold;
+}
+
+input, select {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* ScrollBar */
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: #ddd;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #629cc0;
+  &:hover {
+    background: #2e83b8;
+  }
+}
+
+/* Atomics */
+
+.l-rel{
+  position: relative;
+}
+.l-abs{
+  position: absolute;
+}
+.l-pointer{
+  cursor: pointer;
+}
+
+
+.l-text-overflow{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+
+.l-flex{
+  display: flex;
+}
+.l-row{
+  display: flex;
+  flex-direction: row;
+}
+.l-col{
+  display: flex;
+  flex-direction: column;
+}
+.l-col-reverse{
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.l-flex-wrap{
+  flex-wrap: wrap;
+}
+.l-flex-wrap-reverse{
+  flex-wrap: wrap-reverse;
+}
+.l-flex-between{
+  justify-content: space-between
+}
+
+.l-flex-start{
+  justify-content: flex-start;
+}
+.l-flex-end{
+  justify-content: flex-end;
+}
+.l-flex-center{
+  justify-content: center;
+}
+.l-flex-around{
+  justify-content: space-around;
+}
+.l-flex-between{
+  justify-content: space-between;
+}
+.l-flex-evenly{
+  justify-content: space-evenly;
+}
+
+.l-flexa-start{
+  align-items: flex-start;
+}
+.l-flexa-end{
+  align-items: flex-end;
+}
+.l-flexa-center{
+  align-items: center;
+}
+.l-flexa-stretch{
+  align-items: stretch;
+}
+.l-flexa-baseline{
+  align-items: baseline;
+}
+
+
+
+
+.l-row-container{
+  margin: 0 -5px;
+}
+.l-row-element{
+  margin: 0 5px;
+}
+/* Elements */
+
+.l-element{
+  padding: 0.45em 0.95em;
+}
+.l-element-line{
+  padding: 0.45em 0;
+}
+.l-button{
+  background-color: var(--clr-button);
+  color: #fff;
+  padding: 5px 10px;
+  user-select: none;
+  &:active{
+    position: relative;
+    left: 1px;
+    top:1px
+  }
+}
+
+.l-italic{
+  font-style: italic;
+}
+
+
+/* columns */
+.l-flex-10{
+  flex: 0.10
+}
+.l-flex-20{
+  flex: 0.20
+}
+.l-flex-25{
+  flex: 0.25
+}
+.l-flex-30{
+  flex: 0.3;
+}
+.l-flex-40{
+  flex: 0.4;
+}
+.l-flex-50{
+  flex: 0.5;
+}
+.l-flex-60{
+  flex: 0.6;
+}
+.l-flex-70{
+  flex: 0.7;
+}
+.l-flex-75{
+  flex: 0.75;
+}
+.l-flex-80{
+  flex: 0.8;
+}
+.l-flex-90{
+  flex: 0.9;
+}
+.l-flex-100{
+  flex: 1;
+}
+.l-flex-150{
+  flex: 1.5;
+}
+.l-flex-200{
+  flex: 2;
+}
+.l-flex-300{
+  flex: 3;
+}
+.l-flex-400{
+  flex: 4;
+}
+.l-flex-500{
+  flex: 5;
+}
+
+//.l-textbox {
+//  border: 1px var(--l-clr-component-border) solid;
+//  width: 100%;
+//  //padding-left: 0.5em;
+//  padding: 0.25em 0.75em;
+//  box-sizing: border-box;
+//  &:focus{
+//    outline: none;
+//    border: 1px var(--l-clr-component-border-focus) solid;
+//  }
+//}
+

@@ -1,0 +1,115 @@
+.l-edit-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  max-width: 100%;
+  &.l-edit-changed,
+  &.l-edit-waiting {
+    background-color: var(--l-clr-changed)!important;
+    .l-edit-select,
+    .l-edit-textbox,
+    .l-combo-box {
+      background-color: var(--l-clr-changed)!important;
+    }
+  }
+  &.l-busy {
+    background-image: repeating-linear-gradient(-45deg, var(--clr-waiting), var(--clr-waiting) 10px, #fff 10px, #fff 20px);
+    background-size: 28px 28px;
+    animation: l-busy-move 700ms linear infinite;
+    @keyframes l-busy-move {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 28px 0;
+      }
+    }
+  }
+  .l-edit-container-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    max-width: 100%;
+  }
+  .l-edit-value{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+  .l-edit-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 20px;
+    padding-left: 5px;
+    &.l-edit_white {
+      .l-edit-btn-edit,
+      .l-icon-edit {
+        background-image: url(./img/icon-edit_white.png);
+      }
+    }
+  }
+  .l-edit-icon {
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  .l-edit-btn-edit,
+  .l-icon-edit {
+    background-image: url(./img/icon-edit.png);
+  }
+  .l-edit-btn-remove{
+    background-image: url(./img/icon-x.svg);
+  }
+
+  //edit mode
+  .l-edit-select,
+  .l-edit-textbox {
+    width: calc(100% - 30px);
+    min-width: 50px;
+    padding: 0 5px;
+    position: relative;
+    border: 1px #bee0ef solid;
+    height: 1.5em;
+    margin: -0.25em 0;
+  }
+  .l-cb-textbox {
+    height: 1.5em;
+  }
+  div.l-editable,
+  div.l-removable {
+    align-self: stretch;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+
+
+  .l-edit-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 20px;
+  }
+  .l-edit-btn {
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  .l-edit-btn-save {
+    background-image: url(./img/icon-ok.png);
+  }
+}

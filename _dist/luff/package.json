@@ -1,0 +1,8 @@
+{
+  "name": "luff",
+  "version": "3.0.2",
+  "description": "JavaScript framework for building user interfaces",
+  "main": "index.js",
+  "author": "Dmitrii Pupyrev",
+  "license": "MIT"
+}

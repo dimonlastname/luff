@@ -1,0 +1,22 @@
+.l-date-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .l-date-bar-item {
+
+    .l-date-bar-item-value {
+      cursor: pointer;
+      padding: 7px 15px;
+      background-color: var(--l-clr-button);
+      color: var(--l-clr-button-text);
+      &.l-date-view {
+
+      }
+      &.active,
+      &:hover {
+        background-color: var(--l-clr-button-hover);
+        color: var(--l-clr-button-hover-text);
+      }
+    }
+  }
+}

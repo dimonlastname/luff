@@ -1,0 +1,27 @@
+.l-filter-container {
+  padding: 0 20px;
+}
+
+.l-filter {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -10.5px;
+  width: 21px;
+  height: 21px;
+  background-size: cover;
+  background-image: url("../../../IMG/l-icon-filter.svg");
+  background-position: center;
+  cursor: pointer; 
+  //&.l-sorter-up {
+  //  background-position: 0 0;
+  //}
+  //&.l-sorter-down {
+  //  background-position: 0 50%;
+  //}
+}
+.l-invert{
+  .l-filter{
+    background-image: url("../../../IMG/l-icon-filter_black.svg");
+  }
+}

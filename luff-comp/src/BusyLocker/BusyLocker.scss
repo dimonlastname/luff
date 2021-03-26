@@ -1,0 +1,17 @@
+.l-busy-locker {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+  background-image: repeating-linear-gradient(-45deg,var(--l-clr-warn),var(--l-clr-warn) 10px, transparent 0, transparent 20px);
+  background-size: 28px 28px;
+  animation: l-busy-move .7s linear infinite;
+  @keyframes l-busy-move {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 28px 0;
+    }
+  }
+}

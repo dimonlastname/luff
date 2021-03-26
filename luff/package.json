@@ -1,0 +1,36 @@
+{
+  "name": "luff",
+  "version": "3.0.1",
+  "description": "JavaScript framework for building user interfaces",
+  "main": "./src/index.tsx",
+  "author": "Dmitrii Pupyrev",
+  "license": "MIT",
+  "keywords": [
+    "luff",
+    "UI",
+    "framework"
+  ],
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev webpack --mode=development",
+    "devw": "cross-env NODE_ENV=dev webpack --mode=development --watch",
+    "prod": "cross-env NODE_ENV=production webpack --mode=production"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.6",
+    "css-loader": "^3.6.0",
+    "dts-bundle-webpack": "^1.0.2",
+    "file-loader": "^5.1.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.14.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss-loader": "^3.0.0",
+    "resolve-url-loader": "^3.1.1",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^6.2.2",
+    "typescript": "^4.2.3",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-preprocessor-loader": "^1.1.3"
+  }
+}

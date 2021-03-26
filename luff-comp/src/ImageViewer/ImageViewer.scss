@@ -1,0 +1,104 @@
+.l-image-viewer{
+  width: 800px;
+  background-color: rgba(0,0,0,0.3);
+  position: relative;
+
+  //left: 50%;
+  //top: 20%;
+  //margin-left: -400px;
+  .l-iv-inner{
+    .l-iv-slider{
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      position: relative;
+      //min-height: 400px;
+      padding: 10px 0;
+    }
+    .l-iv-paging{
+      padding: 5px 15px 15px;
+      text-align: center;
+      color: #fff;
+    }
+  }
+  .l-close{
+    top: -30px;
+    right: -30px;
+    opacity: .7;
+    &:hover{
+      opacity: 1;
+    }
+  }
+  .l-iv-body{
+    //padding: 15px;
+    flex: 1;
+    //background-color: #000;
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    .l-iv-image-holder{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      --max-image-height: 50vh;
+      img {
+        max-height: var(--max-image-height);
+        max-width: 100%;
+      }
+    }
+
+    .l-iv-pending{
+      width: 100px;
+      height: 100px;
+      background-color: #1f8793;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -50px;
+      margin-top: -50px;
+      animation-name: l-iv-pending-animation;
+      animation-duration: 1200ms;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+
+      @keyframes l-iv-pending-animation{
+        0%   {transform: rotate(0deg)}
+        100%  {transform: rotate(360deg)}
+      }
+    }
+  }
+  .l-iv-control{
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    position: relative;
+    opacity: 0.7;
+    &:hover{
+      opacity: 1;
+      cursor: pointer;
+    }
+    .l-iv-control-arrow {
+      position: absolute;
+      top: 50%;
+      //top: calc(50% - 15px - 0.5em); //(15px + 0.5em) is 1/2 paging height
+      margin-top: -21px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #FFF;
+      border-right: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      &.l-iv-control-arrow-left{
+        transform: rotate(-45deg);
+        left: 15px;
+      }
+      &.l-iv-control-arrow-right{
+        transform: rotate(135deg);
+      }
+    }
+
+
+  }
+}

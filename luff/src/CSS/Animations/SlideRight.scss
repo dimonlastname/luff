@@ -1,0 +1,33 @@
+.l-animation_slideRight-show {
+  animation-name: l-animation_slideRight-show;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  will-change: auto;
+  transform-origin: top;
+}
+@keyframes l-animation_slideRight-show {
+  0%{
+    transform: translate(100%);
+  }
+  100%{
+    transform: translate(0);
+  }
+}
+
+.l-animation_slideRight-hide {
+  animation-name: l-animation_slideRight-hide;
+  animation-duration: 150ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  will-change: auto;
+  transform-origin: top;
+}
+@keyframes l-animation_slideRight-hide {
+  0%{
+    transform: translate(0);
+  }
+  100%{
+    transform: translate(100%);
+  }
+}

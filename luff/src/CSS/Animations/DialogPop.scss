@@ -1,0 +1,37 @@
+.l-animation_dialog-show {
+  animation-name: l-animation_dialog-show;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  will-change: auto;
+}
+@keyframes l-animation_dialog-show {
+  0%{
+    transform: scale(0);
+  }
+  80%{
+    transform: scale(1.1);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+.l-animation_dialog-hide{
+  animation-name: l-animation_dialog-hide;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  transform: scale(0);
+  will-change: auto;
+}
+@keyframes l-animation_dialog-hide {
+  0%{
+    transform: scale(1);
+  }
+  20%{
+    transform: scale(1.1);
+  }
+  100%{
+    transform: scale(0);
+  }
+}

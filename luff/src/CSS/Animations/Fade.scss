@@ -1,0 +1,38 @@
+.l-animation_fade-show {
+  animation-name: l-animation_fade-show;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  opacity: 1;
+  will-change: auto;
+}
+@keyframes l-animation_fade-show {
+  0%{
+    opacity: 0;
+  }
+  80%{
+    opacity: 0.9;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+.l-animation_fade-hide{
+  animation-name: l-animation_fade-hide;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  will-change: auto;
+}
+@keyframes l-animation_fade-hide {
+  0%{
+    opacity: 1;
+  }
+  20%{
+    opacity: 0.9;
+  }
+  100%{
+    opacity: 0;
+  }
+}

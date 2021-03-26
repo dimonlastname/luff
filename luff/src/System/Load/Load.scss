@@ -1,0 +1,61 @@
+//.l-loadable-wrap{
+//  position: relative;
+//
+//}
+.l-load-wrap {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left:0;
+  top:0;
+  background-color: var(--l-clr-loader);
+  opacity: 1;
+  z-index: 100;
+  Color: white;
+  font-size: 40px;
+  text-align: center;
+  vertical-align: middle;
+  transition: all 0.4s;
+
+}
+
+.l-load-spinner {
+  width:130px;
+  height:130px;
+  position: relative;
+  top: 50%;
+  margin-top: -75px;
+}
+
+.l-spinner-arc {
+  transform-origin: 60px 60px;
+}
+.l-spinner-arc-1{
+  animation: urotate 1.9s linear infinite; //stroke: #5c9baa;
+}
+.l-spinner-arc-2{
+  animation: rotate 1.6s linear infinite;
+}
+.l-spinner-arc-3{
+  animation: urotate 1.3s linear infinite;
+}
+.l-spinner-arc-4{
+  animation: rotate 1.0s  linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);               /* от: left: 0px */
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes urotate {
+  from {
+    transform: rotate(0deg) ;
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}

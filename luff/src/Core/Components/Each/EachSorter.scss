@@ -1,0 +1,26 @@
+.l-sorter-container {
+  padding: 0 20px;
+}
+.l-sorter {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -10.5px;
+  width: 21px;
+  height: 21px;
+  background-size: cover;
+  background-image: url("../../../IMG/control-sort.svg");
+  background-position: 0 100%;
+  cursor: pointer; 
+  &.l-sorter-up {
+    background-position: 0 0;
+  }
+  &.l-sorter-down {
+    background-position: 0 50%;
+  }
+}
+.l-invert{
+  .l-sorter{
+    background-image: url("../../../IMG/control-sort_black.svg");;
+  }
+}

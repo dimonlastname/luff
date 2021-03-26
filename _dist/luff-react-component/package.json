@@ -1,0 +1,13 @@
+{
+  "name": "luff-react-component",
+  "version": "1.0.1",
+  "description": "React component integrator",
+  "main": "src/index.tsx",
+  "author": "Dmitrii Pupyrev",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "luff": "latest"
+  }
+}

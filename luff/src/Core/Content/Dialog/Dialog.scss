@@ -1,0 +1,73 @@
+.l-dialog-wrapper{
+  height: 100%;
+  width: 100%;
+
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .l-dialog-wrapper-bg{
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+  }
+  .l-dialog-wrapper-content{
+    z-index: 1;
+    box-shadow: 2px 2px 7px rgba(0,0,0,0.3);
+  }
+  &.l-global {
+    height: 100vh;
+    width: 100vw;
+    .l-dialog-wrapper-bg {
+      height: 100vh;
+      width: 100vw;
+    }
+  }
+}
+
+//.l-animation_dialog-show {
+//  animation-name: l-animation_dialog-show;
+//  animation-duration: 200ms;
+//  animation-timing-function: ease-in-out;
+//  animation-fill-mode: forwards;
+//  will-change: auto;
+//}
+//@keyframes l-animation_dialog-show {
+//  0%{
+//    transform: scale(0);
+//  }
+//  80%{
+//    transform: scale(1.1);
+//  }
+//  100%{
+//    transform: scale(1);
+//  }
+//}
+//.l-animation_dialog-hide{
+//  animation-name: l-animation_dialog-hide;
+//  animation-duration: 200ms;
+//  animation-timing-function: ease-in-out;
+//  animation-fill-mode: forwards;
+//  transform: scale(0);
+//  will-change: auto;
+//}
+//@keyframes l-animation_dialog-hide {
+//  0%{
+//    transform: scale(1);
+//  }
+//  20%{
+//    transform: scale(1.1);
+//  }
+//  100%{
+//    transform: scale(0);
+//  }
+//}
+

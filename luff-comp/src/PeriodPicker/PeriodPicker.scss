@@ -1,0 +1,485 @@
+@mixin distribute-on-circle( $nb-items, $circle-size, $item-size, $angle-start, $padding) {
+  $half-item: ($item-size / 2);
+  $half-parent: ($circle-size / 2);
+  width: $circle-size;
+  height: $circle-size;
+  margin-top: -($circle-size+$padding)/2;
+  margin-left: -($circle-size+$padding)/2;
+  padding: $padding;
+  border-radius: 50%;
+  list-style: none;
+  box-sizing: content-box;
+  > * {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $item-size;
+    height: $item-size;
+    margin: -$half-item;
+  }
+  $angle: (360 / $nb-items);
+  $rot: $angle-start;
+  @for $i from 1 through $nb-items {
+    >:nth-of-type(#{$i}) {
+      transform: rotate($rot * 1deg) translate($half-parent) rotate($rot * -1deg);
+    }
+    $rot: ($rot + $angle);
+  }
+}
+
+.l-pp-target{
+  cursor: pointer;
+}
+.l-period_picker{
+  .none{
+    display: none;
+  }
+  background-color: var(--l-clr-background);
+  min-width: 250px;
+  font-size: 0.8rem;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+  box-sizing: content-box;
+  z-index: 11; //dialog wrapper has 10
+  &.l-pp-fullscreen{
+    height: 100vh;
+    width: 100vw;
+    left:0;
+    top:0;
+    border: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+  .l-pp-head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 7px 7px 15px;
+    background: var(--l-clr-base);
+    color: var(--l-clr-background);
+    .l-pp-caption{
+      font-size: 1em;
+    }
+    .l-pp-controls{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .l-pp-control{
+        margin-left: 3px;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+      .l-pp-control-fullscreen{
+        width: 10px;
+        height: 10px;
+        border: 1px var(--l-clr-background) solid;
+        border-top-width: 3px;
+      }
+      .l-pp-control-close{
+        height: 1em;
+        width: 1em;
+        background-image: url(../../../luff/src/IMG/l-close-icon-x_white.svg);
+        //background-size: 11px;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+  }
+  .l-pp-date-navigator{
+    padding: 7px 0;
+    .l-pp-nav-year{
+      width: calc(4em + 7px);
+    }
+    .l-pp-nav-month{
+      width: calc(8em + 7px);
+      padding-right: 7px;
+    }
+  }
+
+  .l-pp-work-area{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    .l-pp-work-date{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  .l-pp-arrow{
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    &:before{
+      content: '';
+      border: solid var(--l-clr-component-content-darken);
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      // padding: 10px;
+      transform: rotate(135deg);
+    }
+    &:hover{
+      background-color: var(--l-clr-hover-light);
+      &:before{
+        //border-color: #fff;
+      }
+    }
+    &.l-pp-arrow-right:before{
+      transform: rotate(-45deg);
+    }
+  }
+  .l-pp-month-block{
+    .l-pp-month-name{
+      text-align: center;
+      padding: 10px 0 5px;
+    }
+    .l-pp-month-select{
+      cursor: pointer;
+    }
+  }
+  .l-pp-month{
+    padding: 10px;
+  }
+  .l-pp-month-block{
+    padding: 10px;
+    .l-pp-month-grid{
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .l-pp-month-week{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      &:first-child{
+        justify-content: flex-end;
+      }
+      &:last-child{
+        justify-content: flex-start;
+        .l-pp-week-select{
+          margin: 0;
+        }
+      }
+    }
+  }
+  .l-pp-month-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .l-pp-cell{
+    height: calc(1em + 12px);
+    width: calc(1em + 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+  .l-pp-month-cell{
+    //padding: 5px;
+
+
+    cursor: pointer;
+    &:not(.l-pp-deny):not(.l-pp-selected):hover{
+      background-color: var(--l-clr-hover-light);
+    }
+    &.l-pp-selected{
+      background-color: var(--l-clr-selected);
+      color: #fff;
+    }
+    &.selected-temp{
+      background-color: var(--l-clr-selected-light);
+      //color: #fff;
+    }
+    &.l-pp-deny{
+      opacity: 0.3;
+      cursor: default;
+    }
+
+  }
+  .l-pp-dayoff{
+    color: #cf0c0c;
+  }
+  .l-pp-weekdays-row{
+    display: flex;
+    flex-direction: row;
+    //padding: 10px;
+    //padding-bottom: 0;
+    justify-content: space-between;
+    font-size: 0.8em;
+    .l-pp-weekdays-cell{
+      //padding: 5px;
+      cursor: default;
+      &:hover{
+        background-color: transparent;
+      }
+    }
+  }
+  .l-pp-week-select{
+    padding: 5px;
+    cursor: pointer;
+    justify-self: flex-start;
+    margin-right: auto;
+    &:hover{
+      background-color: var(--l-clr-hover-light);
+    }
+  }
+  .l-pp-week-select-gap{
+    margin: 0;
+    padding: 5px;
+    color: transparent;
+
+    cursor: default;
+  }
+
+  .l-pp-work-time{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 30px;
+    border-left: 1px #ddd solid;
+    //.l-pp-work-time-face{
+    //  flex: 1;
+    //  position: relative;
+    //  width: 22em;
+    //  height: 22em;
+    //  //border: 1px #ddd solid;
+    //  .l-pp-time-part{
+    //    //background-color: #113145;
+    //    border-radius: 50%;
+    //    position: absolute;
+    //    top: 50%;
+    //    left: 50%;
+    //    font-weight: bold;
+    //    font-size: 0.85em;
+    //    &.l-pp-part-hour{
+    //      //width: 11em;
+    //      //height: 11em;
+    //      //margin-top: -5.5em;
+    //      //margin-left: -5.5em;
+    //    }
+    //    &.l-pp-part-hour-1{
+    //      z-index: 8;
+    //      background-color: #113145;
+    //      @include distribute-on-circle(12, 10em, 2em, 270, 1.5em);
+    //
+    //    }
+    //    &.l-pp-part-hour-2{
+    //      z-index: 9;
+    //      @include distribute-on-circle(12, 7em, 2em, 285, 1.5em);
+    //      .l-pp-digit{
+    //        color: #bbc;
+    //      }
+    //    }
+    //    &.l-pp-part-minutes-1{
+    //      z-index: 6;
+    //      background-color: #2e678a;
+    //      @include distribute-on-circle(30, 20em, 2em, 270, 1.5em);
+    //    }
+    //    &.l-pp-part-minutes-2{
+    //      z-index: 7;
+    //      @include distribute-on-circle(30, 16em, 2em, 285, 1.5em);
+    //    }
+    //    .l-pp-digit{
+    //      display: flex;
+    //      align-items: center;
+    //      justify-content: center;
+    //      width: 2em;
+    //      height: 2em;
+    //      border-radius: 50%;
+    //      color: #fff;
+    //      &:hover{
+    //        color: #111;
+    //        background-color: antiquewhite;
+    //        cursor: pointer;
+    //      }
+    //      //background-color: #45c971;
+    //    }
+    //  }
+    //}
+
+  }
+  .l-pp-bottom{
+    display: flex;
+    flex-direction: row;
+    border-top: 1px #ddd solid;
+    padding: 10px;
+    /* ScrollBar width */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .l-pp-result{
+      flex: 1;
+      padding-left: 30px; //l-pp-textbox-gap width
+      .l-textbox{
+        height: 1.5em;
+      }
+      .l-pp-date-values{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 3px 0;
+        .l-textbox{
+          width: calc((1em + 12px) * 6);
+        }
+      }
+      .l-pp-textbox-holder{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .l-pp-date-additional{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .l-pp-textbox-gap{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+      }
+
+      /// time
+      .l-pp-time-face{
+        display: flex;
+        flex-direction: row;
+
+      }
+      .l-pp-time-part{
+        padding: 3px;
+        position: relative;
+        &:before{
+          content: ':';
+          width: 6px;
+          position: absolute;
+          height: 1em;
+          top: 50%;
+          margin-top: -0.5em;
+          left: -3px;
+          /* display: block; */
+          text-align: center
+        }
+        &:first-child:before{
+          content: '';
+        }
+        .l-textbox {
+          text-align: center;
+          width: 3.5em;
+          padding: 0;
+        }
+      }
+      .l-ts-drop-icon{
+        display: none;
+      }
+      .l-cb-drop-icon {
+        display: none;
+      }
+      .tb-time,
+      .l-textbox {
+        text-align: center;
+        width: 3.5em;
+        padding: 0;
+      }
+    }
+
+
+    .l-pp-selected-range{
+      //display: none;
+    }
+    .button{
+      padding: 7px 15px;
+    }
+    input{
+      text-align: center;
+    }
+  }
+
+  .l-textbox-smart {
+    .l-ts-offer-list{
+      .l-ts-offer-item {
+        padding: 3px 5px;
+      }
+    }
+
+  }
+
+
+  &.l-pp-build-in{
+    box-shadow:none;
+    position: static;
+  }
+}
+.l-pp-selection-active{
+  animation: l-pp-selection-active 800ms linear infinite;
+}
+@keyframes l-pp-selection-active {
+  0%{
+    outline: 2px transparent solid;
+  }
+  50%{
+    outline: 2px var(--l-clr-selected) solid;
+  }
+  100%{
+    outline: 2px transparent solid;
+  }
+}
+
+
+
+
+
+/* Animations */
+
+.l-animation_periodpicker-show{
+  animation-name: l-animation_periodpicker-show;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in;
+}
+@keyframes l-animation_periodpicker-show {
+  0%{
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+  100%{
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.l-animation_periodpicker-hide{
+  animation-name: l-animation_periodpicker-hide;
+  animation-duration: 200ms;
+  animation-timing-function: ease-out;
+  transform: scale(0);
+}
+@keyframes l-animation_periodpicker-hide {
+  0%{
+    transform: scale(1);
+    opacity: 1;
+  }
+  100%{
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes l-repeat-liear-gradient {   /* назовём анимацию: "go-left-right" */
+  from {
+    left: 0
+  }
+  to {
+    left: -3000%;
+  }
+}

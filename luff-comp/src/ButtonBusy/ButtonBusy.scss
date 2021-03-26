@@ -1,0 +1,38 @@
+.l-button{
+  padding: 5px 10px;
+  &:active{
+    position: relative;
+    left: 1px;
+    top:1px
+  }
+  &.l-busy{
+    color: transparent!important;
+    position: relative;
+    cursor: default;
+    background-image: none;
+    &:hover{
+      color: transparent!important;
+      background-image: none;
+    }
+    &:before{
+      content: '';
+      background: url('./img/l-icon-load.svg') no-repeat center;
+      background-size: cover;
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      left:50%;
+      top:50%;
+      margin: -12px;
+      animation: l-animation-rotate 1s ease-in-out infinite;
+    }
+    @keyframes l-animation-rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}

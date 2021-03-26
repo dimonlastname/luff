@@ -1,0 +1,11 @@
+{
+  "name": "luff-comp",
+  "version": "1.0.1",
+  "description": "Luff's component library",
+  "main": "./src/index.tsx",
+  "author": "Dmitrii Pupyrev",
+  "license": "MIT",
+  "dependencies": {
+    "luff": "latest"
+  }
+}
