@@ -191,37 +191,10 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
     _HideTransitionFunction() {
         this._IsShown = false;
         this._Dismount();
-        //
-        // for (let child of this.Children) {
-        //     if ((child as any)._IsDialog)
-        //         continue;
-        //     // if ((child as any).GroupType)
-        //     //     continue;
-        //     child._HideTransitionFunction();
-        // }
     }
     _ShowTransitionFunction() {
         this._IsShown = true;
         this._Mount();
-        // //let groups = [];
-        // for (let child of this.Children) {
-        //     if (child instanceof Content) {
-        //         let content = child as any as Content;
-        //         if (content._IsDialog)
-        //             continue;
-        //         if (content.GroupType/* && !groups.includes(content.GroupType)*/) {
-        //             //groups.push(content.GroupType);
-        //             //content._ShowTransitionFunction();
-        //             // if (this.ParentComponent.Components.AllByName[content.Name]) {
-        //             //     content._ShowTransitionFunction();
-        //             // }
-        //             continue;
-        //         }
-        //         content._ShowTransitionFunction();
-        //     }
-        //
-        //     child._ShowTransitionFunction();
-        // }
     }
 
     GetFirstParentDOM() : HTMLElement {
