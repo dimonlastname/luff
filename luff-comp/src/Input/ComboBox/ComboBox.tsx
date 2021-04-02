@@ -18,6 +18,7 @@ type TComboBoxProps<TDataItem, TValue> = {
     value: IObservableStateSimple<TValue>;
     notFoundValue?: string;
     listEmptyText?: string;
+    className?: string | IObservableStateSimple<string>;
 
     data?: IObservableStateArray<TDataItem>;
     dataStatic?: TDataItem[];
@@ -474,6 +475,20 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         //     // });
         // }
     }
+
+    private GetClassName() : any {
+        const classNameDefault = 'l-combo-box';
+
+        let className : string | IObservableStateSimple<string>;
+        if (!this.props.className || typeof this.props.className === 'string') {
+            className = classNameDefault + (this.props.className ? ' ' + this.props.className : '');
+        }
+        else {
+            className = this.props.className.SubState(c => classNameDefault + ' ' + c);
+        }
+        return className;
+    }
+
     Render() : any {
         const state = this.State;
 
@@ -484,8 +499,9 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
 
         //const isShowList = state.IsOfferListVisible.SValue && !state.IsBusy.SValue;
 
+
         return (
-            <div className="l-combo-box"
+            <div className={this.GetClassName()}
                  classDict={{
                      'l-combo-box_open': this.State.IsOpen,
                  }}
@@ -502,6 +518,7 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
                        name="l-cbx-textbox"
                        type="text"
                        placeholder={placeholder}
+                       autocomplete="off"
                        value={state.TextBoxValue as any}
                        onFocus={e => e.target.select()}
                        onChange={e => {
