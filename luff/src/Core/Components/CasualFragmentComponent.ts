@@ -32,7 +32,7 @@ export class CasualFragmentComponent extends ElementBase {
                 return;
             }
 
-            this.GetTargetRenderDOM().appendChild(this.DOM);
+            container.appendChild(this.DOM);
             return;
         }
 
