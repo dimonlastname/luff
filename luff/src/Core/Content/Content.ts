@@ -621,6 +621,15 @@ class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> im
         if (!built)
             return;
 
+        if (this._RawContent.GroupType && (!this._RawContent.Visible || !this.ParentComponent) /*&& AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] !== this*/) {
+            this._IsShown = false;
+        }
+        else if (this._RawContent.GroupType && this._Route && AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] === this) {
+            this._Route.SetLinksActive(true);
+        }
+        if (this._IsHiddenByDefault)
+            this._IsShown = false;
+
         this.Children = [built];
         this.DOM = built._GenerateDOM();
         this._AfterGenerateDOM();
@@ -631,14 +640,6 @@ class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> im
             this.AfterBuild();
             return this.DOM;
         }
-        if (this._RawContent.GroupType && (!this._RawContent.Visible || !this.ParentComponent) /*&& AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] !== this*/) {
-            this._IsShown = false;
-        }
-        else if (this._RawContent.GroupType && this._Route && AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] === this) {
-            this._Route.SetLinksActive(true);
-        }
-        if (this._IsHiddenByDefault)
-            this._IsShown = false;
 
         this.AfterBuild();
         if (this._IsShown)
