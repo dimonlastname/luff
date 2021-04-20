@@ -23,11 +23,12 @@ import EditableSelect from "./Editable/EditableSelect";
 import EditableDate from "./Editable/EditableDate";
 import EditableSpecial, {EditableSpecialArr} from "./Editable/EditableSpecial";
 import {EditableMini} from "./Editable/EditableMini";
+import {TimeBox} from "./Input/TimeBox";
 
 
 
 export {
-    TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, DateBox, DateBoxRange,
+    TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, DateBox, DateBoxRange, TimeBox,
     EditableText, EditableNumber, EditableSelect, EditableDate, EditableSpecial, EditableSpecialArr, EditableMini,
 
     ButtonBusy,
