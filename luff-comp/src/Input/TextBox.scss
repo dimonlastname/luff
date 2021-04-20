@@ -19,3 +19,37 @@
 .l-textbox-filter-search {
   width: 150px;
 }
+
+.l-timebox {
+  position: relative;
+  .l-timebox-time-list {
+    position: absolute;
+    background-color: var(--l-clr-background-clean);
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+
+    box-shadow: 1px 1px 5px var(--l-clr-shadow);
+    z-index: 1000;
+    &.reverseShow {
+      top: unset;
+      bottom: 100%;
+    }
+    .sublist {
+      height: 100px;
+      overflow: auto;
+    }
+    .l-tbt-item {
+      padding: 3px 10px;
+      cursor: pointer;
+      text-align: left;
+      &:hover,
+      &.l-tbt-selected {
+        background-color: var(--l-clr-hover-light);
+      }
+      &.l-tbt-selected {
+        font-weight: bold;
+      }
+    }
+  }
+}

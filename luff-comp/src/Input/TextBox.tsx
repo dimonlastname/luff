@@ -10,6 +10,7 @@ type TProps = {
     type?: string;
     className?: string;
 
+    onClick?: (e: Luff.MouseEvent) => void;
     onChange?: (val?: string) => void;
     onKeyUp?: (e: Luff.KeyboardEvent) => void;
     onKeyDown?: (e: Luff.KeyboardEvent) => void;
@@ -61,6 +62,7 @@ export default class TextBox extends InputBoxBase<TProps> {
                        this.props.value.SValue = value;
                    }}
                    autocomplete={this.props.autocomplete}
+                   onClick={this.props.onClick}
                    onKeyUp={keyUpFn}
                    onKeyDown={this.props.onKeyDown}
                    placeholder={this.props.placeholder}
