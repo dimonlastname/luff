@@ -1,4 +1,13 @@
-import Luff, {React, TContentCtor, luffDate, LuffDate, LibraryDOM, Culture, LibraryNumber} from "luff";
+import Luff, {
+    React,
+    TContentCtor,
+    luffDate,
+    LuffDate,
+    LibraryDOM,
+    Culture,
+    LibraryNumber,
+    IObservableStateArray
+} from "luff";
 
 import PPMonthQuarterYear from "./Parts/PPMonthQuarterYear";
 import PPRange from "./Parts/PPRange";
@@ -36,7 +45,7 @@ type TPeriodPickerProps = {
 
     // DateTarget?: LuffDate;
     // DateRange?: LuffDate[];
-    // DatesForbidden?: Date[] | LuffDate[];
+    forbiddenDates?: IObservableStateArray<LuffDate>;
     // DatesDayOff?: Date[] | LuffDate[];
     //
     dateMin?: LuffDate;
@@ -130,6 +139,7 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         //DateRange: [void 0, void 0],
         //DatesDayOff: [],
         //DatesForbidden: [],
+        forbiddenDates: Luff.StateArr([]),
         //DateTarget: new LuffDate(new Date()),
         //FirstDayOfWeek: 0,
         //Format: Culture.Current.DateFormat,
@@ -175,6 +185,10 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         this._IsShowTimePicker.SValue = this.props.isShowTimePick;
         this._TimePickerResolution.SValue = this.props.timePickerResolution;
         this._TimePickerMinuteStep.SValue = this.props.timePickerMinuteStep;
+    }
+
+    protected AfterBuild(): void {
+        //this.props.forbiddenDates.AddOnChange(() => this._Redraw()); //commented cuz redraws on show;
     }
 
     BeforeBuild(): void {
@@ -354,11 +368,16 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         let current = this._CurrentSelection.SValue;
         const dateMin = this.props.dateMin;
         const dateMax = this.props.dateMax;
+
+        const forbidden =  this.props.forbiddenDates.SValue;
         while (cursor.Month === Date.Month){
             const dayOfWeek = cursor.DayOfWeek;
             let isDeny = false;
             let DayType = '';
             //check for deny
+            if (forbidden.find(x => x.IsSameDate(cursor))) {
+                DayType = 'l-pp-deny';
+            }
             if ( (dateMin && cursor < dateMin.DayStart ) || (dateMax && cursor > dateMax.DayEnd ) ){
                 DayType = 'l-pp-deny';
                 isDeny = true;
