@@ -66,9 +66,11 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
 
     Hide(): void {
         this._HideTransitionFunction();
+        this._Disappear();
     }
     Show(): void {
         this._ShowTransitionFunction();
+        this._Appear();
     }
 
     _TargetDOM: Element; //GetTargetDOM cache;
