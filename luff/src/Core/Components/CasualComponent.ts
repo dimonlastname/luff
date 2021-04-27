@@ -1,7 +1,7 @@
-import {Dict, IObservableStateSimple, IObservableState} from "../../interfaces";
+import {Dict, IObservableStateSimple, IObservableState, IObservableStateArray} from "../../interfaces";
 import {TRawComponent} from "./IElement";
 import {ComponentFactory} from "../Compiler/ComponentFactory";
-import {State} from "../State";
+import {luffState, State} from "../State";
 import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
 
@@ -73,7 +73,7 @@ class CasualComponent extends CasualMountingBase {
     private _EventListeners: Dict<any> = {};
     //private PermissionAttributeName: string = null;
 
-    private _SetClassName(className: string, isSet: boolean) : void {
+    private _SetClassName(className: string, isSet: boolean) : void  {
         if (isSet) {
             this.DOM.classList.add(className);
         } else {
@@ -142,6 +142,86 @@ class CasualComponent extends CasualMountingBase {
         }
     }
 
+    // private _CompileClassListAttribute(classes: Array<IObservableStateSimple<string>>) : void {
+    //     const classList = luffState(classes.reduce((a, b) => a + ' ' + b,''));
+    //     for (let st of classes) {
+    //         st.AddOnChange(() => classList.SValue = classes.reduce((a, b) => a + ' ' + b,''));
+    //     }
+    //
+    //
+    //     for (let className of classNames) {
+    //         let isClass = classes[className];
+    //         this._CompileSingleAttribute(className, isClass, AttributeType.ClassName);
+    //     }
+    // }
+
+    private _CompileClassAttributes(attributes: Dict<any>) : void {
+        if (!attributes)
+            return;
+        //let classStaticAttValue = attributes['classStatic'] || '';
+        let classAttValue = attributes['className'];
+        if (!classAttValue)
+            classAttValue = attributes['class'];
+        classAttValue = classAttValue ? classAttValue : '';
+
+        const classDictAttValue = attributes['classDict'] as Dict<any>;
+        const classListAttValue = attributes['classList'];
+
+        delete attributes['class'];
+        delete attributes['className'];
+        delete attributes['classDict'];
+        delete attributes['classList'];
+
+
+        if (!classDictAttValue && !classListAttValue) {
+            this._CompileSingleAttribute('class', classAttValue, AttributeType.Casual);
+            return;
+        }
+
+        let classState = luffState('');
+        if (classAttValue instanceof State) {
+            classState.SValue = classAttValue.SubState(cls => cls + '');
+
+        } else {
+            this._CompileClassDictAttribute(classDictAttValue);
+        }
+
+        let deps = [];
+        function getAtt() {
+            let val = '';
+            if (classAttValue instanceof State) {
+                val += classAttValue.SValue;
+                deps.push(classAttValue);
+            } else {
+                val += classAttValue;
+            }
+
+            if (classDictAttValue) {
+                const classNames = Object.getOwnPropertyNames(classDictAttValue);
+
+                for (let className of classNames) {
+                    let isClass = classDictAttValue[className];
+                    if (!isClass)
+                        continue;
+
+                    if (isClass.SValue) {
+                        val += ' ' + className;
+                    }
+                    deps.push(isClass);
+                }
+            }
+            return val;
+        };
+
+        let stateClass = luffState(getAtt.call(this));
+        const onChange = () => stateClass.SValue = getAtt.call(this);
+
+        for (let dep of deps) {
+            dep.AddOnChange(onChange);
+        }
+        this._CompileSingleAttribute('class', stateClass, AttributeType.Casual);
+    }
+
     private _CompileStyleAttributes(styleAttribute: Dict<string | IObservableStateSimple<string>> | IObservableState<Dict<string>>) {
         let styleProps;
 
@@ -172,6 +252,8 @@ class CasualComponent extends CasualMountingBase {
     }
 
     private _CompileAttributes(){
+        this._CompileClassAttributes(this._RawComponent.Attributes);
+
         for (let attName in this._RawComponent.Attributes) {
             if (forbidden.includes(attName))
                 continue;
@@ -188,10 +270,17 @@ class CasualComponent extends CasualMountingBase {
                 this._CompileStyleAttributes(attValue);
                 continue;
             }
+            if (attName === 'class') {
+
+            }
             if (attName === 'classDict') {
                 this._CompileClassDictAttribute(attValue);
                 continue
             }
+            // if (attName === 'classList') {
+            //     this._CompileClassListAttribute(attValue);
+            //     continue
+            // }
             let attributeType = AttributeType.Casual;
             if (SpecialProperties.includes(attName)) {
                 attributeType = AttributeType.Property;
