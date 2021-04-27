@@ -1,3 +1,20 @@
+const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
+function sortComparer<T>(a: T, b: T, fieldName: keyof T) {
+
+    let valueA = a[fieldName] as any;
+    let valueB = b[fieldName] as any;
+
+    if (valueA && valueA.localeCompare) { //if string and ok browser
+        return collator.compare(valueA, valueB);
+    }
+
+    if (valueA > valueB)
+        return 1;
+    if (valueA < valueB)
+        return -1;
+    return 0;
+}
+
 export namespace LibraryArray {
     export function Remove<T>(list: T[], predicate: (o: T, index: number) => boolean) : number {
         let removedCount = 0;
@@ -20,5 +37,9 @@ export namespace LibraryArray {
         const indexFrom = list.indexOf(item1);
         const indexTo = list.indexOf(item2);
         MoveByIndex(list, indexFrom, indexTo);
+    }
+
+    export function SortByField<T>(list: T[], fieldName: keyof T) : T[]  {
+        return list.sort((a, b) => sortComparer(a, b, fieldName));
     }
 }
