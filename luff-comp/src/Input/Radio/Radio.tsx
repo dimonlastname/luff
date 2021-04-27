@@ -82,7 +82,7 @@ export default class RadioButton<T> extends Luff.Content<RadioProps<T>> {
         }
         return (
             <>
-                <input type='radio'
+                <input type='checkbox'
                        className="l-radio"
                        id={"l-radio-id-" + this._ID}
                        //radioGroup={this.GetRadioGroup()}
