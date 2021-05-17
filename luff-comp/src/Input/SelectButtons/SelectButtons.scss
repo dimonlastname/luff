@@ -1,0 +1,63 @@
+.l-select-buttons {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  display: flex;
+  flex-direction: row;
+  .l-sb-holder {
+    flex: 1;
+    margin-right: 2px;
+    &:last-child{
+      margin: 0;
+    }
+  }
+  .l-select-button-radio {
+    width: 100%;
+    padding: 5px;
+    background-color: var(--l-clr-content2);
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+    &:before {
+      content: '';
+      display: none;
+    }
+    &:hover {
+      background-color: var(--l-clr-base-light);
+    }
+  }
+  .l-radio:checked + .l-select-button-radio {
+    background: var(--l-clr-base);
+    &:hover {
+      background: var(--l-clr-base);
+    }
+  }
+
+  .selectable-option {
+    border: 2px var(--l-clr-background) solid;
+    padding: 5px;
+    //background-color: var(--l-clr-background-light);
+    background-color: var(--l-clr-content2);
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    //&:hover {
+    //  background-color: var(--l-clr-base-light);
+    //}
+    &.selected {
+      background: var(--l-clr-base);
+    }
+  }
+  tbody:not(.hidden) .selectable-option:not(.hidden):not(.selected):hover  {
+    background-color: var(--l-clr-base-light);
+  }
+}
