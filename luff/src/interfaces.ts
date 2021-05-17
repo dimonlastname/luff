@@ -7,6 +7,17 @@ export type TValueName<T> = {
     Value: T;
     Name: string;
 }
+// type TDictKey = string | number;
+//
+//
+// export type Dictionary<TKey extends TDictKey, TValue> = {
+//     [key: TDictKey]: TValue;
+// }
+
+export type TIDNamePair = {
+    ID: number;
+    Name: string;
+}
 
 
 export type Dict<TValue> = {
@@ -56,6 +67,7 @@ export type IObservableStateAny<T> = T extends object ? (T extends (infer Elemen
 type IObservableExtra<T> = {
     AddOnChange(onChange: TStateOnChange<T>) : void;
     RemoveOnChange(onChange: TStateOnChange<T>) : void;
+    ForceUpdate() : void;
 }
 
 type IObservableStateSingleObject<T> = {

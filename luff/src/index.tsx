@@ -11,7 +11,7 @@ import {
     IObservableStateArray as _IObservableStateArray,
     IObservableStateAny as _IObservableStateAny,
     DictN,
-    Dict, TOffset, TValueName
+    Dict, TOffset, TValueName, TIDNamePair
 } from "./interfaces";
 import _Application from "./Core/Application/Application";
 import {getClosestStateArray, State, StateArray, luffState, luffStateArr} from "./Core/State";
@@ -1586,7 +1586,7 @@ export {React, luffState, luffStateArr, TContentCtor,
     FilePicker,
 
     _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, Dict, DictN,
-    TPositionObject, TOffset, TValueName,
+    TPositionObject, TOffset, TValueName, TIDNamePair,
     _IContent as IContent, JSXElement, IElement, IElementBase, ElementBase, IRenderElement, ComponentFactory,
     State, StateArray, getClosestStateArray,
 

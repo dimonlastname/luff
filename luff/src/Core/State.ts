@@ -77,8 +77,11 @@ export class State<T = any> {
             }
         }
     }
+    public ForceUpdate() : void {
+        this._Update(this.SValue);
+    }
 
-    AddOnChange(onChange: TStateOnChange<T>) : void {
+    public AddOnChange(onChange: TStateOnChange<T>) : void {
         this._AddOnChange(onChange);
     }
 
@@ -87,7 +90,7 @@ export class State<T = any> {
             this._Subscribers = [];
         this._Subscribers.push(onChange);
     }
-    RemoveOnChange(onChange: TStateOnChange<T>): void {
+    public RemoveOnChange(onChange: TStateOnChange<T>): void {
         LibraryArray.Remove(this._Subscribers, x => x === onChange);
     }
     _UpdateValue(childState: State, changedState: State, subscribes: TSubscriber[]): void {
@@ -284,6 +287,13 @@ export class State<T = any> {
     //         this.__SValuePrev = null;
     //     }
     // }
+
+    _Update(value: any) : void {
+        let ss = [];
+        this._Compile(value, ss);
+        this._OnChange(this, ss);
+        this._UpdateParents(this, ss);
+    }
     get SProperty() : string {
         return this._Property;
     }
@@ -297,10 +307,7 @@ export class State<T = any> {
     }
     set _SValue(value: any) {
         if (value != this.__SValue || typeof value === "object") {
-            let ss = [];
-            this._Compile(value, ss);
-            this._OnChange(this, ss);
-            this._UpdateParents(this, ss);
+            this._Update(value);
         }
     }
 }
