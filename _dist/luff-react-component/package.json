@@ -1,6 +1,6 @@
 {
   "name": "luff-react-component",
-  "version": "1.0.1",
+  "version": "3.0.1",
   "description": "React component integrator",
   "main": "src/index.tsx",
   "author": "Dmitrii Pupyrev",
