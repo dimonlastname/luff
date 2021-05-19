@@ -663,7 +663,7 @@ namespace Luff  {
          */
         is?: string;
 
-        isVisible?: IObservableStateSimple<boolean>;
+        isVisible?: IObservableStateSimple<boolean> | boolean;
         class?: string | IObservableStateSimple<string>;
         classDict?: Dict<IObservableStateSimple<boolean>>
         name?: string;
