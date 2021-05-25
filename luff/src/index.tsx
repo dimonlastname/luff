@@ -798,29 +798,29 @@ namespace Luff  {
     }
 
     export interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string;
+        alt?: string | IObservableStateSimple<string>;;
         crossOrigin?: "anonymous" | "use-credentials" | "";
         decoding?: "async" | "auto" | "sync";
         height?: number | string;
         loading?: "eager" | "lazy";
         referrerPolicy?: "no-referrer" | "origin" | "unsafe-url";
-        sizes?: string;
+        sizes?: string | IObservableStateSimple<string>;
         src?: string | IObservableStateSimple<string>;
-        srcSet?: string;
-        useMap?: string;
-        width?: number | string;
+        srcSet?: string | IObservableStateSimple<string>;
+        useMap?: string | IObservableStateSimple<string>;
+        width?: number | string | IObservableStateSimple<string | number>;
     }
 
     export interface InsHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string;
-        dateTime?: string;
+        cite?: string | IObservableStateSimple<string>;
+        dateTime?: string | IObservableStateSimple<string>;
     }
 
     export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
-        accept?: string;
-        alt?: string;
-        autoComplete?: string;
-        autoFocus?: boolean;
+        accept?: string | IObservableStateSimple<string>;
+        alt?: string | IObservableStateSimple<string>;
+        autoComplete?: string | IObservableStateSimple<string>;
+        autoFocus?: boolean | IObservableStateSimple<string>;
         capture?: boolean | string; // https://www.w3.org/TR/html-media-capture/#the-capture-attribute
         checked?: boolean | IObservableStateSimple<boolean>;
         crossOrigin?: string;
@@ -834,7 +834,7 @@ namespace Luff  {
         height?: number | string;
         list?: string;
         max?: number | string | IObservableStateSimple<number>;
-        maxLength?: number;
+        maxLength?: number | IObservableStateSimple<number>;
         min?: number | string | IObservableStateSimple<number>;
         minLength?: number;
         multiple?: boolean;
@@ -844,11 +844,11 @@ namespace Luff  {
         readOnly?: boolean;
         required?: boolean;
         size?: number;
-        src?: string;
+        src?: string | IObservableStateSimple<string>;
         step?: number | string;
-        type?: string;
+        type?: string | IObservableStateSimple<string>;
         value?: string | string[] | number | IObservableStateSimple<string|number>;
-        width?: number | string;
+        width?: number | string | IObservableStateSimple<string | number>;
 
         onChange?: ChangeEventHandler<T>;
 
