@@ -7,6 +7,9 @@ enum HintDirection {
 
 type HintRenderFn = (hintPack: THintPack) => HTMLElement;
 
+const MARGIN_X = 20;
+const MARGIN_Y = 8;
+
 interface TLuffHintCtor {
     TargetArea?: HTMLElement;
     ExtraClassNames?: string;
@@ -88,20 +91,20 @@ export class LuffHint {
         let PosX = -rectContainment.x;
         let PosY = -rectContainment.y;
         if (direction === 'bottom-right'){
-            PosX += rect.x + rect.width + this.Config.Margin.x;
-            PosY += rect.y + rect.height + this.Config.Margin.y;
+            PosX += rect.x + rect.width + this.Config.Margin.x - MARGIN_X;
+            PosY += rect.y + rect.height + this.Config.Margin.y + MARGIN_Y;
         }
         else if (direction === 'bottom-left'){
-            PosX += rect.x - rectHint.width;
-            PosY += rect.y + rect.height + this.Config.Margin.y;
+            PosX += rect.x - rectHint.width + MARGIN_X;
+            PosY += rect.y + rect.height + this.Config.Margin.y + MARGIN_Y;
         }
         else if (direction === 'top-right'){
-            PosX += rect.x + rect.width + this.Config.Margin.x;
-            PosY += rect.y - rectHint.height - this.Config.Margin.y;
+            PosX += rect.x + rect.width + this.Config.Margin.x - MARGIN_X;
+            PosY += rect.y - rectHint.height - this.Config.Margin.y - MARGIN_Y;
         }
         else if (direction === 'top-left'){
-            PosX += rect.x - rectHint.width - this.Config.Margin.x;
-            PosY += rect.y - rectHint.height - this.Config.Margin.y;
+            PosX += rect.x - rectHint.width - this.Config.Margin.x + MARGIN_X;
+            PosY += rect.y - rectHint.height - this.Config.Margin.y - MARGIN_Y;
         }
         return {
             x: PosX,
