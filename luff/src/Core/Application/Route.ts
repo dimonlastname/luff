@@ -240,6 +240,7 @@ export class Route<T = any> {
         this.Content.Toggle();
     }
     GoWithParams(params: T) : void {
+        this.Content._RouteParam = params;
         this.Content.OnRoute(params);
     }
     Go() : void {
