@@ -798,7 +798,7 @@ namespace Luff  {
     }
 
     export interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string | IObservableStateSimple<string>;;
+        alt?: string | IObservableStateSimple<string>;
         crossOrigin?: "anonymous" | "use-credentials" | "";
         decoding?: "async" | "auto" | "sync";
         height?: number | string;
@@ -1358,7 +1358,12 @@ namespace Luff  {
         z?: number | string;
         zoomAndPan?: string;
     }
-    export interface CSSProperties extends Partial<globalThis.CSSStyleDeclaration> { }
+    // export interface CSSProperties extends Partial<globalThis.CSSStyleDeclaration> {
+    //
+    // }
+    export type CSSProperties = {
+        [Properties in keyof CSSStyleDeclaration]?: CSSStyleDeclaration[Properties];
+    }
 }
 
 declare global {
