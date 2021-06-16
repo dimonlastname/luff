@@ -656,7 +656,11 @@ export function getClosestStateArray(state: State) : TClosestArr {
     }
     return null;
 }
-export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
+
+
+type Flatten<T> = T extends any[] ? IObservableStateArray<T[number]> : IObservableState<T>
+
+export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : Flatten<T> {
     if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
         return state as any;
     if (Array.isArray(state))
