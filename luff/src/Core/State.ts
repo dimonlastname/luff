@@ -1,5 +1,5 @@
 import {PropTypes} from "../Library/PropTypes";
-import {IObservableState, IObservableStateArray, SelectDelegate, WhereDelegate} from "../interfaces";
+import {FlattenState, IObservableState, IObservableStateArray, SelectDelegate, WhereDelegate} from "../interfaces";
 import {LibraryArray} from "../Library/Array";
 import {LibraryNumber} from "../Library";
 
@@ -658,9 +658,9 @@ export function getClosestStateArray(state: State) : TClosestArr {
 }
 
 
-type Flatten<T> = T extends any[] ? IObservableStateArray<T[number]> : IObservableState<T>
 
-export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : Flatten<T> {
+
+export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : FlattenState<T> {
     if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
         return state as any;
     if (Array.isArray(state))
