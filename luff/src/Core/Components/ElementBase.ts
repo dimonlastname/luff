@@ -289,10 +289,15 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
             this._IsHiddenByDefault = !state.SValue;
             this._IsShown = state.SValue;
             state.AddOnChange(isVisible => {
-                if (isVisible)
-                    this.Show();
-                else
-                    this.Hide();
+                if (isVisible){
+                    this._ShowTransitionFunction();
+                    this._Appear(); //todo: fix _Appear to onMount
+                }
+                else {
+                    this._HideTransitionFunction();
+                    this._Disappear(); //todo: fix _Disappear to onDismount
+                }
+
             })
         } else {
             this._IsHiddenByDefault = !(isVisible as boolean);
