@@ -146,6 +146,9 @@ export namespace LibraryDOM {
         }
         return <HTMLElement>Array.from(frag.childNodes).find(x=> x.nodeName.indexOf('text') < 0);
     }
+    export function InsertAfter(element: Element, referenceNode: Element) : void {
+        referenceNode.parentNode.insertBefore(element, referenceNode.nextSibling);
+    }
     export function CreateElementsFromString(htmlString: string, parentElementTagName:string = "div") : HTMLElement[] {
         let frag = document.createDocumentFragment();
         let elem = document.createElement(parentElementTagName);
