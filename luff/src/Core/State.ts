@@ -660,7 +660,7 @@ export function getClosestStateArray(state: State) : TClosestArr {
 
 
 
-export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : FlattenState<T> {
+export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
     if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
         return state as any;
     if (Array.isArray(state))
