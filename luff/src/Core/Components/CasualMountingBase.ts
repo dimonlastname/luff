@@ -3,9 +3,20 @@ import Application from "../Application/Application";
 
 class CasualMountingBase extends ElementBase {
     _Mount(isFirstMount: boolean = false) : void {
-        if (!this._IsShown)
+        if (!this._IsShown || this._IsMount)
             return;
         this._IsMount = true;
+
+        // if (this._TargetRenderComp) {
+        //     console.warn('[RENDER.DOM] experimental ', this);
+        //     this._TargetRenderComp.DOM.appendChild(this.DOM);
+        //     return;
+        // }
+        // if (!this.DOM) {
+        //     //special components like <Each/>
+        //     console.warn('[RENDER.DOM] impossible branch ', this);
+        //     return;
+        // }
 
         const parent = this.ParentElement as ElementBase;
         if (!parent) {
@@ -18,15 +29,15 @@ class CasualMountingBase extends ElementBase {
             return;
         }
 
-        if (isFirstMount){
-            try {
-                container.appendChild(this.DOM);
-            }
-            catch (e) {
-                debugger;
-            }
-            return;
-        }
+        // if (isFirstMount){
+        //     try {
+        //         container.appendChild(this.DOM);
+        //     }
+        //     catch (e) {
+        //         debugger;
+        //     }
+        //     return;
+        // }
 
         const nextDomTreeSibling = this.GetNextSibling();
         if (nextDomTreeSibling) {
