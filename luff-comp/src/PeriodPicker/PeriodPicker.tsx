@@ -6,7 +6,7 @@ import Luff, {
     LibraryDOM,
     Culture,
     LibraryNumber,
-    IObservableStateArray
+    IObservableStateArray, IObservableStateSimple
 } from "luff";
 
 import PPMonthQuarterYear from "./Parts/PPMonthQuarterYear";
@@ -454,10 +454,19 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
     _ShiftMonthByWheel(e: any){
         this._ShiftMonth(e.deltaY > 0 ? 1 : -1);
     }
-    _SetDateByInput(textValue: string, oneOrTwo: number) : void {
+    _SetDateByInput(textValue: string, dateView: IObservableStateSimple<string>, oneOrTwo: number) : void {
         if (!textValue) {
+
             return;
         }
+        const rgx = `^${Luff.Culture.Current.DateFormat.replace(/[dmyDMYs]/g, '\\d')}$`;
+        const rgxSearch = new RegExp(rgx, 'g');
+
+        if (!rgxSearch.test(textValue)) {
+            dateView.SValue = textValue;
+            return;
+        }
+
         let dateValue : Luff.Date;
         try {
             dateValue = Luff.Date(textValue, Luff.Culture.Current.DateFormat);
@@ -558,6 +567,8 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
     Render(): any {
         const stClassPPFullscreen = this.State.IsFullscreen.SubState(isTrue => "l-period_picker" + (isTrue ? ' l-pp-fullscreen':'') );
 
+        const dsView = this._CurrentSelection.DateStart.SubState(ds => ds ? ds.Format(Culture.Current.DateFormat) : '');
+        const dfView = this._CurrentSelection.DateFinish.SubState(df => df ? df.Format(Culture.Current.DateFormat) : '');
         return (
             <div className={ stClassPPFullscreen }>
                 <div className="l-pp-head">
@@ -586,11 +597,11 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
                             <div className="l-pp-date-values l-pp-date-date">
                                 <div className="l-pp-textbox-holder">
                                     <input className="l-textbox tb-date-start"
-                                           value={this._CurrentSelection.DateStart.SubState(ds => ds ? ds.Format(Culture.Current.DateFormat) : '')}
+                                           value={dsView}
                                            onChange={e => {
                                                let text = e.target.value.trim();
                                                console.log('[PeriodPicker] tb-date-start:', text);
-                                               this._SetDateByInput(text, 0)
+                                               this._SetDateByInput(text, dsView, 0);
                                            }}
                                            placeholder={Culture.Current.DateFormat}/>
                                 </div>
@@ -603,11 +614,11 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
                                         </div>
                                         <div className="l-pp-textbox-holder">
                                             <input className="l-textbox tb-date-end"
-                                                   value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Format(Culture.Current.DateFormat) : '')}
+                                                   value={dfView}
                                                    onChange={e => {
                                                        let text = e.target.value.trim();
                                                        //console.log('[PeriodPicker] tb-date-end:', text);
-                                                       this._SetDateByInput(text, 1)
+                                                       this._SetDateByInput(text, dfView, 1);
                                                    }}
                                                    placeholder={Culture.Current.DateFormat}/>
                                         </div>
