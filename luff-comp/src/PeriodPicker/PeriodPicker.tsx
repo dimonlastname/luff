@@ -251,7 +251,8 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
                 DateFinish: void 0
             };
         }
-        this.props.onChange = onChange;
+        if (onChange)
+            this.props.onChange = onChange;
         this.Show();
     }
     public RunRange(dateValues: Date[], onChange?: TPeriodPickerOnChange, options?: TPeriodPickerPropsCall) {
