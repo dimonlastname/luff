@@ -1,9 +1,10 @@
 import {Dict, IObservableStateSimple, IObservableState, IObservableStateArray} from "../../interfaces";
 import {TRawComponent} from "./IElement";
-import {ComponentFactory} from "../Compiler/ComponentFactory";
+import {ComponentFactory, IRenderElement} from "../Compiler/ComponentFactory";
 import {luffState, State} from "../State";
 import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
+import {ElementBase} from "./ElementBase";
 
 const eventNames = ["onabort", "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose",
     "oncontextmenu", "oncuechange", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover",
@@ -110,6 +111,11 @@ class CasualComponent extends CasualMountingBase {
             this._EventListeners[attName.substring(2).toLowerCase()] = attValue;
             return;
         }
+        if (typeof attValue === 'object' && attValue.Tag && typeof attValue.Tag === 'function' && attValue.Tag.prototype instanceof ElementBase) {
+            // if (attValue is IRenderElement)
+            attValue = ComponentFactory.Build(attValue as IRenderElement, this, this.ParentComponent).Render();
+        }
+
 
         if (attValue instanceof State){
             let state: State = attValue as State;
@@ -270,6 +276,7 @@ class CasualComponent extends CasualMountingBase {
                 this._CompileStyleAttributes(attValue);
                 continue;
             }
+
             if (attName === 'class') {
 
             }
