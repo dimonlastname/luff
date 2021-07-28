@@ -489,7 +489,7 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         return className;
     }
 
-    Render() : any {
+    Render() : Luff.Node {
         const state = this.State;
 
         const placeholder = this.props.placeholder;
@@ -618,9 +618,10 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
     private OnScroll: any;
 
     protected AfterShow(): void {
-        this.props.comboBox.State.IsOpen.SValue = true;
-        if (this.props.comboBox.props.isSearchEnabled) {
-            this.props.comboBox._TextBox.select();
+        const cbx = this.props.comboBox;
+        cbx.State.IsOpen.SValue = true;
+        if (cbx.props.isSearchEnabled) {
+            cbx._TextBox.select();
         }
         const container = this.ListContainer;
         const rect = container.getBoundingClientRect();
@@ -629,6 +630,11 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
             container.style.top = this.Top - rect.height - 1 + 'px';
         }
         //this.AfterShow = () => {};
+
+        if (document.body.scrollIntoView) {
+            const lineDOM = this.EachItems.GetDOMByItemState(this.State.OfferDataFiltered[this.State.SelectedItem.SValue.LineID]);
+            lineDOM.scrollIntoView();
+        }
         document.addEventListener('scroll', this.OnScroll, true);
     }
 
