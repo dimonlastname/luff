@@ -57,7 +57,7 @@ export interface IElement<P = any> extends JSXElement<P> {
     _Mount(isFirstMount: boolean): void;
     _Dismount(): void;
 
-
+    GetComponentByName<T extends IElement>(name: string) : T;
 
     Show(): void;
     Hide(): void;

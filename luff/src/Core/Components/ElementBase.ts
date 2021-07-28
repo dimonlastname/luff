@@ -75,6 +75,17 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
 
     _TargetDOM: Element; //GetTargetDOM cache;
     _TargetRenderComp: IElement;
+    GetComponentByName<T extends IElement>(name: string) : T {
+        for (let ch of this.Children) {
+            if (ch.Name == name)
+                return ch as T;
+        }
+        for (let ch of this.Children) {
+            const subChild = ch.GetComponentByName(name);
+            if (subChild)
+                return subChild as T;
+        }
+    }
 
     GetTargetRenderDOM(): Element {
         //normal comp returns this.DOM
