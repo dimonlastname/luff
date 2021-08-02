@@ -631,7 +631,7 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
         }
         //this.AfterShow = () => {};
 
-        if (document.body.scrollIntoView) {
+        if (this.State.SelectedItem.SValue && document.body.scrollIntoView) {
             const lineDOM = this.EachItems.GetDOMByItemState(this.State.OfferDataFiltered[this.State.SelectedItem.SValue.LineID]);
             lineDOM.scrollIntoView();
         }
