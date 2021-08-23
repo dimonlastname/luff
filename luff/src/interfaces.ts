@@ -44,7 +44,7 @@ export interface IShowHideable {
     Hide(): void;
 }
 
-export type FlattenState<T> = T extends any[] ? IObservableStateArray<T[number]> : IObservableState<T>;
+//export type FlattenState<T> = T extends any[] ? IObservableStateArray<T[number]> : IObservableState<T>;
 
 export type IObservableStateKeys<T> =
     {

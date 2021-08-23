@@ -1,5 +1,5 @@
 import {PropTypes} from "../Library/PropTypes";
-import {FlattenState, IObservableState, IObservableStateArray, SelectDelegate, WhereDelegate} from "../interfaces";
+import {IObservableState, IObservableStateArray, SelectDelegate, WhereDelegate} from "../interfaces";
 import {LibraryArray} from "../Library/Array";
 import {LibraryNumber} from "../Library";
 
