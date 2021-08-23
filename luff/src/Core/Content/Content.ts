@@ -49,6 +49,28 @@ class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> im
     static OutsideChecks : TListener[] = [];
 
     static defaultProps : any;
+
+    static AddStateSubscription(state: IObservableState<any>, content: IContent, callBack: () => void) : void {
+        const ctx = content as any;
+
+        const appear = ctx.OnAppear.bind(ctx);
+        const disappear = ctx.OnDisappear.bind(ctx);
+
+        ctx.OnAppear = function() {
+            appear();
+            //console.log(content.Name + ' appear');
+            state.AddOnChange(callBack);
+        }.bind(ctx);
+        ctx.OnDisappear = function() {
+            disappear();
+            //console.log(content.Name + ' disappear');
+            state.RemoveOnChange(callBack);
+        }.bind(ctx);
+    }
+    private AddStateSubscription(state: IObservableState<any>, callBack: () => void) : void {
+        Content.AddStateSubscription(state, this, callBack);
+    }
+
     ParentComponent: Content;
 
 
