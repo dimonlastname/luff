@@ -524,8 +524,8 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
                        onChange={e => {
                            let value = e.currentTarget.value;
                            if (isInputMode){
-                               if (this.props.onChange)
-                                   this.props.onChange(value as any);
+                               if (onChange)
+                                   onChange(value as any);
                                else
                                    this.props.value.SValue = value as any;
                            }
@@ -536,12 +536,17 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
                        }}
                        ////onDoubleClick={() => state.IsBusy.SValue = !state.IsBusy.SValue}
                        onKeyUp={(e) => this._onKeyUp(e)}
-                       // onKeyDown={(e) => this._onKeyDown(e)}
-                       //ref={_Textbox}
                        disabled={this._IsDisabled.SubState(isDisabled => isDisabled || ((!isInputMode && !isSearchEnabled) || state.IsBusy.SValue) , [state.IsBusy])}
                 />
-                <RouteLink route={this.RouteComboBoxOfferList} disabled={this._IsDisabled}>
-                    <div className="l-cb-drop-icon"/>
+                <RouteLink route={this.RouteComboBoxOfferList} disabled={Luff.State(true)}>
+                    <div className="l-cb-drop-icon"
+                         onClick={e => {
+                             if (this._IsDisabled.SValue)
+                                 return;
+                             this.RouteComboBoxOfferList.Toggle();
+                             e.stopPropagation();
+                         }}
+                    />
                 </RouteLink>
                 <ComboBoxOfferList comboBox={this}/>
             </div>
