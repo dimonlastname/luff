@@ -162,7 +162,10 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
                 <EditableContent Mode={this.Mode} isVisible={isEditMode}>
                     {this.RenderContent()}
                     <div className="l-edit l-edit-controls">
-                        <div className="l-edit l-edit-icon l-edit-proto l-edit-btn-save" title="Применить" onClick={() => this.Confirm()}/>
+                        <div className="l-edit l-edit-icon l-edit-proto l-edit-btn-save" title="Применить" onClick={(e) => {
+                            this.Confirm();
+                            e.stopPropagation();
+                        }}/>
                     </div>
                 </EditableContent>
 

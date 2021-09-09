@@ -113,3 +113,14 @@
     background-image: url(./img/icon-ok.png);
   }
 }
+
+.l-invert {
+  .l-edit-container {
+    .l-edit-controls {
+      .l-edit-btn-edit,
+      .l-icon-edit {
+        background-image: url(./img/icon-edit_white.png);
+      }
+    }
+  }
+}
