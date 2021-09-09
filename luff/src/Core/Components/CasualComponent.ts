@@ -316,9 +316,9 @@ class CasualComponent extends CasualMountingBase {
     private _GenerateEventListeners(){
         for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
             let fn = this._EventListeners[eventName];
+            const dom = this.DOM as HTMLInputElement;
 
             if (eventName == 'change' && this.Tag === 'input') {
-                const dom = this.DOM as HTMLInputElement;
                 if (this._AttributeByName['value']) {
                     if (dom.type === 'text') {
                         const onInput = (e: KeyboardEvent) => {
@@ -346,6 +346,7 @@ class CasualComponent extends CasualMountingBase {
 
             this.DOM.addEventListener(eventName, (e: Event) => {
                 fn.call(this.ParentComponent, e);
+                dom.value = this.props.value.SValue;
             });
         }
     }
