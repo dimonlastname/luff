@@ -5,6 +5,7 @@
   white-space: nowrap;
   background-color: var(--l-clr-nav-bg);
   color: #e1e1e1;
+  //color: var(--l-clr-text-default);
   opacity: 0;
   border-radius: 3px;
   //box-shadow: -3px 5px 10px rgba(0, 0, 0, 0.7);
@@ -45,6 +46,13 @@
       transform: rotate(45deg);
       top: -5px;
       left: 10px;
+    }
+  }
+  &.l-hint-error {
+    background-color: var(--l-clr-danger);
+    color: #fff;
+    &:before {
+      border-color: var(--l-clr-danger);
     }
   }
 }

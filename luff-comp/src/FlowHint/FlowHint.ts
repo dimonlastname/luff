@@ -4,7 +4,7 @@ import {DictN, LibraryDOM, TPositionObject} from "luff";
 enum HintDirection {
     BottomRight = 1, //'bottom-right'
 }
-
+type THintDirection = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 type HintRenderFn = (hintPack: THintPack) => HTMLElement;
 
 const MARGIN_X = 20;
@@ -39,12 +39,106 @@ type THintPack = {
     TimeoutToShow: number;
     TimeoutToHide: number;
 }
+
+type THintSimple = {
+    Text: string;
+    ClassName: string;
+    OnElement: HTMLElement;
+    TargetArea: HTMLElement;
+    Direction: THintDirection;
+    Margin: TPositionObject;
+    IsContainment: boolean;
+    Duration: number;
+}
+
+
 export class LuffHint {
     private readonly _HintDict: DictN<THintPack> = {};
     private _HintCounter: number = 1;
     private readonly _ListenToShowSafeContext: () => void; //save listener link here to add/remove listening
     Config: THintConfig;
 
+
+
+    static PopHint(hint: THintSimple) : void {
+        const dom = LuffHint.GetHintDefault(hint);
+        LuffHint.HideHintDefault(dom, hint);
+
+    }
+    static GetHintDefault(hint: THintSimple) {
+        const dom = LibraryDOM.CreateElementFromString(`<div class="l-flow-hint ${hint.ClassName}">${hint.Text}</div>`);
+        LuffHint.SetHintPosition(dom, hint);
+        dom.style.opacity = '1';
+        return dom;
+
+    }
+    static SetHintPosition(hintDom: HTMLElement, hint: THintSimple) {
+        const rect = hint.OnElement.getBoundingClientRect();
+        let rectContainment : DOMRect = hint.TargetArea.getBoundingClientRect();
+        if (!hintDom.isConnected)
+            hint.TargetArea.appendChild(hintDom);
+        const rectHint = hintDom.getBoundingClientRect();
+
+
+        let direction = hint.Direction;
+        const margin = hint.Margin;
+        if (hint.IsContainment){
+            let directions = direction.split('-');
+            if (rect.y + rect.height + rectHint.height + margin.y > rectContainment.y + rectContainment.height){
+                directions[0] = 'top';
+            }
+            else if (rect.y - rectHint.height - margin.y < rectContainment.y){
+                directions[0] = 'bottom';
+            }
+
+            if (rect.x + rect.width + rectHint.width + margin.x > rectContainment.x + rectContainment.width){
+                directions[1] = 'left';
+            }
+            if (rect.x - rectHint.width - margin.x < rectContainment.x){
+                directions[1] = 'right';
+            }
+            hintDom.classList.remove(direction);
+            direction = directions.join('-') as THintDirection;
+            hintDom.classList.add(direction);
+        }
+        const Pos = LuffHint.GetPos(direction, rect, rectHint, rectContainment, margin);
+        hintDom.style.left = Pos.x + 'px';
+        hintDom.style.top  = Pos.y + 'px';
+    }
+    static GetPos(direction: string, rect: DOMRect, rectHint: DOMRect, rectContainment: DOMRect, margin: TPositionObject){
+        console.log('GetPos');
+        let PosX = -rectContainment.x;
+        let PosY = -rectContainment.y;
+        if (direction === 'bottom-right'){
+            PosX += rect.x + rect.width + margin.x - MARGIN_X;
+            PosY += rect.y + rect.height + margin.y + MARGIN_Y;
+        }
+        else if (direction === 'bottom-left'){
+            PosX += rect.x - rectHint.width + MARGIN_X;
+            PosY += rect.y + rect.height + margin.y + MARGIN_Y;
+        }
+        else if (direction === 'top-right'){
+            PosX += rect.x /*+ rect.width*/ + margin.x - MARGIN_X;
+            PosY += rect.y - rectHint.height - margin.y - MARGIN_Y;
+        }
+        else if (direction === 'top-left'){
+            PosX += rect.x - rectHint.width - margin.x + MARGIN_X;
+            PosY += rect.y - rectHint.height - margin.y - MARGIN_Y;
+        }
+        return {
+            x: PosX,
+            y: PosY,
+        }
+    }
+    static HideHintDefault(hintDom: HTMLElement, hint: THintSimple) {
+        window.setTimeout(() => {
+            hintDom.style.opacity = '0';
+            const animDuration = LibraryDOM.GetDurationAnimation('l-flow-hint');
+            setTimeout(()=>{
+                hintDom.remove();
+            }, animDuration)
+        }, hint.Duration)
+    }
     RunListening() {
         this.Config.TargetArea.addEventListener('mouseover', this._ListenToShowSafeContext);
         return true;
@@ -88,28 +182,7 @@ export class LuffHint {
         }
     }
     _GetPos(direction: string, rect: DOMRect, rectHint: DOMRect, rectContainment: DOMRect){
-        let PosX = -rectContainment.x;
-        let PosY = -rectContainment.y;
-        if (direction === 'bottom-right'){
-            PosX += rect.x + rect.width + this.Config.Margin.x - MARGIN_X;
-            PosY += rect.y + rect.height + this.Config.Margin.y + MARGIN_Y;
-        }
-        else if (direction === 'bottom-left'){
-            PosX += rect.x - rectHint.width + MARGIN_X;
-            PosY += rect.y + rect.height + this.Config.Margin.y + MARGIN_Y;
-        }
-        else if (direction === 'top-right'){
-            PosX += rect.x + rect.width + this.Config.Margin.x - MARGIN_X;
-            PosY += rect.y - rectHint.height - this.Config.Margin.y - MARGIN_Y;
-        }
-        else if (direction === 'top-left'){
-            PosX += rect.x - rectHint.width - this.Config.Margin.x + MARGIN_X;
-            PosY += rect.y - rectHint.height - this.Config.Margin.y - MARGIN_Y;
-        }
-        return {
-            x: PosX,
-            y: PosY,
-        }
+        return LuffHint.GetPos(direction, rect, rectHint, rectContainment, this.Config.Margin);
     }
     _Show(hintPack: THintPack){
         if (!hintPack.Hint)
