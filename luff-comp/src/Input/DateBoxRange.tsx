@@ -1,7 +1,7 @@
 import Luff, {React, IObservableStateSimple, Culture} from "luff";
 import './TextBox.scss';
 import PeriodPicker from "../PeriodPicker/PeriodPicker";
-import InputBoxBase from "./_InputBoxBase";
+import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 
 type TProps = {
@@ -48,6 +48,40 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
         });
         //console.log('[Luff.DateBox] TODO DatePicker max min');
     }
+
+    public IsInputValidDefault() : TInputValidResult {
+        const { dateStart, dateFinish, min, max } = this.props;
+
+        if (!dateStart) {
+            return {
+                IsValid: false,
+                Message: 'Дата начала не указана'
+            }
+        }
+        if (!dateFinish) {
+            return {
+                IsValid: false,
+                Message: 'Дата конца не указана'
+            };
+        }
+        if (min !== void 0 && dateStart.SValue.valueOf() < min.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Дата начала меньше минимального значения'
+            };
+        }
+        if (max !== void 0 && dateFinish.SValue.valueOf() > max.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Дата конца больше максимального значения'
+            };
+        }
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
+
     Render(): any {
         let classState = this._IsDisabled.SubState(isDis => 'l-textbox' + this.props.className + (isDis ? '': ' l-pointer'));
         const formatFull = `${this.props.formatDate} ${this.props.formatTime}`;

@@ -1,7 +1,7 @@
 import Luff, {React, IObservableStateSimple} from "luff";
 
 import './TextBox.scss';
-import InputBoxBase from "./_InputBoxBase";
+import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 
 type TProps = {
@@ -23,7 +23,19 @@ export default class TextBoxRich extends InputBoxBase<TProps> {
         isPermissionWriteRequired: false,
     };
 
-
+    public IsInputValidDefault() : TInputValidResult {
+        const { value } = this.props;
+        if (value.SValue.trim().length == 0) {
+            return {
+                IsValid: false,
+                Message: 'Поле не может быть пустым',
+            }
+        }
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
     Render(): any {
         let keyUpFn;
         if (this.props.onKeyUp || this.props.onKeyEnter || this.props.onKeyEsc) {

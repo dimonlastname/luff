@@ -1,7 +1,7 @@
 import Luff, {React, IObservableStateSimple} from "luff";
 
 import './TextBox.scss';
-import InputBoxBase from "./_InputBoxBase";
+import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 
 type TProps = {
@@ -19,6 +19,10 @@ type TProps = {
     placeholder?: string;
     autocomplete?: string;
 }
+const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+function validateEmail(email) {
+    return regexEmail.test(String(email).toLowerCase());
+}
 
 export default class TextBox extends InputBoxBase<TProps> {
     DOM: HTMLInputElement;
@@ -34,6 +38,31 @@ export default class TextBox extends InputBoxBase<TProps> {
         placeholder: '',
         isPermissionWriteRequired: false,
     };
+    public IsInputValidDefault() : TInputValidResult {
+        const { type, value } = this.props;
+        if (type == TextBox.Type.Email && validateEmail(value.SValue.trim()) ) {
+            return {
+                IsValid: false,
+                Message: 'Формат электронной почты неверен'
+            };
+        }
+        // if (type == TextBox.Type.Text) {
+        //     return value.SValue.trim().length > 0;
+        // }
+        if (type == TextBox.Type.Phone) {
+
+        }
+        if (value.SValue.trim().length == 0) {
+            return {
+                IsValid: false,
+                Message: 'Поле не может быть пустым',
+            }
+        }
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
     Render(): any {
 
         let keyUpFn;

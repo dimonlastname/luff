@@ -1,10 +1,19 @@
 import {IContent, React, ComponentSimple, IObservableStateSimple} from "luff";
 import {IDisableSwitchable, initDisabled, TDisableSwitchableProps} from "./_DisableSwitchable";
 
-
+export type TInputValidResult = {
+    IsValid: boolean;
+    Message: string;
+}
 
 export default class InputBoxBase<TProps> extends ComponentSimple<TProps & TDisableSwitchableProps>  implements IDisableSwitchable<TDisableSwitchableProps> {
     protected Input: HTMLInputElement;
+    public IsInputValidDefault() : TInputValidResult {
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
     _IsDisabled: IObservableStateSimple<boolean>;
 
     protected BeforeBuild() : void {

@@ -26,11 +26,13 @@ import {EditableMini} from "./Editable/EditableMini";
 import {TimeBox} from "./Input/TimeBox";
 import {RangeSlider} from "./Input/RangeSlider/RangeSlider";
 import {SelectButtons} from "./Input/SelectButtons/SelectButtons";
+import {InputValidator} from "./Input/InputValidator";
 
 
 export {
     TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, DateBox, DateBoxRange, TimeBox, RangeSlider, SelectButtons,
     EditableText, EditableNumber, EditableSelect, EditableDate, EditableSpecial, EditableSpecialArr, EditableMini,
+    InputValidator,
 
     ButtonBusy,
     LuffChart, ChartDrawing,

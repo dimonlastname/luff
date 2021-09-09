@@ -1,7 +1,7 @@
 import Luff, {React, IObservableStateSimple, Culture, State} from "luff";
 import './TextBox.scss';
 import PeriodPicker from "../PeriodPicker/PeriodPicker";
-import InputBoxBase from "./_InputBoxBase";
+import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 
 type TProps = {
@@ -45,7 +45,27 @@ export default class DateBox extends InputBoxBase<TProps> {
     AfterBuild(): void {
         this.PeriodPicker = this.GetComponentByName('PeriodPicker');
     }
+    public IsInputValidDefault() : TInputValidResult {
+        const { value, min, max } = this.props;
+        const v = value.SValue;
 
+        if (min !== void 0 && v < min.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Дата меньше минимумального значения'
+            };
+        }
+        if (max !== void 0 && v > max.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Дата больше максимального значения'
+            };
+        }
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
 
     private GetMin() : Date {
         if (this.isMinState) {

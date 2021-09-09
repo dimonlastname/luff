@@ -1,7 +1,7 @@
 import Luff, {React, ComponentSimple, luffState, TContentCtor, IObservableStateSimple, State} from "luff";
 
 import './TextBox.scss';
-import InputBoxBase from "./_InputBoxBase";
+import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 
 
@@ -35,6 +35,28 @@ export default class NumBox extends InputBoxBase<TProps> {
         isPermissionWriteRequired: false,
         isHideInappropriateValue: true,
     };
+    public IsInputValidDefault() : TInputValidResult {
+        const { value, min, max } = this.props;
+        const v = value.SValue;
+
+        if (min !== void 0 && v < min.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Значение меньше минимума'
+            };
+        }
+        if (max !== void 0 && v > max.valueOf()) {
+            return {
+                IsValid: false,
+                Message: 'Значение больше максимума'
+            };
+        }
+        return {
+            IsValid: true,
+            Message: ''
+        };
+    }
+
     Render(): any {
         const isHideInappropriateValue = this.props.isHideInappropriateValue;
         const min = this.props.min;
