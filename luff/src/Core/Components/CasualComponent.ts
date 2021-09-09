@@ -341,12 +341,14 @@ class CasualComponent extends CasualMountingBase {
                     }
 
                 }
-                eventName = 'input';
+                this.DOM.addEventListener('input', (e: Event) => {
+                    fn.call(this.ParentComponent, e);
+                    dom.value = this.props.value.SValue;
+                });
+                continue
             }
-
             this.DOM.addEventListener(eventName, (e: Event) => {
                 fn.call(this.ParentComponent, e);
-                dom.value = this.props.value.SValue;
             });
         }
     }
