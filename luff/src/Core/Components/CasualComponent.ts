@@ -5,6 +5,7 @@ import {luffState, State} from "../State";
 import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
 import {ElementBase} from "./ElementBase";
+import {when} from "q";
 
 const eventNames = ["onabort", "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose",
     "oncontextmenu", "oncuechange", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover",
@@ -314,11 +315,47 @@ class CasualComponent extends CasualMountingBase {
         }
     }
     private _GenerateEventListeners(){
+        const dom = this.DOM as HTMLInputElement;
+        const tag = this.Tag;
+        const type = this._AttributeByName['type']?.Gen();
+        let resetValue : Function;
+        if (tag === 'input') {
+            switch (type) {
+                case 'radio':
+                case 'checkbox':
+                    resetValue = function () {
+                        dom.checked = this.props.checked.SValue;
+                    };
+                    break;
+                case 'text':
+                case 'number':
+                case 'password':
+                case 'email':
+                case 'tel':
+                case 'url':
+                case 'date':
+                case 'datetime-local':
+                case 'time':
+                case 'color':
+                case 'month':
+                case 'search':
+                case 'week':
+                    resetValue = function () {
+                        dom.value = this.props.value.SValue;
+                    };
+                    break;
+                default:
+                    resetValue = function () { };
+                    break;
+            }
+        }
+
         for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
             let fn = this._EventListeners[eventName];
-            const dom = this.DOM as HTMLInputElement;
 
-            if (eventName == 'change' && this.Tag === 'input') {
+
+            if (eventName == 'change' && tag === 'input') {
+
                 if (this._AttributeByName['value']) {
                     if (dom.type === 'text') {
                         const onInput = (e: KeyboardEvent) => {
@@ -343,7 +380,7 @@ class CasualComponent extends CasualMountingBase {
                 }
                 this.DOM.addEventListener('input', (e: Event) => {
                     fn.call(this.ParentComponent, e);
-                    dom.value = this.props.value.SValue;
+                    resetValue.call(this);
                 });
                 continue
             }
