@@ -57,6 +57,12 @@ export class ComponentFactory {
                 Children: renderElement.Children
             });
         }
+        else if (renderElement instanceof ElementBase) {
+            renderElement.ParentComponent = parentComponent;
+            renderElement.ParentElement = parentElement;
+            renderElement._InitializeComponent();
+            return renderElement;
+        }
         else if (renderElement.Tag === void 0) { //fragment
             element = new CasualFragmentComponent({
                 ParentElement: parentElement,
