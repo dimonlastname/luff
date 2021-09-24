@@ -25,6 +25,7 @@ export class DialogTools {
             HasWrapper: true,
             HasWrapperBG: true,
             HasWrapperHandle: true,
+            WrapperClassCSS: '',
             IsHideOnOutsideClick: false,
             IsGlobal: false,
             OnOutsideClick: null,
@@ -55,6 +56,7 @@ export class DialogTools {
         let wrapped = document.createElement('div');
 
         wrapped.classList.add('l-dialog-wrapper');
+        wrapped.classList.add(...dialogParams.WrapperClassCSS.split(' '));
         if (dialogParams.IsGlobal) {
             wrapped.classList.add('l-global');
         }

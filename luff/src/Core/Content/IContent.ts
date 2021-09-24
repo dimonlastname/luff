@@ -111,6 +111,7 @@ namespace ContentTypes {
         HasWrapperBG?: boolean;
         HasWrapperHandle?: boolean;
         IsHideOnOutsideClick?: boolean,
+        WrapperClassCSS?: string;
         //IsInsideParent?: boolean;
         IsGlobal?: boolean;
         OnWrapperClick?: (e: MouseEvent) => void; //TODO: Luff.MouseEvent
