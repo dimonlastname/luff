@@ -306,7 +306,7 @@ export class State<T = any> {
         return this.__SValue;
     }
     set _SValue(value: any) {
-        if (value != this.__SValue || typeof value === "object") {
+        if (value !== this.__SValue || typeof value === "object") {
             this._Update(value);
         }
     }
