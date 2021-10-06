@@ -100,7 +100,7 @@ class CasualComponent extends CasualMountingBase {
 
         let att = this._AttributeByName[attName];
         let attVal = att.Gen();
-        if (att.LastVal != attVal) {
+        if (att.LastVal !== attVal) {
             att.LastVal = attVal;
             this._SetAttribute(attName, attributeType, attVal);
         }
