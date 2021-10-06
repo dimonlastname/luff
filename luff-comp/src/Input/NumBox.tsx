@@ -62,7 +62,7 @@ export default class NumBox extends InputBoxBase<TProps> {
         const min = this.props.min;
         const max = this.props.max;
 
-        let valueView : any = this.props.value;
+        let valueView : IObservableStateSimple<number | string> = this.props.value;
         if (isHideInappropriateValue) {
             const isMinState = min instanceof State;
             const isMaxState = max instanceof State;
