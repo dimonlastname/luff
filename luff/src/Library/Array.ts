@@ -1,3 +1,5 @@
+import {when} from "q";
+
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 function sortComparer<T>(a: T, b: T, fieldName: keyof T) {
 
@@ -41,5 +43,23 @@ export namespace LibraryArray {
 
     export function SortByField<T>(list: T[], fieldName: keyof T) : T[]  {
         return list.sort((a, b) => sortComparer(a, b, fieldName));
+    }
+    export function FlattenObjects<T, U>(arr: T[], flatFn: (item: T) => U, subKey: keyof T) : U[] {
+        return arr.reduce((resultArr, obj) => {
+            return resultArr
+                .concat((obj[subKey] as any)
+                .map(flatFn));
+        }, arr.map(flatFn));
+
+    }
+    //experimental
+    export function IsExistsInTree<T>(tree: T[], subKey: (keyof T), searchFn: (item: T) => boolean) : boolean {
+        for (let item of tree) {
+            if (searchFn(item))
+                return true;
+            if (IsExistsInTree(item[subKey] as any as T[], subKey, searchFn))
+                return true;
+        }
+        return false;
     }
 }
