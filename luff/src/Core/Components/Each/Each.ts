@@ -308,6 +308,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             if (existsItem) {
                 existsItem.Index.SValue = index;
                 index++;
+                this._HideItem(existsItem.Component); //to force mount element //fixme
                 this._ShowItem(existsItem.Component);
                 // this._InsertHTML(existsItem.Component.DOM);
                 // if (this.ParentElement.DOM.isConnected)
