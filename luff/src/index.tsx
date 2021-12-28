@@ -49,6 +49,7 @@ import {FilePicker} from "./Library/other";
 import {luffConfirm, luffConfirmPromise} from "./Library/Confirm/Confirm";
 import {IFilterMan} from "./Core/Components/Each/FilterManager";
 import {ISortMan} from "./Core/Components/Each/EachSorter";
+import {LibraryTree} from "./Library/Tree";
 
 type Booleanish = boolean | 'true' | 'false';
 
@@ -75,6 +76,7 @@ namespace Luff  {
     export type Date = LuffDate;
     export const Linq = luffLinq;
     export const Array = LibraryArray;
+    export const Tree = LibraryTree;
     export const DOM = LibraryDOM;
     export const String = LibraryString;
     export const Blob = LibraryBlob;
@@ -1587,7 +1589,7 @@ export {React, luffState, luffStateArr, TContentCtor,
     _ComponentSimple as ComponentSimple,
     _Application as Application,
     Route, RouteLink, Each, EachPaging, ISortMan, IFilterMan,
-    luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,
+    luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryTree, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,
     FilePicker,
 
     _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, Dict, DictN,

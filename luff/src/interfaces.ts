@@ -82,6 +82,7 @@ type IObservableStateSingleObject<T> = {
 export type IObservableStateSimple<T> = {
     SValue: T;
     //SValue: (T extends ExcludeProps<[T]> ? Readonly<T> : T);
+    //SubStateCommon<U>(render: (value: T) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<U>);
     SubState<U>(render: (value: T) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableState<U>;
     SubStateArr<U>(render: (value: T) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableStateArray<U>;
     readonly SProperty: string;
@@ -93,6 +94,7 @@ export type IObservableStateArray<T> = {
     readonly [Key: number]: (IObservableStateAny<T>);
     SValue: T[];
     //SValue: ReadonlyArray<T>;
+    //SubStateCommon<U>(render: (value: T[]) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<U>);
     SubState<U>(render: (value: T[]) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableState<U>;
     SubStateArr<U>(render: (value: T[]) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableStateArray<U>;
 
