@@ -506,8 +506,19 @@ export class ChartContentGraph extends BChartContent{
             let OrderMax = LibraryNumber.GetNumberOrder(Scale.Max);
             if (Step === 'auto'){
                 let dy = Scale.Max - Scale.Min;
+                //let OrderMax = LibraryNumber.GetNumberOrder(dy);
                 let Rounder = 5 * Math.pow(10, OrderMax-2);
+                if (Rounder >= dy) {
+                    let order = OrderMax - 3;
+                    Rounder = 5 * Math.pow(10, order);
+                    while (Rounder > dy) {
+                        Rounder = 5 * Math.pow(10, order);
+                        order--;
+                    }
+                }
                 Step = LibraryNumber.RoundBy( dy * MagicConst/Height, Rounder);
+                Scale.Max = LibraryNumber.RoundBy( Scale.Max, Rounder, 'ceil');
+                Scale.Min = LibraryNumber.RoundBy( Scale.Min, Rounder, 'floor');
             }
 
             if (Scale._Min === 'auto' && OrderMax > -1 && Scale.Min % 5 > 0){
