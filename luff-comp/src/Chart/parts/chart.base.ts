@@ -222,6 +222,7 @@ export class BChartContent {
         this.Refresh();
     }
     //_ToolTipTimeout : number;
+    protected _ToolTipShowTimeout : number;
     OnChartMouseMove(e): void {};
     // OnChartMouseMove(e) : void  {
     //     clearTimeout(this._ToolTipTimeout);
@@ -247,8 +248,9 @@ export class BChartContent {
     //     }, 50)
     //
     // }
-    OnChartMouseEnter(){
+    OnChartMouseEnter(e){
         this.Tooltip.Reset();
+        this.OnChartMouseMove(e);
     }
     OnChartMouseLeave(){
         this.Tooltip.Close();
@@ -278,13 +280,17 @@ export class BChartContent {
             this.HookChart.addEventListener('mousemove',  this.OnChartMouseMove.bind(this));
             this.HookChart.addEventListener('mouseenter', this.OnChartMouseEnter.bind(this));
             this.HookChart.addEventListener('mouseleave', this.OnChartMouseLeave.bind(this));
+            this.ChartTooltip.addEventListener('mouseleave', this.OnChartMouseLeave.bind(this));
+            //this.HookChart.addEventListener('mouseout', this.OnChartMouseLeave.bind(this));
             this.Tooltip = {
                 Timer: null,
                 Format: this.Options.Tooltip.Format,
                 Hide: () => {
                     LibraryDOM.AsyncToggle(null, null, this.ChartTooltip, ()=>{},()=>{
                         this.ChartTooltip.style.display = 'none';
-                    }, 'l-appear', 'l-disappear', 200, this.Tooltip.Timer)
+                    }, 'l-appear', 'l-disappear', 200, this.Tooltip.Timer);
+                    this.Tooltip.Timer = null;
+                    this.Options.Tooltip.Episode = null;
                 },
                 Show: () => {
                     LibraryDOM.AsyncToggle(null, null, this.ChartTooltip, ()=>{
@@ -298,9 +304,8 @@ export class BChartContent {
                 Close: () => {
                     clearTimeout(this.Tooltip.Timer);
                     this.Tooltip.Timer = setTimeout(() => {
+                        clearTimeout(this._ToolTipShowTimeout);
                         this.Tooltip.Hide();
-                        this.Tooltip.Timer = null;
-                        this.Options.Tooltip.Episode = null;
                     }, this.Options.Tooltip.Timeout);
                 },
                 Refresh: () => {

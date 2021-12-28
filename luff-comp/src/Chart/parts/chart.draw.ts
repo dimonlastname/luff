@@ -286,43 +286,47 @@ export class ChartContentDraw extends BChartContent {
         }
         this.Refresh({Animation: false});
     }
-    _ToolTipTimeout : number;
+
     OnChartMouseMove(e){
-        clearTimeout(this._ToolTipTimeout);
-        this._ToolTipTimeout = window.setTimeout(() => {
-            //console.log(`e.target.tagName ${e.target.tagName}`);
-            if (e.target.tagName.toLowerCase() !== 'path')
-                return false;
-            let i = e.target.dataset["line"];
-            let j = e.target.dataset["sector"];
-            this.Options.Tooltip.Episode = this.Options.Draws[i];
-            this.Options.Svg.Rect = this.HookChart.getBoundingClientRect();
-            if (!this.Options.Tooltip.Episode)
-                return;
-            let x = e.clientX - this.Options.Svg.Rect.left;
-            let y = e.clientY - this.Options.Svg.Rect.top;
+        //this.Tooltip.Close();
+        window.clearTimeout(this._ToolTipShowTimeout);
+        this._ToolTipShowTimeout = window.setTimeout(() => {
 
-            let EpisodeNum = e.target.dataset['line'];
-            let ValueNum = e.target.dataset['item'];
-
-            this.Tooltip.Tip =  {
-                Name:  this.Options.Tooltip.Episode.Labels.Data[j],
-                Label: this.Options.Tooltip.Episode.Labels.Data[j],
-                Color: this.Options.Tooltip.Episode.Colors[j],
-                ValueX: this.Options.Tooltip.Episode.Labels.Data[j],
-                ValueY: this.Options.Tooltip.Episode.Data[j],
-                Value:  this.Options.Tooltip.Episode.Data[j],
-                Episode: this.Options.Tooltip.Episode,
-                x: x,
-                y: y,
-                SvgWidth: this.HookChart.clientWidth,
-                SvgHeight: this.HookChart.clientHeight,
-                EpisodeNum,
-                ValueNum,
-            };
-            //console.log(`e.pageX:${e.pageX}, e.clientX: ${e.clientX}`, e);
-            this.Tooltip.Refresh();
         }, 50);
+        //console.log(`e.target.tagName ${e.target.tagName}`);
+        if (e.target.tagName.toLowerCase() !== 'path')
+            return false;
+        let i = e.target.dataset["line"];
+        let j = e.target.dataset["sector"];
+        this.Options.Tooltip.Episode = this.Options.Draws[i];
+        this.Options.Svg.Rect = this.HookChart.getBoundingClientRect();
+        if (!this.Options.Tooltip.Episode)
+            return false;
+        // let x = e.clientX - this.Options.Svg.Rect.left;
+        // let y = e.clientY - this.Options.Svg.Rect.top;
+        let x = e.offsetX;
+        let y = e.offsetY;
+
+        let EpisodeNum = e.target.dataset['line'];
+        let ValueNum = e.target.dataset['item'];
+
+        this.Tooltip.Tip =  {
+            Name:  this.Options.Tooltip.Episode.Labels.Data[j],
+            Label: this.Options.Tooltip.Episode.Labels.Data[j],
+            Color: this.Options.Tooltip.Episode.Colors[j],
+            ValueX: this.Options.Tooltip.Episode.Labels.Data[j],
+            ValueY: this.Options.Tooltip.Episode.Data[j],
+            Value:  this.Options.Tooltip.Episode.Data[j],
+            Episode: this.Options.Tooltip.Episode,
+            x: x,
+            y: y,
+            SvgWidth: this.HookChart.clientWidth,
+            SvgHeight: this.HookChart.clientHeight,
+            EpisodeNum,
+            ValueNum,
+        };
+        //console.log(`e.pageX:${e.pageX}, e.clientX: ${e.clientX}`, e);
+        this.Tooltip.Refresh();
 
     }
 
