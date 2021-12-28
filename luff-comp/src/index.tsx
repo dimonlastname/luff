@@ -1,4 +1,5 @@
 import ComboBox from "./Input/ComboBox/ComboBox";
+import ComboBoxTree from "./Input/ComboBoxTree/ComboBoxTree";
 import RadioButton from "./Input/Radio/Radio";
 import ButtonBusy from "./ButtonBusy/ButtonBusy";
 import LuffChart from "./Chart/Chart";
@@ -29,8 +30,9 @@ import {SelectButtons} from "./Input/SelectButtons/SelectButtons";
 import {InputValidator} from "./Input/InputValidator";
 
 
+
 export {
-    TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, DateBox, DateBoxRange, TimeBox, RangeSlider, SelectButtons,
+    TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, ComboBoxTree, DateBox, DateBoxRange, TimeBox, RangeSlider, SelectButtons,
     EditableText, EditableNumber, EditableSelect, EditableDate, EditableSpecial, EditableSpecialArr, EditableMini,
     InputValidator,
 
