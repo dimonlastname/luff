@@ -26,7 +26,7 @@ type TComboBoxProps<TDataItem, TValue> = {
     dataDelegateValue?: (val: TDataItem, i?: number) => TValue;
     dataDelegateView?: (val: TDataItem, i?: number) => string;
 
-    dataRender?: (val: TDataItem, comboBox?: ComboBox) => Luff.Node;
+    dataRender?: (val: IObservableState<TDataItem>, comboBox?: ComboBox) => Luff.Node;
 
     onChange?: (val?: TValue, item?: TDataItem, valView?: string) => void;
     onChangeAsync?: (val?: TValue, item?: TDataItem, valView?: string) => Promise<any>;
@@ -39,6 +39,8 @@ type TComboBoxProps<TDataItem, TValue> = {
 
     isSearchEnabled?: boolean;                       //default: true.
     searchDelegate?: (val: string) => boolean;
+    searchSuggestionDataAsync?: (val: string) => Promise<TDataItem[]>;
+    searchSuggestionDataAsyncDelay?: number;
     //IsInputMode?: boolean;                           //default: false.  if enabled works like <input>
     //IsAllowEmpty?: boolean;                          //default: true. If true - sets null or ValueOnNull when IsSearchEnabled and value item is not found
     //IsDirectInput?: boolean;                         ///default: false. if IsInputMode and IsDirectInput, owher state will be updated on keyUp
@@ -65,13 +67,13 @@ type TComboBoxProps<TDataItem, TValue> = {
     //OnInput?(value: string) : void;                  //callback keyup when IsInputMode
     //OnSetValue?: (value: any, text: string, originalItem: any) => void;   //callback function when set .Value
 }
-type TComboBoxState = {
+type TComboBoxState<T> = {
     textBoxValue: string;
-    offerData: TComboBoxOfferItem[];
+    offerData: TComboBoxOfferItem<T>[];
     //offerDataInList: TComboBoxOfferItem[];
     isOfferListVisible: boolean;
 }
-type TComboBoxOfferItem<T = any> = {
+export type TComboBoxOfferItem<T> = {
     Original: T;
     View: string;
     Value: any;
@@ -99,7 +101,7 @@ type TState<T> = {
     TextBoxValue: string;
     TextBoxValueSearch: string;
     //offerData: TComboBoxOfferItem[];
-    OfferDataFiltered: TComboBoxOfferItem[];
+    OfferDataFiltered: TComboBoxOfferItem<T>[];
 
 }
 
@@ -119,6 +121,7 @@ const defaultProps = {
     isSearchEnabled: false,
     listVisibleLinesCount: 5,
     isPermissionWriteRequired: false,
+    searchSuggestionDataAsyncDelay: 1000,
     //searchDelegate: (item: TComboBoxOfferItem, search: string) => false,
 
 
@@ -148,19 +151,20 @@ const defaultProps = {
 };
 
 
-class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxProps<TDataItem, TValue> & TDisableSwitchableProps, TState<TDataItem>> implements IDisableSwitchable<TDisableSwitchableProps> {
+class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends Luff.Content<TComboBoxProps<TDataItem, TValue> & TDisableSwitchableProps & TExtraProps, TState<TDataItem>> implements IDisableSwitchable<TDisableSwitchableProps> {
     static defaultProps = defaultProps;
-    _offerData: TComboBoxOfferItem[];
+    _offerData: TComboBoxOfferItem<TDataItem>[];
 
-    _ListComponent : ComboBoxOfferList;
+    _ListComponent : ComboBoxOfferList<TDataItem>;
     _TextBox: HTMLInputElement;
     RouteComboBoxOfferList = new Route({DoNotUseRouter: true});
 
     //private _IsOpen = Luff.State(false);
+    private SearchSuggestionDataAsyncTimeout: number; //window.setTimeout
 
     protected AfterBuild(): void {
         this._TextBox = this.GetComponentByName('l-cbx-textbox').DOM as HTMLInputElement;
-        this._ListComponent = this.GetComponentByName<ComboBoxOfferList>('ComboBoxOfferList');
+        this._ListComponent = this.GetComponentByName<ComboBoxOfferList<TDataItem>>('ComboBoxOfferList');
         if (this.props.data) {
             this.props.data.AddOnChange(() => {
                // console.log('[ComboBox] data changed', newVal);
@@ -232,14 +236,14 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         }
     }
 
-    _PrepareData(data: TDataItem[]): TComboBoxOfferItem[] {
+    _PrepareData(data: TDataItem[]): TComboBoxOfferItem<TDataItem>[] {
         let prepared = [];
         //let data = dataState;
         for (let i = 0; i < data.length; i++){
             let d = data[i];
             let val = this.props.dataDelegateValue(d, i);
             let view = this.props.dataDelegateView(d, i);
-            let item: TComboBoxOfferItem = {
+            let item: TComboBoxOfferItem<TDataItem> = {
                 Original: d,
                 Value: val,
                 View:  String(view),
@@ -270,7 +274,7 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         return foundIndex > -1;
     }
 
-    _OnOfferClick(offerItem: TComboBoxOfferItem){
+    _OnOfferClick(offerItem: TComboBoxOfferItem<TDataItem>){
 
         this.State.SValue = {
             ...this.State.SValue,
@@ -299,7 +303,7 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         }
 
     }
-    _CursorItem(item: IObservableState<TComboBoxOfferItem>) : void {
+    _CursorItem(item: IObservableState<TComboBoxOfferItem<TDataItem>>) : void {
         if (!item) {
             this.State.CursorItem.SValue = null;
             return;
@@ -408,7 +412,10 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
         if (e.key == 'Tab')
             return;
 
-        if (this.props.isSearchEnabled) {
+        const text = this.State.TextBoxValue.SValue;
+
+        if (this.props.isSearchEnabled && !this.props.searchSuggestionDataAsync) {
+            console.log('casual search');
             if (!this._ListComponent._IsShown) {
                 this._ListComponent.Show();
                 //this.State.IsOfferListVisible.SValue = true;
@@ -428,6 +435,30 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
                         return this._DefaultSearch(x);
                     })
             }
+        }
+        if (this.props.isSearchEnabled && this.props.searchSuggestionDataAsync) {
+            window.clearTimeout(this.SearchSuggestionDataAsyncTimeout);
+            this.SearchSuggestionDataAsyncTimeout = window.setTimeout(() => {
+                this.props.searchSuggestionDataAsync(text)
+                    .then(data => {
+                        this._offerData = this._PrepareData(data);
+                        this.State.OfferDataFiltered.SValue = this._offerData;
+                        const item = this._offerData[0];
+                        if (item) {
+                            this.State.SValue = {
+                                ...this.State.SValue,
+                                OfferDataFiltered: this._offerData,
+                                //SelectedItem: item,
+                                CursorItem: item,
+                            };
+                        }
+                        else {
+                            this.State.OfferDataFiltered.SValue = this._offerData;
+                        }
+                    })
+            }, this.props.searchSuggestionDataAsyncDelay);
+
+
         }
 
 
@@ -530,7 +561,7 @@ class ComboBox<TDataItem = any, TValue = number> extends Luff.Content<TComboBoxP
                                    this.props.value.SValue = value as any;
                            }
                            state.TextBoxValue.SValue = value;
-                           if (isSearchEnabled) {
+                           if (isSearchEnabled && !this.props.searchSuggestionDataAsync) {
                                state.TextBoxValueSearch.SValue = value;
                            }
                        }}
@@ -600,7 +631,7 @@ type TComboBoxOfferListProps = {
 
 }
 
-class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any>> {
+class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps, TState<any>> {
     Top: number;
     EachItems: Each;
     public ListContainer: HTMLElement;
@@ -617,7 +648,7 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
         this.ListContainer = this.GetComponentByName('offerListContainer').DOM;
     }
 
-    public GetDOMOfItem(itemState: IObservableState<TComboBoxOfferItem>) : HTMLElement {
+    public GetDOMOfItem(itemState: IObservableState<TComboBoxOfferItem<TDataItem>>) : HTMLElement {
         return this.EachItems.GetDOMByItemState(itemState as any)
     }
     private OnScroll: any;
@@ -693,7 +724,6 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
                         deps={[cbx.State.TextBoxValueSearch]}
                         renderOnEmpty={() => <div className="l-cb-offer-empty">{cbx.props.listEmptyText}</div>}
                         render={(x, i) => {
-
                             const styleState = state.SelectedItem.SubState(selectedItem => {
                                 const isSelected = selectedItem === x.SValue;
                                 const isCursored = state.CursorItem.SValue === x.SValue;
@@ -713,7 +743,7 @@ class ComboBoxOfferList extends Luff.Content<TComboBoxOfferListProps, TState<any
                                     {
                                         render
                                         &&
-                                        render(x.Original, this.props.comboBox)
+                                        render(x.Original as IObservableState<TDataItem>, this.props.comboBox)
                                     }
                                     {
                                         !render
