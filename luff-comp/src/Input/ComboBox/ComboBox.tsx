@@ -663,7 +663,7 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
         const rect = container.getBoundingClientRect();
         if (window.innerHeight < rect.top + rect.height + window.scrollY + 1) {
             //container.style.bottom = '100%';
-            container.style.top = this.Top - rect.height - 1 + 'px';
+            this.DOM.style.top = this.Top - rect.height - 1 + 'px';
         }
         //this.AfterShow = () => {};
 
