@@ -86,9 +86,9 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     private _SortDelegate: (a: TIterationItem, b: TIterationItem) => number;
     private _Sorted: boolean = false;
 
-    private _RenderedKeys: number[];
-    private _SortedKeys: number[];
-    private _FilteredKeys: number[];
+    private _RenderedKeys: number[] = [];
+    private _SortedKeys: number[] = [];
+    private _FilteredKeys: number[] = [];
 
     private _FilterDelegate: (v: TIterationItem, index: number) => boolean;
 
@@ -254,7 +254,6 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             this._EachPaging.Paging.Count.SValue = itemsCount;
             let skip = this._EachPaging.Paging.Skip.SValue;
             let take = this._EachPaging.Paging.Take.SValue;
-            let shown = this._EachPaging.Paging.Shown.SValue;
 
 
             if (skip > itemsCount) {
@@ -268,12 +267,6 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 this._EachPaging.Paging.Skip.SValue = skip;
                 this._EachPaging._IsPagingRefreshLocked = false;// fixes double refresh;
             }
-            // if (take > itemsCount) {
-            //     this._EachPaging._IsPagingRefreshLocked = true; // fixes double refresh;
-            //     this._EachPaging.Paging.Shown.SValue = take > itemsCount ? itemsCount : take;
-            //     this._EachPaging._IsPagingRefreshLocked = false;// fixes double refresh;
-            // }
-            this._EachPaging.Paging.Shown.SValue = take > itemsCount ? itemsCount : take;
             keys = keys.slice(skip, skip + take);
         }
         this._RenderedKeys = keys;

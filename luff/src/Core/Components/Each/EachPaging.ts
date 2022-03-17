@@ -2,14 +2,11 @@ import {IObservableState} from "../../../interfaces";
 import {luffState} from "../../State";
 import {TPaging} from "./Each";
 
-type TPagingShown = {
-    Shown: number
-}
 
 export default class EachPaging {
     _IsPagingRefreshLocked = false;
 
-    Paging: IObservableState<TPaging & TPagingShown>;
+    Paging: IObservableState<TPaging>;
 
     public PrevPage() {
         if (this.Paging.Skip.SValue <= this.Paging.Take.SValue)
@@ -29,10 +26,7 @@ export default class EachPaging {
     }
 
     constructor(paging: TPaging) {
-        this.Paging = luffState({
-            ...paging,
-            Shown: paging.Take,
-        });
+        this.Paging = luffState(paging);
         // this._TakePrevious = this.Paging.Take.SValue;
         // this.Paging.Take.AddOnChange(take => {
         //     this._TakePrevious = take;
