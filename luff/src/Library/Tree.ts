@@ -25,17 +25,38 @@ export namespace LibraryTree {
         }
         return res;
     }
-    export function Filter<T, U>(tree: T[], subKey: (keyof T), predicate: (item: T) => boolean) : T[] {
+    export function Filter<T, U>(tree: T[], subKey: (keyof T), predicate: (item: T) => boolean, isDropBranch: boolean = false) : T[] {
         let res = [];
         for (let item of tree) {
             let newItem;
-            if (predicate(item)) {
+            const isPassed = predicate(item);
+            if (isPassed) {
                 newItem = {...item};
                 newItem[subKey] = Filter(newItem[subKey], subKey, predicate);
                 res.push(newItem);
             }
+            else if (!isPassed && isDropBranch) {
+                //res.push(...Filter(item[subKey] as any, subKey, predicate));
+            }
+            else if (!isPassed && !isDropBranch) {
+                res.push(...Filter(item[subKey] as any, subKey, predicate));
+            }
         }
         return res;
+    }
+    export function Find<T, U>(tree: T[], subKey: (keyof T), predicate: (item: T) => boolean) : T {
+        for (let item of tree) {
+            if (predicate(item)) {
+                return item;
+            }
+            else {
+                let found = Find(item[subKey] as any, subKey, predicate);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
     export function ForEach<T, U>(tree: T[], subKey: (keyof T), action: (item: T) => void) : T[] {
         let res = [];
