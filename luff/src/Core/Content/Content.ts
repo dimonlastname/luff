@@ -77,7 +77,7 @@ class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> im
     get IsVisible() : boolean {
         let p : IElement = this;
         while (p) {
-            if (!p._IsVisible)
+            if (!p._IsShown)
                 return false;
             p = p.ParentElement;
         }
