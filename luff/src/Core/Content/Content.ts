@@ -744,7 +744,9 @@ class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> im
     }
     _InitializeComponent(props?: TProps) {
         const ctor = this._RawContent;
-
+        if (!this.HasPermission) { //dropped by permission attribute (ElementBase)
+            return;
+        }
         this._Permission = new PermissionManager(ctor.Permission, this);
         this.HasPermission = this._Permission.IsAllow;
         if (!this.HasPermission) {
