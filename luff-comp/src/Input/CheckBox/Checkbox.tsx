@@ -1,32 +1,36 @@
 import './Checkbox.scss';
-import Luff, {React, IObservableStateSimple, TContentCtor} from "luff"
+import Luff, {React, IObservableStateSimple, TContentCtor, IObservableStateSimpleOrValue} from "luff"
+import {IDisableSwitchable, initDisabled, TDisableSwitchableProps} from "../_DisableSwitchable";
 
 type CheckBoxProps = {
     checked?: IObservableStateSimple<boolean>;
-    disabled?: IObservableStateSimple<boolean>;
-    indeterminate?: IObservableStateSimple<boolean>;
-
 
     onChange?: (val?: boolean) => void;
     onChangeAsync?: (val?: boolean) => Promise<number>;
     checkBoxGroup?: string;
     className?: string;
     style?: Luff.AttributeStyleType<string>;
-}
+
+} & TDisableSwitchableProps
 
 type TState = {
     IsChecked: boolean;
-    IsDisabled: boolean;
+    //IsDisabled: boolean;
     IsIndeterminate: boolean;
 }
 
-export default class CheckBox extends Luff.Content<CheckBoxProps, TState> {
+export default class CheckBox extends Luff.Content<CheckBoxProps, TState> implements IDisableSwitchable<CheckBoxProps> {
     static defaultProps = {
         className: '',
         checked: false,
         disabled: false,
         indeterminate: false,
+        isPermissionWriteRequired: false,
     };
+
+    _IsDisabled: IObservableStateSimple<boolean>;
+
+
 
     get IsChecked() : boolean {
         return this.State.IsChecked.SValue;
@@ -34,17 +38,21 @@ export default class CheckBox extends Luff.Content<CheckBoxProps, TState> {
     set IsChecked(val: boolean) {
         this.State.IsChecked.SValue = val;
     }
+    // get IsDisabled() : boolean {
+    //     return this.State.IsDisabled.SValue;
+    // }
+    // set IsDisabled(val: boolean) {
+    //     this.State.IsDisabled.SValue = val;
+    // }
     get IsDisabled() : boolean {
-        return this.State.IsDisabled.SValue;
+        return this._IsDisabled.SValue;
     }
     set IsDisabled(val: boolean) {
-        this.State.IsDisabled.SValue = val;
+        this._IsDisabled.SValue = val;
     }
-    get IsIndeterminate() : boolean {
-        return this.State.IsIndeterminate.SValue;
-    }
-    set IsIndeterminate(val: boolean) {
-        this.State.IsIndeterminate.SValue = val;
+
+    protected BeforeBuild(): void {
+        initDisabled(this);
     }
 
     Render(): Luff.Node {
@@ -71,8 +79,8 @@ export default class CheckBox extends Luff.Content<CheckBoxProps, TState> {
                            this.State.IsChecked.SValue = isChecked;
                        }}
                        checked={this.State.IsChecked}
-                       disabled={this.State.IsDisabled}
-                       indeterminate={this.State.IsIndeterminate}
+                       disabled={this._IsDisabled}
+                       indeterminate={this.State.IsChecked.SubState(isChecked => isChecked === void 0 || isChecked === null)}
                 />
                 <label
                     for={"l-checkbox-id-" + this._ID}
@@ -84,13 +92,10 @@ export default class CheckBox extends Luff.Content<CheckBoxProps, TState> {
 
     }
     Ctor(): TContentCtor {
-
         return {
-
             State: {
                 IsChecked: this.props.checked,
                 IsDisabled: this.props.disabled,
-                IsIndeterminate: this.props.indeterminate,
             }
         }
     }
