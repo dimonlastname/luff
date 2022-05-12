@@ -357,7 +357,7 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
                 if (permissionName) {
                     const permission = rawComponent.ParentComponent.Permission;
                     this.HasPermission =  permissionName !== PERMISSION_NAME_WRITE ? permission.IsAllowByRule(permissionName) : permission.IsAllowWrite;
-                    if (!this.HasPermission)
+                    if (!this.HasPermission && !((this.Tag as any) instanceof Function))
                         return;
                     //console.log('permissionName', permissionName, hasRule, rawComponent);
                     delete rawComponent.Attributes['permission'];
