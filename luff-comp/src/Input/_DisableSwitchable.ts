@@ -1,4 +1,4 @@
-import {IContent, IObservableStateSimple, luffState} from "luff";
+import {IContent, IObservableStateSimple, IObservableStateSimpleOrValue, luffState} from "luff";
 
 export interface IDisableSwitchable<TProps> {
     _IsDisabled: IObservableStateSimple<boolean>;
@@ -6,7 +6,7 @@ export interface IDisableSwitchable<TProps> {
     ParentComponent: IContent;
 }
 export type TDisableSwitchableProps = {
-    disabled?: boolean | IObservableStateSimple<boolean>;
+    disabled?: IObservableStateSimpleOrValue<boolean>;
     isPermissionWriteRequired?: boolean;
 }
 
