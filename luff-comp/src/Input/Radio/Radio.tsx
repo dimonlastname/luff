@@ -1,5 +1,13 @@
 import './Radio.scss';
-import Luff, {React, TContentCtor, IObservableStateSimple, IObservableState, State} from "luff";
+import Luff, {
+    React,
+    TContentCtor,
+    IObservableStateSimple,
+    IObservableState,
+    State,
+    IObservableStateSimpleOrValue
+} from "luff";
+import {IDisableSwitchable, initDisabled, TDisableSwitchableProps} from "../_DisableSwitchable";
 
 type TRadioButtonClick<T> = (e: Luff.MouseEvent<HTMLLabelElement>, radio?: RadioButton<T>) => void;
 type RadioProps<T> = {
@@ -8,18 +16,17 @@ type RadioProps<T> = {
     radioGroup?: string;
 
 
-    disabled?: IObservableStateSimple<boolean>;
     indeterminate?: IObservableStateSimple<boolean>;
     onChange?: (val?: T) => void;
     onClick?: TRadioButtonClick<T>;
     className?: string;
-}
+} & TDisableSwitchableProps
 
 
 
 
 
-export default class RadioButton<T> extends Luff.Content<RadioProps<T>> {
+export default class RadioButton<T> extends Luff.Content<RadioProps<T>> implements IDisableSwitchable<RadioProps<T>> {
     static defaultProps = {
         className: '',
         state: Luff.State(-1),
@@ -41,7 +48,7 @@ export default class RadioButton<T> extends Luff.Content<RadioProps<T>> {
     private _IsChecked = this.props.currentValue.SubState(c => c === this.GetRadioValue(), [this.props.value as any]);
 
 
-    private _IsDisabled = Luff.State<boolean>(this.props.disabled as any);
+    _IsDisabled = Luff.State<boolean>(this.props.disabled as any);
     private _IsIndeterminate = Luff.State<boolean>(this.props.indeterminate as any);
     get IsChecked() : boolean {
         return this._IsChecked.SValue;
@@ -49,18 +56,30 @@ export default class RadioButton<T> extends Luff.Content<RadioProps<T>> {
     // set IsChecked(val: boolean) {
     //     this.State.IsChecked.SValue = val;
     // }
-    get IsDisabled() : boolean {
-        return this._IsDisabled.SValue;
-    }
-    set IsDisabled(val: boolean) {
-        this._IsDisabled.SValue = val;
-    }
+    // get IsDisabled() : boolean {
+    //     return this._IsDisabled.SValue;
+    // }
+    // set IsDisabled(val: boolean) {
+    //     this._IsDisabled.SValue = val;
+    // }
     get IsIndeterminate() : boolean {
         return this._IsIndeterminate.SValue;
     }
     set IsIndeterminate(val: boolean) {
         this.State.IsIndeterminate.SValue = val;
     }
+    get IsDisabled() : boolean {
+        return this._IsDisabled.SValue;
+    }
+    set IsDisabled(val: boolean) {
+        this._IsDisabled.SValue = val;
+    }
+
+    protected BeforeBuild(): void {
+        initDisabled(this);
+    }
+
+
     private GetOnClick(): Luff.MouseEventHandler {
         if (!this.props.onClick)
             return void 0;
