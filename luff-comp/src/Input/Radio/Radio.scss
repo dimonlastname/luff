@@ -39,6 +39,9 @@
 .l-radio +.l-radio-label:before{
   background-position: 0 0;
 }
+.l-radio:disabled +.l-radio-label:before{
+  filter: grayscale(1);
+}
 .l-radio:not(:checked) +.l-radio-label:before{
   background-position: 0 100%;
 }
