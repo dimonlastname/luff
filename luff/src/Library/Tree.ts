@@ -44,7 +44,7 @@ export namespace LibraryTree {
         }
         return res;
     }
-    export function Find<T, U>(tree: T[], subKey: (keyof T), predicate: (item: T) => boolean) : T {
+    export function Find<T, U>(tree: Iterable<T>, subKey: (keyof T), predicate: (item: T) => boolean) : T {
         for (let item of tree) {
             if (predicate(item)) {
                 return item;
@@ -58,12 +58,10 @@ export namespace LibraryTree {
         }
         return null;
     }
-    export function ForEach<T, U>(tree: T[], subKey: (keyof T), action: (item: T) => void) : T[] {
-        let res = [];
+    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T) => void) : void {
         for (let item of tree) {
             action(item);
             ForEach((item as any)[subKey], subKey, action);
         }
-        return res;
     }
 }
