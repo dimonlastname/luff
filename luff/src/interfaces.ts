@@ -79,6 +79,7 @@ type IObservableStateSingleObject<T> = {
 
 //type TSubState<T, U> = (render: (value: T) => U, deps?: IObservableState<any>[] | IObservableStateSimple<any>[]) => IObservableState<U>;
 
+
 export type IObservableStateSimple<T> = {
     SValue: T;
     //SValue: (T extends ExcludeProps<[T]> ? Readonly<T> : T);
@@ -89,6 +90,7 @@ export type IObservableStateSimple<T> = {
     SParentState: IObservableState<any> | IObservableStateArray<any> | IObservableStateSimple<any>;
 
 } & IObservableExtra<T>;
+export type IObservableStateSimpleOrValue<T> = T | IObservableStateSimple<T>;
 export type IObservableStateArray<T> = {
     //readonly [Key: number]: IObservableState<T>;
     readonly [Key: number]: (IObservableStateAny<T>);

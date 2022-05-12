@@ -10,6 +10,7 @@ import {
     IObservableStateSimple as _IObservableStateSimple,
     IObservableStateArray as _IObservableStateArray,
     IObservableStateAny as _IObservableStateAny,
+    IObservableStateSimpleOrValue as _IObservableStateSimpleOrValue,
     DictN,
     Dict, TOffset, TValueName, TIDNamePair
 } from "./interfaces";
@@ -69,6 +70,7 @@ namespace Luff  {
     export type IObservableStateSimple<T> = _IObservableStateSimple<T>;
     export type IObservableStateArray<T> = _IObservableStateArray<T>;
     export type IObservableStateAny<T> = _IObservableStateAny<T>;
+    export type IObservableStateSimpleOrValue<T> = _IObservableStateSimpleOrValue<T>;
     export const State = luffState;
     export const StateArr = luffStateArr;
     export const Application = _Application;
@@ -1583,6 +1585,30 @@ window['___LuffGlobal'] = {
     ]
 );
 
+// type Stateable<T> = _IObservableStateSimple<T> | T;
+//
+// function getAttribute<T>(s: Stateable<T>, p: (v: T) => T) {
+//     let state = s as _IObservableStateSimple<T>;
+//     let val = s as T;
+//     if (state) {
+//         return state.SubState(v => p(v))
+//     } {
+//         return p(val);
+//     }
+// }
+//
+// getAttribute(12, v => 5 + 5);
+// let s = Luff.State("12");
+//
+// getAttribute<number>(Luff.State(12), v => v + 4);
+// getAttribute<number>(4, v => v + 4);
+// //Luff.DOM.GetAttrubute = getAttribute;
+// function makeClass(s: Stateable<string>) {
+//
+//     return (
+//         <button className={getAttribute(s, className => className + ' l-button')}>Button 1</button>
+//     )
+// }
 
 
 export {React, luffState, luffStateArr, TContentCtor,
@@ -1592,7 +1618,7 @@ export {React, luffState, luffStateArr, TContentCtor,
     luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryTree, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,
     FilePicker,
 
-    _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, Dict, DictN,
+    _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, _IObservableStateSimpleOrValue as IObservableStateSimpleOrValue, Dict, DictN,
     TPositionObject, TOffset, TValueName, TIDNamePair,
     _IContent as IContent, JSXElement, IElement, IElementBase, ElementBase, IRenderElement, ComponentFactory,
     State, StateArray, getClosestStateArray,
