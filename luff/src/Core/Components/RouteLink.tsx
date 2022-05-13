@@ -10,7 +10,8 @@ import {LibraryDOM} from "../../Library";
 type TRouterProps = {
     route: Route;
     isUseToggle?: boolean;
-    onChangeActive?(isActive: boolean) : void;
+    onChangeActive?(isActive: boolean, routeLink?: RouteLink) : void;
+    onPermissionFailed?: (routeLink: RouteLink) => void;
 
     disabled?: IObservableStateSimple<boolean>;
     //name: string;
@@ -33,7 +34,7 @@ export class RouteLink extends ComponentSimple<TRouterProps> implements IRouteLi
         }
 
         if (this.props.onChangeActive)
-            this.props.onChangeActive(isActive);
+            this.props.onChangeActive(isActive, this);
         //console.log('[Luff.RouteLink] setActive: ', isActive);
     }
     public IsContainsElement(elem: HTMLElement) : boolean {
@@ -72,6 +73,8 @@ export class RouteLink extends ComponentSimple<TRouterProps> implements IRouteLi
         const permission = route.Content.Permission;
         if (!permission.IsAllow) {
             route.RemoveRouteLink(this);
+            if (this.props.onPermissionFailed)
+                this.props.onPermissionFailed(this);
             if (permission.IsHideControls) {
                 return null;
             }
