@@ -41,7 +41,7 @@ function getRouteName(ctx: Content) : string {
 
 
 
-class Content<TProps = any, TState = any> extends ElementBase<TProps, TState> implements IContent<any ,any> {
+class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> implements IContent<TProps, TState> {
     static AppRouter: Router = AppRouter;
     static Load = LuffLoadNative;
     static Permission: LuffContentUserPermission = appUserPermission;

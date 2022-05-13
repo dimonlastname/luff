@@ -5,7 +5,7 @@ import {IElement} from "../Components/IElement";
 import {PermissionManager} from "./Permission";
 import {ElementBase} from "../Components/ElementBase";
 
-interface IContent<TProps = any, TState = any> extends IElement {
+interface IContent<TProps = {}, TState = {}> extends IElement {
 
     //new (props: TProps): any;
     State: IObservableState<TState>;
