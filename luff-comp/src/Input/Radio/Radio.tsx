@@ -66,7 +66,7 @@ export default class RadioButton<T> extends Luff.Content<RadioProps<T>> implemen
         return this._IsIndeterminate.SValue;
     }
     set IsIndeterminate(val: boolean) {
-        this.State.IsIndeterminate.SValue = val;
+        this._IsIndeterminate.SValue = val;
     }
     get IsDisabled() : boolean {
         return this._IsDisabled.SValue;
