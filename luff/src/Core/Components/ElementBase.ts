@@ -13,7 +13,7 @@ export interface IElementBase<TProps = any> {
 }
 const PERMISSION_NAME_WRITE = 'Write';
 
-export class ElementBase<TProps = any, TState = any> implements IElementBase<TProps>, IElement<TProps> {
+export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProps>, IElement<TProps> {
     props: TProps & TPropsDefault<TState>;
     //real react:
     render() {return null};
@@ -57,7 +57,7 @@ export class ElementBase<TProps = any, TState = any> implements IElementBase<TPr
                 }
             }
         }
-        this.props = props as (TProps & TPropsDefault);
+        this.props = props as (TProps & TPropsDefault<TState>);
     }
 
     _InitializeComponent(props?: TProps): void {};

@@ -81,6 +81,7 @@ export default class CheckBox extends Luff.Content<CheckBoxProps, TState> implem
                        checked={this.State.IsChecked}
                        disabled={this._IsDisabled}
                        indeterminate={this.State.IsChecked.SubState(isChecked => isChecked === void 0 || isChecked === null)}
+                       autocomplete="nope"
                 />
                 <label
                     for={"l-checkbox-id-" + this._ID}

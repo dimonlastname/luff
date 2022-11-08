@@ -29,7 +29,7 @@ import {
 
 import {LuffLoad} from "./System/Load/Load";
 import {LuffLoadNative} from "./System/Load/LoadNative";
-import {luffPop, PopLog} from "./System/Pop/Pop";
+import {PopLog} from "./System/Pop/Pop";
 
 
 import {RouteLink} from "./Core/Components/RouteLink";
@@ -88,7 +88,7 @@ namespace Luff  {
     export const Culture = _Culture;
     export const Settings = AppSettings;
 
-    export const Pop = luffPop;
+    export const Pop = PopLog;
     export type Pop = PopLog;
     export const RunConfirm = luffConfirm;
     export const RunConfirmPromise = luffConfirmPromise;

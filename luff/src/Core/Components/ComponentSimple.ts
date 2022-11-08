@@ -2,7 +2,7 @@ import {JSXElement, TRawComponent} from "./IElement";
 import {ElementBase} from "./ElementBase";
 import {ComponentFactory} from "../Compiler/ComponentFactory";
 
-export class ComponentSimple<TProps = any> extends ElementBase<TProps> {
+export class ComponentSimple<TProps = {}> extends ElementBase<TProps> {
     Render(): JSXElement {
         return null;
     }

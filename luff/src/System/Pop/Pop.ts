@@ -9,7 +9,7 @@ type TPopCtor = {
     AnimationDuration?: number;
     Duration?: number;
     Style?: any;
-    isNewInstance?: boolean;
+    IsNewInstance?: boolean;
 }
 type TShowMessageOptions = {
     Duration?: number;
@@ -103,15 +103,15 @@ export class PopLog {
                     AnimationDuration = PopLog.DefaultSettings.AnimationDuration,
                     Duration          = PopLog.DefaultSettings.Duration,
                     Style             = {},
-                    isNewInstance = false,
+                    IsNewInstance = false,
                 } : TPopCtor = {}){
         popLogInstanceCounter++;
         this._AnimationDuration = AnimationDuration;
         this._Duration = Duration;
-        if (!isNewInstance){
+        if (!IsNewInstance){
             this._Block = document.querySelector('#l-pop-log-hook-1');
         }
-        if (isNewInstance || this._Block === null){
+        if (IsNewInstance || this._Block === null){
             this._Block = createElementFromString(`<div class="l-pop-log-hook" id="l-pop-log-hook-${popLogInstanceCounter}"></div>`);
         }
         Target.appendChild(this._Block);
@@ -122,9 +122,7 @@ export class PopLog {
             console.log(opt.LogItem);
         }
     }
-    // Success2(message: React.ReactNode) {
-    //     console.log('yeah');
-    // }
+
     Error(text: string, opt: TShowMessageOptions = {}){
         this._AddLine(text, 'error', opt);
         console.error(opt.LogItem? opt.LogItem : text);
@@ -138,19 +136,29 @@ export class PopLog {
         if (opt.LogItem)
             console.log(opt.LogItem)
     }
-    // ShowSuccess(text: string){
-    //     this._AddLine(text, 'success');
-    // }
-    // ShowError(text: string){
-    //     this._AddLine(text, 'error');
-    // }
-    // ShowWarn(text: string){
-    //     this._AddLine(text, 'warning');
-    // }
-    // ShowNotice(text: string){
-    //     this._AddLine(text, 'notice');
-    // }
-}
 
+
+    public static Success(text: string, opt : TShowMessageOptions = {}){
+        luffPop.Success(text, opt);
+        if (opt.LogItem) {
+            console.log(opt.LogItem);
+        }
+    }
+    public static Error(text: string, opt: TShowMessageOptions = {}){
+        luffPop.Error(text,  opt);
+    }
+    public static Warn(text: string, opt: TShowMessageOptions = {}){
+        luffPop.Warn(text, opt);
+    }
+    public static Notice(text: string, opt: TShowMessageOptions = {}){
+        luffPop.Notice(text, opt);
+    }
+
+    public static _l(){
+        return luffPop;
+    }
+
+}
 let luffPop = new PopLog();
-export {luffPop};
+
+

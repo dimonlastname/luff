@@ -1,7 +1,7 @@
 import {IContent} from "../Content/IContent";
 import {IRouteLink} from "../Components/IRouterLink";
 import {Dict} from "../../interfaces";
-import {luffPop} from "../../System/Pop/Pop";
+import {PopLog} from "../../System/Pop/Pop";
 import {LibraryArray, LibraryDOM} from "../../Library";
 
 export class Router {
@@ -199,7 +199,7 @@ export class Route<T = any> {
             this.Content.Permission.OnDeny();
             return;
         }
-        luffPop.Warn('[Luff.Permission] You have no permission to the unit', {LogItem: this.Content});
+        PopLog.Warn('[Luff.Permission] You have no permission to the unit', {LogItem: this.Content});
     };
 
 
