@@ -125,3 +125,5 @@ export type IObservableStateArray<T> = {
     LastOrDefault(predicate?: (val: T, i: number) => boolean) : IObservableState<T>;
     [Symbol.iterator](): Iterator<IObservableState<T>>;
 }
+
+export type IObservableOrValue<T> = IObservableStateSimple<T> | T;

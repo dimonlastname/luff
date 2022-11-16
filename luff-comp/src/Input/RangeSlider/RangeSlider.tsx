@@ -116,7 +116,7 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
 
         const widthView1 = this.Value1.SubState(v => {
             if (!this.ValueBodyDOM)
-                return 0;
+                return "0";
             const wBody = this.ValueBodyDOM.getBoundingClientRect().width;
             const wViewHalf = this.ValueView1DOM.getBoundingClientRect().width / 2;
             const offset = (wViewHalf / wBody) * 100;
@@ -125,9 +125,9 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
         });
         const widthView2 = this.Value2.SubState(v => {
             if (!this.props.value2)
-                return 0;
+                return "0";
             if (!this.ValueBodyDOM)
-                return 0;
+                return "0";
             const wBody = this.ValueBodyDOM.getBoundingClientRect().width;
             const wViewHalf = this.ValueView2DOM.getBoundingClientRect().width / 2;
             const offset = (wViewHalf / wBody) * 100;
@@ -139,7 +139,7 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
             <div className={"l-slider-range" + (isSingle ? " l-sr-single": "")}>
                 <div className="l-sr-head">
                     <div className="l-sr-line-part l-sr-empty" style={{width: widthView1}}/>
-                    <div className="l-sr-line-part l-sr-caption" style={{flex: 1}}>
+                    <div className="l-sr-line-part l-sr-caption" style={{flex: "1"}}>
                         <div className="l-sr-value-view" name="l-sr-value-view-1">
                             {this.props.renderView(this.props.value1)}
                         </div>
@@ -200,7 +200,7 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
                             this.props.value2
                             &&
                             <>
-                                <div className="l-sr-line-part l-sr-fill"  style={{flex: 1}}/>
+                                <div className="l-sr-line-part l-sr-fill"  style={{flex: "1"}}/>
                                 <div className="l-sr-hook l-sr-hook-1">
                                     <div className="l-sr-pin"/>
                                 </div>

@@ -9,7 +9,7 @@ type CheckBoxProps = {
     onChangeAsync?: (val?: boolean) => Promise<number>;
     checkBoxGroup?: string;
     className?: string;
-    style?: Luff.AttributeStyleType<string>;
+    style?: Luff.AttributeStyleType;
 
 } & TDisableSwitchableProps
 

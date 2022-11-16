@@ -12,7 +12,7 @@ import {
     IObservableStateAny as _IObservableStateAny,
     IObservableStateSimpleOrValue as _IObservableStateSimpleOrValue,
     DictN,
-    Dict, TOffset, TValueName, TIDNamePair
+    Dict, TOffset, TValueName, TIDNamePair, IObservableOrValue
 } from "./interfaces";
 import _Application from "./Core/Application/Application";
 import {getClosestStateArray, State, StateArray, luffState, luffStateArr} from "./Core/State";
@@ -51,8 +51,9 @@ import {luffConfirm, luffConfirmPromise} from "./Library/Confirm/Confirm";
 import {IFilterMan} from "./Core/Components/Each/FilterManager";
 import {ISortMan} from "./Core/Components/Each/EachSorter";
 import {LibraryTree} from "./Library/Tree";
+import {ICssStyle} from "./ICssStyle";
 
-type Booleanish = boolean | 'true' | 'false';
+//type Booleanish = boolean | 'true' | 'false';
 
 
 
@@ -99,7 +100,15 @@ namespace Luff  {
     export const Fragment = CasualFragmentComponent;
     export type Node = JSXElement;
 
-
+    export function GetStateOrValue<T>(s: IObservableOrValue<T>, p: (v: T) => T) {
+        let state = s as _IObservableStateSimple<T>;
+        let val = s as T;
+        if (state) {
+            return state.SubState(v => p(v))
+        } {
+            return p(val);
+        }
+    }
 
 
 
@@ -212,8 +221,6 @@ namespace Luff  {
     export interface SVGProps<T> extends SVGAttributes<T> {
 
     }
-    export type AttributeType<T> = T | IObservableStateSimple<T>;
-    export type AttributeStyleType<T> = T | Dict<IObservableStateSimple<T>> | IObservableStateSimple<Dict<T>>;
 
     interface DOMAttributes<T> {
         children?: ReactNode;
@@ -411,249 +418,245 @@ namespace Luff  {
     // All the WAI-ARIA 1.1 attributes from https://www.w3.org/TR/wai-aria-1.1/
     interface AriaAttributes {
         /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
-        'aria-activedescendant'?: string;
+        'aria-activedescendant'?: IObservableOrValue<string>;
         /** Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. */
-        'aria-atomic'?: boolean | 'false' | 'true';
+        'aria-atomic'?: IObservableOrValue<boolean>;
         /**
          * Indicates whether inputting text could trigger display of one or more predictions of the user's intended value for an input and specifies how predictions would be
          * presented if they are made.
          */
-        'aria-autocomplete'?: 'none' | 'inline' | 'list' | 'both';
+        'aria-autocomplete'?: IObservableOrValue<'none' | 'inline' | 'list' | 'both'>;
         /** Indicates an element is being modified and that assistive technologies MAY want to wait until the modifications are complete before exposing them to the user. */
-        'aria-busy'?: boolean | 'false' | 'true';
+        'aria-busy'?: IObservableOrValue<boolean>;
         /**
          * Indicates the current "checked" state of checkboxes, radio buttons, and other widgets.
          * @see aria-pressed @see aria-selected.
          */
-        'aria-checked'?: boolean | 'false' | 'mixed' | 'true';
+        'aria-checked'?: IObservableOrValue<boolean | 'mixed'>;
         /**
          * Defines the total number of columns in a table, grid, or treegrid.
          * @see aria-colindex.
          */
-        'aria-colcount'?: number;
+        'aria-colcount'?: IObservableOrValue<number>;
         /**
          * Defines an element's column index or position with respect to the total number of columns within a table, grid, or treegrid.
          * @see aria-colcount @see aria-colspan.
          */
-        'aria-colindex'?: number;
+        'aria-colindex'?: IObservableOrValue<number>;
         /**
          * Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid.
          * @see aria-colindex @see aria-rowspan.
          */
-        'aria-colspan'?: number;
+        'aria-colspan'?: IObservableOrValue<number>;
         /**
          * Identifies the element (or elements) whose contents or presence are controlled by the current element.
          * @see aria-owns.
          */
-        'aria-controls'?: string;
+        'aria-controls'?: IObservableOrValue<string>;
         /** Indicates the element that represents the current item within a container or set of related elements. */
-        'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time';
+        'aria-current'?: IObservableOrValue<boolean | 'page' | 'step' | 'location' | 'date' | 'time'>;
         /**
          * Identifies the element (or elements) that describes the object.
          * @see aria-labelledby
          */
-        'aria-describedby'?: string;
+        'aria-describedby'?: IObservableOrValue<string>;
         /**
          * Identifies the element that provides a detailed, extended description for the object.
          * @see aria-describedby.
          */
-        'aria-details'?: string;
+        'aria-details'?: IObservableOrValue<string>;
         /**
          * Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable.
          * @see aria-hidden @see aria-readonly.
          */
-        'aria-disabled'?: boolean | 'false' | 'true';
+        'aria-disabled'?: IObservableOrValue<boolean>;
         /**
          * Indicates what functions can be performed when a dragged object is released on the drop target.
          * @deprecated in ARIA 1.1
          */
-        'aria-dropeffect'?: 'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup';
+        'aria-dropeffect'?: IObservableOrValue<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>;
         /**
          * Identifies the element that provides an error message for the object.
          * @see aria-invalid @see aria-describedby.
          */
-        'aria-errormessage'?: string;
+        'aria-errormessage'?: IObservableOrValue<string>;
         /** Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. */
-        'aria-expanded'?: boolean | 'false' | 'true';
+        'aria-expanded'?: IObservableOrValue<boolean>;
         /**
          * Identifies the next element (or elements) in an alternate reading order of content which, at the user's discretion,
          * allows assistive technology to override the general default of reading in document source order.
          */
-        'aria-flowto'?: string;
+        'aria-flowto'?: IObservableOrValue<string>;
         /**
          * Indicates an element's "grabbed" state in a drag-and-drop operation.
          * @deprecated in ARIA 1.1
          */
-        'aria-grabbed'?: boolean | 'false' | 'true';
+        'aria-grabbed'?: IObservableOrValue<boolean>;
         /** Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. */
-        'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+        'aria-haspopup'?: IObservableOrValue<boolean | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>;
         /**
          * Indicates whether the element is exposed to an accessibility API.
          * @see aria-disabled.
          */
-        'aria-hidden'?: boolean | 'false' | 'true';
+        'aria-hidden'?: IObservableOrValue<boolean>;
         /**
          * Indicates the entered value does not conform to the format expected by the application.
          * @see aria-errormessage.
          */
-        'aria-invalid'?: boolean | 'false' | 'true' | 'grammar' | 'spelling';
+        'aria-invalid'?: IObservableOrValue<boolean | 'grammar' | 'spelling'>;
         /** Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. */
-        'aria-keyshortcuts'?: string;
+        'aria-keyshortcuts'?: IObservableOrValue<string>;
         /**
          * Defines a string value that labels the current element.
          * @see aria-labelledby.
          */
-        'aria-label'?: string;
+        'aria-label'?: IObservableOrValue<string>;
         /**
          * Identifies the element (or elements) that labels the current element.
          * @see aria-describedby.
          */
-        'aria-labelledby'?: string;
+        'aria-labelledby'?: IObservableOrValue<string>;
         /** Defines the hierarchical level of an element within a structure. */
-        'aria-level'?: number;
+        'aria-level'?: IObservableOrValue<number>;
         /** Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. */
-        'aria-live'?: 'off' | 'assertive' | 'polite';
+        'aria-live'?: IObservableOrValue<'off' | 'assertive' | 'polite'>;
         /** Indicates whether an element is modal when displayed. */
-        'aria-modal'?: boolean | 'false' | 'true';
+        'aria-modal'?: IObservableOrValue<boolean>;
         /** Indicates whether a text box accepts multiple lines of input or only a single line. */
-        'aria-multiline'?: boolean | 'false' | 'true';
+        'aria-multiline'?: IObservableOrValue<boolean>;
         /** Indicates that the user may select more than one item from the current selectable descendants. */
-        'aria-multiselectable'?: boolean | 'false' | 'true';
+        'aria-multiselectable'?: IObservableOrValue<boolean>;
         /** Indicates whether the element's orientation is horizontal, vertical, or unknown/ambiguous. */
-        'aria-orientation'?: 'horizontal' | 'vertical';
+        'aria-orientation'?: IObservableOrValue<'horizontal' | 'vertical'>;
         /**
          * Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship
          * between DOM elements where the DOM hierarchy cannot be used to represent the relationship.
          * @see aria-controls.
          */
-        'aria-owns'?: string;
+        'aria-owns'?: IObservableOrValue<string>;
         /**
          * Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value.
          * A hint could be a sample value or a brief description of the expected format.
          */
-        'aria-placeholder'?: string;
+        'aria-placeholder'?: IObservableOrValue<string>;
         /**
          * Defines an element's number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
          * @see aria-setsize.
          */
-        'aria-posinset'?: number;
+        'aria-posinset'?: IObservableOrValue<number>;
         /**
          * Indicates the current "pressed" state of toggle buttons.
          * @see aria-checked @see aria-selected.
          */
-        'aria-pressed'?: boolean | 'false' | 'mixed' | 'true';
+        'aria-pressed'?: IObservableOrValue<boolean | 'mixed'>;
         /**
          * Indicates that the element is not editable, but is otherwise operable.
          * @see aria-disabled.
          */
-        'aria-readonly'?: boolean | 'false' | 'true';
+        'aria-readonly'?: IObservableOrValue<boolean>;
         /**
          * Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified.
          * @see aria-atomic.
          */
-        'aria-relevant'?: 'additions' | 'additions text' | 'all' | 'removals' | 'text';
+        'aria-relevant'?: IObservableOrValue<'additions' | 'additions text' | 'all' | 'removals' | 'text'>;
         /** Indicates that user input is required on the element before a form may be submitted. */
-        'aria-required'?: boolean | 'false' | 'true';
+        'aria-required'?: IObservableOrValue<boolean>;
         /** Defines a human-readable, author-localized description for the role of an element. */
-        'aria-roledescription'?: string;
+        'aria-roledescription'?: IObservableOrValue<string>;
         /**
          * Defines the total number of rows in a table, grid, or treegrid.
          * @see aria-rowindex.
          */
-        'aria-rowcount'?: number;
+        'aria-rowcount'?: IObservableOrValue<number>;
         /**
          * Defines an element's row index or position with respect to the total number of rows within a table, grid, or treegrid.
          * @see aria-rowcount @see aria-rowspan.
          */
-        'aria-rowindex'?: number;
+        'aria-rowindex'?: IObservableOrValue<number>;
         /**
          * Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid.
          * @see aria-rowindex @see aria-colspan.
          */
-        'aria-rowspan'?: number;
+        'aria-rowspan'?: IObservableOrValue<number>;
         /**
          * Indicates the current "selected" state of various widgets.
          * @see aria-checked @see aria-pressed.
          */
-        'aria-selected'?: boolean | 'false' | 'true';
+        'aria-selected'?: IObservableOrValue<boolean>;
         /**
          * Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM.
          * @see aria-posinset.
          */
-        'aria-setsize'?: number;
+        'aria-setsize'?: IObservableOrValue<number>;
         /** Indicates if items in a table or grid are sorted in ascending or descending order. */
-        'aria-sort'?: 'none' | 'ascending' | 'descending' | 'other';
+        'aria-sort'?: IObservableOrValue<'none' | 'ascending' | 'descending' | 'other'>;
         /** Defines the maximum allowed value for a range widget. */
-        'aria-valuemax'?: number;
+        'aria-valuemax'?: IObservableOrValue<number>;
         /** Defines the minimum allowed value for a range widget. */
-        'aria-valuemin'?: number;
+        'aria-valuemin'?: IObservableOrValue<number>;
         /**
          * Defines the current value for a range widget.
          * @see aria-valuetext.
          */
-        'aria-valuenow'?: number;
+        'aria-valuenow'?: IObservableOrValue<number>;
         /** Defines the human readable text alternative of aria-valuenow for a range widget. */
-        'aria-valuetext'?: string;
+        'aria-valuetext'?: IObservableOrValue<string>;
     }
+    export type CSSProperties = Partial<ICssStyle> | Dict<string>;
+    export type AttributeStyleType = IObservableOrValue<string> | CSSProperties | IObservableState<CSSProperties>;
 
     export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
         // React-Attributes
         ref?: any;
         key?: any;
 
-        // React-specific Attributes
-        defaultChecked?: boolean;
-        defaultValue?: string | number | string[];
-        suppressContentEditableWarning?: boolean;
-        suppressHydrationWarning?: boolean;
-
         // Standard HTML Attributes
-        accessKey?: string;
-        className?: string;
-        contentEditable?: Booleanish | "inherit";
-        contextMenu?: string;
-        dir?: string;
-        draggable?: Booleanish;
-        hidden?: boolean;
-        id?: string;
-        lang?: string;
-        placeholder?: string;
-        slot?: string;
-        spellCheck?: Booleanish;
-        style?: string | any; //AttributeStyleType<string>; //TODO: uncomment
-        tabIndex?: number;
-        title?: string | IObservableStateSimple<string>;
-        translate?: 'yes' | 'no';
+        accessKey?: IObservableOrValue<string>;
+        className?: IObservableOrValue<string>;
+        contentEditable?: IObservableOrValue<boolean | "inherit">;
+        contextMenu?: IObservableOrValue<string>;
+        dir?: IObservableOrValue<string>;
+        draggable?: IObservableOrValue<boolean>;
+        hidden?: IObservableOrValue<boolean>;
+        id?: IObservableOrValue<string>;
+        lang?: IObservableOrValue<string>;
+        placeholder?: IObservableOrValue<string | number>;
+        slot?: IObservableOrValue<string>;
+        spellCheck?: IObservableOrValue<boolean>;
+        style?: AttributeStyleType;
+        tabIndex?: IObservableOrValue<number>;
+        title?: IObservableOrValue<string>;
+        translate?: IObservableOrValue<'yes' | 'no'>;
 
         // Unknown
-        radioGroup?: string; // <command>, <menuitem>
+        radioGroup?: IObservableOrValue<string>; // <command>, <menuitem>
 
         // WAI-ARIA
-        role?: string;
+        role?: IObservableOrValue<string>;
 
         // RDFa Attributes
         about?: any;
-        datatype?: string;
+        datatype?: IObservableOrValue<string>;
         inlist?: any;
-        prefix?: string;
-        property?: string;
-        resource?: string;
-        typeof?: string;
-        vocab?: string;
+        prefix?: IObservableOrValue<string>;
+        property?: IObservableOrValue<string>;
+        resource?: IObservableOrValue<string>;
+        typeof?: IObservableOrValue<string>;
+        vocab?: IObservableOrValue<string>;
 
         // Non-standard Attributes
-        autoCapitalize?: string;
-        autoCorrect?: string;
-        autoSave?: string;
-        color?: string;
-        itemProp?: string;
-        itemScope?: boolean;
-        itemType?: string;
-        itemID?: string;
-        itemRef?: string;
-        results?: number;
-        security?: string;
-        unselectable?: 'on' | 'off';
+        autoCapitalize?: IObservableOrValue<string>;
+        autoCorrect?: IObservableOrValue<string>;
+        autoSave?: IObservableOrValue<string>;
+        color?: IObservableOrValue<string>;
+        itemProp?: IObservableOrValue<string>;
+        itemScope?: IObservableOrValue<boolean>;
+        itemType?: IObservableOrValue<string>;
+        itemID?: IObservableOrValue<string>;
+        itemRef?: IObservableOrValue<string>;
+        results?: IObservableOrValue<number>;
+        security?: IObservableOrValue<string>;
+        unselectable?: IObservableOrValue<'on' | 'off'>;
 
         // Living Standard
         /**
@@ -665,10 +668,10 @@ namespace Luff  {
          * Specify that a standard HTML element should behave like a defined custom built-in element
          * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
          */
-        is?: string;
+        is?: IObservableOrValue<string>;
 
-        isVisible?: IObservableStateSimple<boolean> | boolean;
-        class?: string | IObservableStateSimple<string>;
+        isVisible?: IObservableOrValue<boolean>;
+        class?: IObservableOrValue<string>;
         classDict?: Dict<IObservableStateSimple<boolean>>
         name?: string;
         permission?: string;
@@ -676,220 +679,220 @@ namespace Luff  {
 
     export interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
         download?: any;
-        href?: string | IObservableStateSimple<string>;
-        hrefLang?: string;
-        media?: string;
-        ping?: string;
-        rel?: string;
-        target?: string;
-        type?: string;
-        referrerPolicy?: string;
+        href?: IObservableOrValue<string>;
+        hrefLang?: IObservableOrValue<string>;
+        media?: IObservableOrValue<string>;
+        ping?: IObservableOrValue<string>;
+        rel?: IObservableOrValue<string>;
+        target?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
+        referrerPolicy?: IObservableOrValue<string>;
     }
 
     // tslint:disable-next-line:no-empty-interface
     export interface AudioHTMLAttributes<T> extends MediaHTMLAttributes<T> {}
 
     export interface AreaHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string;
-        coords?: string;
+        alt?: IObservableOrValue<string>;
+        coords?: IObservableOrValue<string>;
         download?: any;
-        href?: string;
-        hrefLang?: string;
-        media?: string;
-        rel?: string;
-        shape?: string;
-        target?: string;
+        href?: IObservableOrValue<string>;
+        hrefLang?: IObservableOrValue<string>;
+        media?: IObservableOrValue<string>;
+        rel?: IObservableOrValue<string>;
+        shape?: IObservableOrValue<string>;
+        target?: IObservableOrValue<string>;
     }
 
     export interface BaseHTMLAttributes<T> extends HTMLAttributes<T> {
-        href?: string;
-        target?: string;
+        href?: IObservableOrValue<string>;
+        target?: IObservableOrValue<string>;
     }
 
     export interface BlockquoteHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string;
+        cite?: IObservableOrValue<string>;
     }
 
     export interface ButtonHTMLAttributes<T> extends HTMLAttributes<T> {
         autoFocus?: boolean;
-        disabled?: boolean | IObservableStateSimple<boolean>;
-        form?: string;
-        formAction?: string;
-        formEncType?: string;
-        formMethod?: string;
-        formNoValidate?: boolean;
-        formTarget?: string;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
+        formAction?: IObservableOrValue<string>;
+        formEncType?: IObservableOrValue<string>;
+        formMethod?: IObservableOrValue<string>;
+        formNoValidate?: IObservableOrValue<boolean>;
+        formTarget?: IObservableOrValue<string>;
         name?: string;
-        type?: 'submit' | 'reset' | 'button';
-        value?: string | string[] | number;
+        type?: IObservableOrValue<'submit' | 'reset' | 'button'>;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface CanvasHTMLAttributes<T> extends HTMLAttributes<T> {
-        height?: number | string;
-        width?: number | string;
+        height?: IObservableOrValue<number | string>;
+        width?: IObservableOrValue<number | string>;
     }
 
     export interface ColHTMLAttributes<T> extends HTMLAttributes<T> {
-        span?: number;
-        width?: number | string;
+        span?: IObservableOrValue<number>;
+        width?: IObservableOrValue<number | string>;
     }
 
     export interface ColgroupHTMLAttributes<T> extends HTMLAttributes<T> {
-        span?: number;
+        span?: IObservableOrValue<number>;
     }
 
     export interface DataHTMLAttributes<T> extends HTMLAttributes<T> {
-        value?: string | string[] | number;
+        value?: IObservableOrValue<string> | string[] | number;
     }
 
     export interface DetailsHTMLAttributes<T> extends HTMLAttributes<T> {
-        open?: boolean;
+        open?: IObservableOrValue<boolean>;
     }
 
     export interface DelHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string;
-        dateTime?: string;
+        cite?: IObservableOrValue<string>;
+        dateTime?: IObservableOrValue<string>;
     }
 
     export interface DialogHTMLAttributes<T> extends HTMLAttributes<T> {
-        open?: boolean;
+        open?: IObservableOrValue<boolean>;
     }
 
     export interface EmbedHTMLAttributes<T> extends HTMLAttributes<T> {
-        height?: number | string;
-        src?: string;
-        type?: string;
-        width?: number | string;
+        height?: IObservableOrValue<number | string>;
+        width?: IObservableOrValue<number | string>;
+        src?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
     }
 
     export interface FieldsetHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean;
-        form?: string;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
         name?: string;
     }
 
     export interface FormHTMLAttributes<T> extends HTMLAttributes<T> {
-        acceptCharset?: string;
-        action?: string;
-        autoComplete?: string;
-        encType?: string;
-        method?: string;
+        acceptCharset?: IObservableOrValue<string>;
+        action?: IObservableOrValue<string>;
+        autoComplete?: IObservableOrValue<string>;
+        encType?: IObservableOrValue<string>;
+        method?: IObservableOrValue<string>;
         name?: string;
-        noValidate?: boolean;
-        target?: string;
+        noValidate?: IObservableOrValue<boolean>;
+        target?: IObservableOrValue<string>;
     }
 
     export interface HtmlHTMLAttributes<T> extends HTMLAttributes<T> {
-        manifest?: string;
+        manifest?: IObservableOrValue<string>;
     }
 
     export interface IframeHTMLAttributes<T> extends HTMLAttributes<T> {
-        allow?: string;
-        allowFullScreen?: boolean;
-        allowTransparency?: boolean;
-        frameBorder?: number | string;
-        height?: number | string;
-        marginHeight?: number;
-        marginWidth?: number;
+        allow?: IObservableOrValue<string>;
+        allowFullScreen?: IObservableOrValue<boolean>;
+        allowTransparency?: IObservableOrValue<boolean>;
+        frameBorder?: IObservableOrValue<number>;
+        height?: IObservableOrValue<number | string>;
+        marginHeight?: IObservableOrValue<number>;
+        marginWidth?: IObservableOrValue<number>;
         name?: string;
-        referrerPolicy?: string;
-        sandbox?: string;
-        scrolling?: string;
-        seamless?: boolean;
-        src?: string;
-        srcDoc?: string;
-        width?: number | string;
+        referrerPolicy?: IObservableOrValue<string>;
+        sandbox?: IObservableOrValue<string>;
+        scrolling?: IObservableOrValue<string>;
+        seamless?: IObservableOrValue<boolean>;
+        src?: IObservableOrValue<string>;
+        srcDoc?: IObservableOrValue<string>;
+        width?: IObservableOrValue<number | string>;
     }
 
     export interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-        alt?: string | IObservableStateSimple<string>;
-        crossOrigin?: "anonymous" | "use-credentials" | "";
-        decoding?: "async" | "auto" | "sync";
-        height?: number | string;
-        loading?: "eager" | "lazy";
-        referrerPolicy?: "no-referrer" | "origin" | "unsafe-url";
-        sizes?: string | IObservableStateSimple<string>;
-        src?: string | IObservableStateSimple<string>;
-        srcSet?: string | IObservableStateSimple<string>;
-        useMap?: string | IObservableStateSimple<string>;
-        width?: number | string | IObservableStateSimple<string | number>;
+        alt?: IObservableOrValue<string>;
+        crossOrigin?: IObservableOrValue<"anonymous" | "use-credentials" | "">;
+        decoding?: IObservableOrValue<"async" | "auto" | "sync">;
+        height?: IObservableOrValue<number | string>;
+        loading?: IObservableOrValue<"eager" | "lazy">;
+        referrerPolicy?: IObservableOrValue<"no-referrer" | "origin" | "unsafe-url">;
+        sizes?: IObservableOrValue<string>;
+        src?: IObservableOrValue<string>;
+        srcSet?: IObservableOrValue<string>;
+        useMap?: IObservableOrValue<string>;
+        width?: IObservableOrValue<number | string>;
     }
 
     export interface InsHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string | IObservableStateSimple<string>;
-        dateTime?: string | IObservableStateSimple<string>;
+        cite?: IObservableOrValue<string>;
+        dateTime?: IObservableOrValue<string>;
     }
 
     export interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
-        accept?: string | IObservableStateSimple<string>;
-        alt?: string | IObservableStateSimple<string>;
-        autoComplete?: string | IObservableStateSimple<string>;
-        autoFocus?: boolean | IObservableStateSimple<string>;
-        capture?: boolean | string; // https://www.w3.org/TR/html-media-capture/#the-capture-attribute
-        checked?: boolean | IObservableStateSimple<boolean>;
-        crossOrigin?: string;
-        disabled?: boolean | IObservableStateSimple<boolean>;
-        form?: string;
-        formAction?: string;
-        formEncType?: string;
-        formMethod?: string;
-        formNoValidate?: boolean;
-        formTarget?: string;
-        height?: number | string;
-        list?: string;
-        max?: number | string | IObservableStateSimple<number>;
-        maxLength?: number | IObservableStateSimple<number>;
-        min?: number | string | IObservableStateSimple<number>;
-        minLength?: number;
-        multiple?: boolean;
+        accept?: IObservableOrValue<string>;
+        alt?: IObservableOrValue<string>;
+        autoComplete?: IObservableOrValue<string>;
+        autoFocus?: IObservableOrValue<boolean>;
+        capture?: IObservableOrValue<string>; // https://www.w3.org/TR/html-media-capture/#the-capture-attribute
+        checked?: IObservableOrValue<boolean>;
+        crossOrigin?: IObservableOrValue<string>;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
+        formAction?: IObservableOrValue<string>;
+        formEncType?: IObservableOrValue<string>;
+        formMethod?: IObservableOrValue<string>;
+        formNoValidate?: IObservableOrValue<boolean>;
+        formTarget?: IObservableOrValue<string>;
+        height?: IObservableOrValue<number | string>;
+        list?: IObservableOrValue<string>;
+        max?: IObservableOrValue<number>;
+        maxLength?: IObservableOrValue<number>;
+        min?: IObservableOrValue<number>;
+        minLength?: IObservableOrValue<number>;
+        multiple?: IObservableOrValue<boolean>;
         name?: string;
-        pattern?: string;
-        placeholder?: string;
-        readOnly?: boolean;
-        required?: boolean;
-        size?: number;
-        src?: string | IObservableStateSimple<string>;
-        step?: number | string;
-        type?: string | IObservableStateSimple<string>;
-        value?: string | string[] | number | IObservableStateSimple<string|number>;
-        width?: number | string | IObservableStateSimple<string | number>;
+        pattern?: IObservableOrValue<string>;
+        placeholder?: IObservableOrValue<string | number>;
+        readOnly?: IObservableOrValue<boolean>;
+        required?: IObservableOrValue<boolean>;
+        size?: IObservableOrValue<number>;
+        src?: IObservableOrValue<string>;
+        step?: IObservableOrValue<number | string>;
+        type?: IObservableOrValue<string>;
+        value?: IObservableOrValue<string | string[] | number>;
+        width?: IObservableOrValue<number | string>;
 
         onChange?: ChangeEventHandler<T>;
 
-        indeterminate?: IObservableStateSimple<boolean>;
-        autocomplete?: string;
+        indeterminate?: IObservableOrValue<boolean>;
+        autocomplete?: IObservableOrValue<string>;
     }
 
     export interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoFocus?: boolean;
-        challenge?: string;
-        disabled?: boolean;
-        form?: string;
-        keyType?: string;
-        keyParams?: string;
+        autoFocus?: IObservableOrValue<boolean>;
+        challenge?: IObservableOrValue<string>;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
+        keyType?: IObservableOrValue<string>;
+        keyParams?: IObservableOrValue<string>;
         name?: string;
     }
 
     export interface LabelHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string;
-        htmlFor?: string;
-        for?: string;
+        form?: IObservableOrValue<string>;
+        htmlFor?: IObservableOrValue<string>;
+        for?: IObservableOrValue<string>;
     }
 
     export interface LiHTMLAttributes<T> extends HTMLAttributes<T> {
-        value?: string | string[] | number;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface LinkHTMLAttributes<T> extends HTMLAttributes<T> {
-        as?: string;
-        crossOrigin?: string;
-        href?: string;
-        hrefLang?: string;
-        integrity?: string;
-        media?: string;
-        rel?: string;
-        sizes?: string;
-        type?: string;
+        as?: IObservableOrValue<string>;
+        crossOrigin?: IObservableOrValue<string>;
+        href?: IObservableOrValue<string>;
+        hrefLang?: IObservableOrValue<string>;
+        integrity?: IObservableOrValue<string>;
+        media?: IObservableOrValue<string>;
+        rel?: IObservableOrValue<string>;
+        sizes?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
     }
 
     export interface MapHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -897,194 +900,192 @@ namespace Luff  {
     }
 
     export interface MenuHTMLAttributes<T> extends HTMLAttributes<T> {
-        type?: string;
+        type?: IObservableOrValue<string>;
     }
 
     export interface MediaHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoPlay?: boolean;
-        controls?: boolean;
-        controlsList?: string;
-        crossOrigin?: string;
-        loop?: boolean;
-        mediaGroup?: string;
-        muted?: boolean;
-        playsinline?: boolean;
-        preload?: string;
-        src?: string;
+        autoPlay?: IObservableOrValue<boolean>;
+        controls?: IObservableOrValue<boolean>;
+        controlsList?: IObservableOrValue<string>;
+        crossOrigin?: IObservableOrValue<string>;
+        loop?: IObservableOrValue<boolean>;
+        mediaGroup?: IObservableOrValue<string>;
+        muted?: IObservableOrValue<boolean>;
+        playsinline?: IObservableOrValue<boolean>;
+        preload?: IObservableOrValue<string>;
+        src?: IObservableOrValue<string>;
     }
 
     export interface MetaHTMLAttributes<T> extends HTMLAttributes<T> {
-        charSet?: string;
-        content?: string;
-        httpEquiv?: string;
+        charSet?: IObservableOrValue<string>;
+        content?: IObservableOrValue<string>;
+        httpEquiv?: IObservableOrValue<string>;
         name?: string;
     }
 
     export interface MeterHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string;
-        high?: number;
-        low?: number;
-        max?: number | string;
-        min?: number | string;
-        optimum?: number;
-        value?: string | string[] | number;
+        form?: IObservableOrValue<string>;
+        high?: IObservableOrValue<string>;
+        low?: IObservableOrValue<string>;
+        max?: IObservableOrValue<number>;
+        min?: IObservableOrValue<number>;
+        optimum?: IObservableOrValue<number>;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface QuoteHTMLAttributes<T> extends HTMLAttributes<T> {
-        cite?: string;
+        cite?: IObservableOrValue<string>;
     }
 
     export interface ObjectHTMLAttributes<T> extends HTMLAttributes<T> {
-        classID?: string;
-        data?: string;
-        form?: string;
-        height?: number | string;
+        classID?: IObservableOrValue<string>;
+        data?: IObservableOrValue<string>;
+        form?: IObservableOrValue<string>;
+        height?: IObservableOrValue<number | string>;
         name?: string;
-        type?: string;
-        useMap?: string;
-        width?: number | string;
-        wmode?: string;
+        type?: IObservableOrValue<string>;
+        useMap?: IObservableOrValue<string>;
+        width?: IObservableOrValue<number | string>;
+        wmode?: IObservableOrValue<string>;
     }
 
     export interface OlHTMLAttributes<T> extends HTMLAttributes<T> {
-        reversed?: boolean;
-        start?: number;
-        type?: '1' | 'a' | 'A' | 'i' | 'I';
+        reversed?: IObservableOrValue<boolean>;
+        start?: IObservableOrValue<number>;
+        type?: IObservableOrValue<'1' | 'a' | 'A' | 'i' | 'I'>;
     }
 
     export interface OptgroupHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean;
-        label?: string;
+        disabled?: IObservableOrValue<boolean>;
+        label?: IObservableOrValue<string>;
     }
 
     export interface OptionHTMLAttributes<T> extends HTMLAttributes<T> {
-        disabled?: boolean;
-        label?: string;
-        selected?: boolean;
-        value?: string | string[] | number;
+        disabled?: IObservableOrValue<boolean>;
+        label?: IObservableOrValue<string>;
+        selected?: IObservableOrValue<boolean>;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface OutputHTMLAttributes<T> extends HTMLAttributes<T> {
-        form?: string;
-        htmlFor?: string;
+        form?: IObservableOrValue<string>;
+        htmlFor?: IObservableOrValue<string>;
         name?: string;
     }
 
     export interface ParamHTMLAttributes<T> extends HTMLAttributes<T> {
         name?: string;
-        value?: string | string[] | number;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface ProgressHTMLAttributes<T> extends HTMLAttributes<T> {
-        max?: number | string;
-        value?: string | string[] | number;
+        max?: IObservableOrValue<number>;
+        value?: IObservableOrValue<string | string[] | number>;
     }
 
     export interface ScriptHTMLAttributes<T> extends HTMLAttributes<T> {
-        async?: boolean;
-        charSet?: string;
-        crossOrigin?: string;
-        defer?: boolean;
-        integrity?: string;
-        noModule?: boolean;
-        nonce?: string;
-        src?: string;
-        type?: string;
+        async?: IObservableOrValue<boolean>;
+        charSet?: IObservableOrValue<string>;
+        crossOrigin?: IObservableOrValue<string>;
+        defer?: IObservableOrValue<boolean>;
+        integrity?: IObservableOrValue<string>;
+        noModule?: IObservableOrValue<boolean>;
+        nonce?: IObservableOrValue<string>;
+        src?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
     }
 
     export interface SelectHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoComplete?: string;
-        autoFocus?: boolean;
-        disabled?: boolean;
-        form?: string;
-        multiple?: boolean;
+        autoComplete?: IObservableOrValue<string>;
+        autoFocus?: IObservableOrValue<boolean>;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
+        multiple?: IObservableOrValue<boolean>;
         name?: string;
-        required?: boolean;
-        size?: number;
-        value?: string | string[] | number;
+        required?: IObservableOrValue<boolean>;
+        size?: IObservableOrValue<number>;
+        value?: IObservableOrValue<string | string[] | number>;
         onChange?: ChangeEventHandler<T>;
     }
 
     export interface SourceHTMLAttributes<T> extends HTMLAttributes<T> {
-        media?: string;
-        sizes?: string;
-        src?: string;
-        srcSet?: string;
-        type?: string;
+        media?: IObservableOrValue<string>;
+        sizes?: IObservableOrValue<string>;
+        src?: IObservableOrValue<string>;
+        srcSet?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
     }
 
     export interface StyleHTMLAttributes<T> extends HTMLAttributes<T> {
-        media?: string;
-        nonce?: string;
-        scoped?: boolean;
-        type?: string;
+        media?: IObservableOrValue<string>;
+        nonce?: IObservableOrValue<string>;
+        scoped?: IObservableOrValue<boolean>;
+        type?: IObservableOrValue<string>;
     }
 
     export interface TableHTMLAttributes<T> extends HTMLAttributes<T> {
-        cellPadding?: number | string;
-        cellSpacing?: number | string;
-        summary?: string;
+        cellPadding?: IObservableOrValue<number | string>;
+        cellSpacing?: IObservableOrValue<number | string>;
+        summary?: IObservableOrValue<string>;
     }
 
     export interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
-        autoComplete?: string;
-        autoFocus?: boolean;
-        cols?: number;
-        dirName?: string;
-        disabled?: boolean;
-        form?: string;
-        maxLength?: number;
-        minLength?: number;
+        autoComplete?: IObservableOrValue<string>;
+        autoFocus?: IObservableOrValue<boolean>;
+        cols?: IObservableOrValue<number>;
+        dirName?: IObservableOrValue<string>;
+        disabled?: IObservableOrValue<boolean>;
+        form?: IObservableOrValue<string>;
+        maxLength?: IObservableOrValue<number>;
+        minLength?: IObservableOrValue<number>;
         name?: string;
-        placeholder?: string;
-        readOnly?: boolean;
-        required?: boolean;
-        rows?: number;
-        value?: string | string[] | number | IObservableStateSimple<string>;
-        wrap?: string;
+        placeholder?: IObservableOrValue<string>;
+        readOnly?: IObservableOrValue<boolean>;
+        required?: IObservableOrValue<boolean>;
+        rows?: IObservableOrValue<number>;
+        value?: IObservableOrValue<string | string[] | number>;
+        wrap?: IObservableOrValue<string>;
 
         onChange?: ChangeEventHandler<T>;
     }
 
     export interface TdHTMLAttributes<T> extends HTMLAttributes<T> {
-        align?: "left" | "center" | "right" | "justify" | "char";
-        colSpan?: number | IObservableStateSimple<number>;
-        //colspan?: number;
-        headers?: string;
-        rowSpan?: number;
-        //rowspan?: number;
-        scope?: string;
-        abbr?: string;
-        valign?: "top" | "middle" | "bottom" | "baseline";
+        align?: IObservableOrValue<"left" | "center" | "right" | "justify" | "char">;
+        colSpan?: IObservableOrValue<number>;
+        headers?: IObservableOrValue<string>;
+        rowSpan?: IObservableOrValue<number>;
+        scope?: IObservableOrValue<string>;
+        abbr?: IObservableOrValue<string>;
+        valign?: IObservableOrValue<"top" | "middle" | "bottom" | "baseline">;
     }
 
     export interface ThHTMLAttributes<T> extends HTMLAttributes<T> {
-        align?: "left" | "center" | "right" | "justify" | "char";
-        colSpan?: number | IObservableStateSimple<number>;
-        headers?: string;
-        rowSpan?: number | IObservableStateSimple<number>;
-        scope?: string;
-        abbr?: string;
+        align?: IObservableOrValue<"left" | "center" | "right" | "justify" | "char">;
+        colSpan?: IObservableOrValue<number>;
+        headers?: IObservableOrValue<string>;
+        rowSpan?: IObservableOrValue<number>;
+        scope?: IObservableOrValue<string>;
+        abbr?: IObservableOrValue<string>;
     }
 
     export interface TimeHTMLAttributes<T> extends HTMLAttributes<T> {
-        dateTime?: string;
+        dateTime?: IObservableOrValue<string>;
     }
 
     export interface TrackHTMLAttributes<T> extends HTMLAttributes<T> {
-        default?: boolean;
-        kind?: string;
-        label?: string;
-        src?: string;
-        srcLang?: string;
+        default?: IObservableOrValue<boolean>;
+        kind?: IObservableOrValue<string>;
+        label?: IObservableOrValue<string>;
+        src?: IObservableOrValue<string>;
+        srcLang?: IObservableOrValue<string>;
     }
 
     export interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
-        height?: number | string;
-        playsInline?: boolean;
-        poster?: string;
-        width?: number | string;
-        disablePictureInPicture?: boolean;
+        height?: IObservableOrValue<number | string>;
+        playsInline?: IObservableOrValue<boolean>;
+        poster?: IObservableOrValue<string>;
+        width?: IObservableOrValue<number | string>;
+        disablePictureInPicture?: IObservableOrValue<boolean>;
     }
 
     // this list is "complete" in that it contains every SVG attribute
@@ -1098,275 +1099,269 @@ namespace Luff  {
     export interface SVGAttributes<T> extends AriaAttributes, DOMAttributes<T> {
         // Attributes which also defined in HTMLAttributes
         // See comment in SVGDOMPropertyConfig.js
-        className?: string;
-        color?: string;
-        height?: number | string;
-        id?: string;
-        lang?: string;
-        max?: number | string;
-        media?: string;
-        method?: string;
-        min?: number | string;
+        className?: IObservableOrValue<string>;
+        color?: IObservableOrValue<string>;
+        height?: IObservableOrValue<number | string>;
+        id?: IObservableOrValue<string>;
+        lang?: IObservableOrValue<string>;
+        max?: IObservableOrValue<number>;
+        media?: IObservableOrValue<string>;
+        method?: IObservableOrValue<string>;
+        min?: IObservableOrValue<number>;
         name?: string;
-        style?: string;
-        target?: string;
-        type?: string;
-        width?: number | string;
+        style?: IObservableOrValue<string>;
+        target?: IObservableOrValue<string>;
+        type?: IObservableOrValue<string>;
+        width?: IObservableOrValue<number | string>;
 
         // Other HTML properties supported by SVG elements in browsers
-        role?: string;
-        tabIndex?: number;
-        crossOrigin?: "anonymous" | "use-credentials" | "";
+        role?: IObservableOrValue<string>;
+        tabIndex?: IObservableOrValue<number>;
+        crossOrigin?: IObservableOrValue<"anonymous" | "use-credentials" | "">;
 
         // SVG Specific attributes
-        accentHeight?: number | string;
-        accumulate?: "none" | "sum";
-        additive?: "replace" | "sum";
-        alignmentBaseline?: "auto" | "baseline" | "before-edge" | "text-before-edge" | "middle" | "central" | "after-edge" |
-            "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit";
-        allowReorder?: "no" | "yes";
-        alphabetic?: number | string;
-        amplitude?: number | string;
-        arabicForm?: "initial" | "medial" | "terminal" | "isolated";
-        ascent?: number | string;
-        attributeName?: string;
-        attributeType?: string;
-        autoReverse?: Booleanish;
-        azimuth?: number | string;
-        baseFrequency?: number | string;
-        baselineShift?: number | string;
-        baseProfile?: number | string;
-        bbox?: number | string;
-        begin?: number | string;
-        bias?: number | string;
-        by?: number | string;
-        calcMode?: number | string;
-        capHeight?: number | string;
-        clip?: number | string;
-        clipPath?: string;
-        clipPathUnits?: number | string;
-        clipRule?: number | string;
-        colorInterpolation?: number | string;
+        accentHeight?: IObservableOrValue<number>;
+        accumulate?: IObservableOrValue<"none" | "sum">;
+        additive?: IObservableOrValue<"replace" | "sum">;
+        alignmentBaseline?: IObservableOrValue<"auto" | "baseline" | "before-edge" | "text-before-edge" | "middle" | "central" | "after-edge" |
+            "text-after-edge" | "ideographic" | "alphabetic" | "hanging" | "mathematical" | "inherit">;
+        allowReorder?: IObservableOrValue<"no" | "yes">;
+        alphabetic?: IObservableOrValue<number | string>;
+        amplitude?: IObservableOrValue<number | string>;
+        arabicForm?: IObservableOrValue<"initial" | "medial" | "terminal" | "isolated">;
+        ascent?: IObservableOrValue<number | string>;
+        attributeName?: IObservableOrValue<string>;
+        attributeType?: IObservableOrValue<string>;
+        autoReverse?: IObservableOrValue<boolean>;
+        azimuth?: IObservableOrValue<number | string>;
+        baseFrequency?: IObservableOrValue<number | string>;
+        baselineShift?: IObservableOrValue<number | string>;
+        baseProfile?: IObservableOrValue<number | string>;
+        bbox?: IObservableOrValue<number | string>;
+        begin?: IObservableOrValue<number | string>;
+        bias?: IObservableOrValue<number | string>;
+        by?: IObservableOrValue<number | string>;
+        calcMode?: IObservableOrValue<number | string>;
+        capHeight?: IObservableOrValue<number | string>;
+        clip?: IObservableOrValue<number | string>;
+        clipPath?: IObservableOrValue<string>;
+        clipPathUnits?: IObservableOrValue<number | string>;
+        clipRule?: IObservableOrValue<number | string>;
+        colorInterpolation?: IObservableOrValue<number | string>;
         colorInterpolationFilters?: "auto" | "sRGB" | "linearRGB" | "inherit";
-        colorProfile?: number | string;
-        colorRendering?: number | string;
-        contentScriptType?: number | string;
-        contentStyleType?: number | string;
-        cursor?: number | string;
-        cx?: number | string;
-        cy?: number | string;
-        d?: string;
-        decelerate?: number | string;
-        descent?: number | string;
-        diffuseConstant?: number | string;
-        direction?: number | string;
-        display?: number | string;
-        divisor?: number | string;
-        dominantBaseline?: number | string;
-        dur?: number | string;
-        dx?: number | string;
-        dy?: number | string;
-        edgeMode?: number | string;
-        elevation?: number | string;
-        enableBackground?: number | string;
-        end?: number | string;
-        exponent?: number | string;
-        externalResourcesRequired?: Booleanish;
-        fill?: string;
-        fillOpacity?: number | string;
-        fillRule?: "nonzero" | "evenodd" | "inherit";
-        filter?: string;
-        filterRes?: number | string;
-        filterUnits?: number | string;
-        floodColor?: number | string;
-        floodOpacity?: number | string;
-        focusable?: Booleanish | "auto";
-        fontFamily?: string;
-        fontSize?: number | string;
-        fontSizeAdjust?: number | string;
-        fontStretch?: number | string;
-        fontStyle?: number | string;
-        fontVariant?: number | string;
-        fontWeight?: number | string;
-        format?: number | string;
-        from?: number | string;
-        fx?: number | string;
-        fy?: number | string;
-        g1?: number | string;
-        g2?: number | string;
-        glyphName?: number | string;
-        glyphOrientationHorizontal?: number | string;
-        glyphOrientationVertical?: number | string;
-        glyphRef?: number | string;
-        gradientTransform?: string;
-        gradientUnits?: string;
-        hanging?: number | string;
-        horizAdvX?: number | string;
-        horizOriginX?: number | string;
-        href?: string;
-        ideographic?: number | string;
-        imageRendering?: number | string;
-        in2?: number | string;
-        in?: string;
-        intercept?: number | string;
-        k1?: number | string;
-        k2?: number | string;
-        k3?: number | string;
-        k4?: number | string;
-        k?: number | string;
-        kernelMatrix?: number | string;
-        kernelUnitLength?: number | string;
-        kerning?: number | string;
-        keyPoints?: number | string;
-        keySplines?: number | string;
-        keyTimes?: number | string;
-        lengthAdjust?: number | string;
-        letterSpacing?: number | string;
-        lightingColor?: number | string;
-        limitingConeAngle?: number | string;
-        local?: number | string;
-        markerEnd?: string;
-        markerHeight?: number | string;
-        markerMid?: string;
-        markerStart?: string;
-        markerUnits?: number | string;
-        markerWidth?: number | string;
-        mask?: string;
-        maskContentUnits?: number | string;
-        maskUnits?: number | string;
-        mathematical?: number | string;
-        mode?: number | string;
-        numOctaves?: number | string;
-        offset?: number | string;
-        opacity?: number | string;
-        operator?: number | string;
-        order?: number | string;
-        orient?: number | string;
-        orientation?: number | string;
-        origin?: number | string;
-        overflow?: number | string;
-        overlinePosition?: number | string;
-        overlineThickness?: number | string;
-        paintOrder?: number | string;
-        panose1?: number | string;
-        path?: string;
-        pathLength?: number | string;
-        patternContentUnits?: string;
-        patternTransform?: number | string;
-        patternUnits?: string;
-        pointerEvents?: number | string;
-        points?: string;
-        pointsAtX?: number | string;
-        pointsAtY?: number | string;
-        pointsAtZ?: number | string;
-        preserveAlpha?: Booleanish;
-        preserveAspectRatio?: string;
-        primitiveUnits?: number | string;
-        r?: number | string;
-        radius?: number | string;
-        refX?: number | string;
-        refY?: number | string;
-        renderingIntent?: number | string;
-        repeatCount?: number | string;
-        repeatDur?: number | string;
-        requiredExtensions?: number | string;
-        requiredFeatures?: number | string;
-        restart?: number | string;
-        result?: string;
-        rotate?: number | string;
-        rx?: number | string;
-        ry?: number | string;
-        scale?: number | string;
-        seed?: number | string;
-        shapeRendering?: number | string;
-        slope?: number | string;
-        spacing?: number | string;
-        specularConstant?: number | string;
-        specularExponent?: number | string;
-        speed?: number | string;
-        spreadMethod?: string;
-        startOffset?: number | string;
-        stdDeviation?: number | string;
-        stemh?: number | string;
-        stemv?: number | string;
-        stitchTiles?: number | string;
-        stopColor?: string;
-        stopOpacity?: number | string;
-        strikethroughPosition?: number | string;
-        strikethroughThickness?: number | string;
-        string?: number | string;
-        stroke?: string;
-        strokeDasharray?: string | number;
-        strokeDashoffset?: string | number;
-        strokeLinecap?: "butt" | "round" | "square" | "inherit";
-        strokeLinejoin?: "miter" | "round" | "bevel" | "inherit";
-        strokeMiterlimit?: number | string;
-        strokeOpacity?: number | string;
-        strokeWidth?: number | string;
-        surfaceScale?: number | string;
-        systemLanguage?: number | string;
-        tableValues?: number | string;
-        targetX?: number | string;
-        targetY?: number | string;
-        textAnchor?: string;
-        textDecoration?: number | string;
-        textLength?: number | string;
-        textRendering?: number | string;
-        to?: number | string;
-        transform?: string;
-        u1?: number | string;
-        u2?: number | string;
-        underlinePosition?: number | string;
-        underlineThickness?: number | string;
-        unicode?: number | string;
-        unicodeBidi?: number | string;
-        unicodeRange?: number | string;
-        unitsPerEm?: number | string;
-        vAlphabetic?: number | string;
-        values?: string;
-        vectorEffect?: number | string;
-        version?: string;
-        vertAdvY?: number | string;
-        vertOriginX?: number | string;
-        vertOriginY?: number | string;
-        vHanging?: number | string;
-        vIdeographic?: number | string;
-        viewBox?: string;
-        viewTarget?: number | string;
-        visibility?: number | string;
-        vMathematical?: number | string;
-        widths?: number | string;
-        wordSpacing?: number | string;
-        writingMode?: number | string;
-        x1?: number | string;
-        x2?: number | string;
-        x?: number | string;
-        xChannelSelector?: string;
-        xHeight?: number | string;
-        xlinkActuate?: string;
-        xlinkArcrole?: string;
-        xlinkHref?: string;
-        xlinkRole?: string;
-        xlinkShow?: string;
-        xlinkTitle?: string;
-        xlinkType?: string;
-        xmlBase?: string;
-        xmlLang?: string;
-        xmlns?: string;
-        xmlnsXlink?: string;
-        xmlSpace?: string;
-        y1?: number | string;
-        y2?: number | string;
-        y?: number | string;
-        yChannelSelector?: string;
-        z?: number | string;
-        zoomAndPan?: string;
-    }
-    // export interface CSSProperties extends Partial<globalThis.CSSStyleDeclaration> {
-    //
-    // }
-    export type CSSProperties = {
-        [Properties in keyof CSSStyleDeclaration]?: CSSStyleDeclaration[Properties];
+        colorProfile?: IObservableOrValue<number | string>;
+        colorRendering?: IObservableOrValue<number | string>;
+        contentScriptType?: IObservableOrValue<number | string>;
+        contentStyleType?: IObservableOrValue<number | string>;
+        cursor?: IObservableOrValue<number | string>;
+        cx?: IObservableOrValue<number | string>;
+        cy?: IObservableOrValue<number | string>;
+        d?: IObservableOrValue<string>;
+        decelerate?: IObservableOrValue<number | string>;
+        descent?: IObservableOrValue<number | string>;
+        diffuseConstant?: IObservableOrValue<number | string>;
+        direction?: IObservableOrValue<number | string>;
+        display?: IObservableOrValue<number | string>;
+        divisor?: IObservableOrValue<number | string>;
+        dominantBaseline?: IObservableOrValue<number | string>;
+        dur?: IObservableOrValue<number | string>;
+        dx?: IObservableOrValue<number | string>;
+        dy?: IObservableOrValue<number | string>;
+        edgeMode?: IObservableOrValue<number | string>;
+        elevation?: IObservableOrValue<number | string>;
+        enableBackground?: IObservableOrValue<number | string>;
+        end?: IObservableOrValue<number | string>;
+        exponent?: IObservableOrValue<number | string>;
+        externalResourcesRequired?: IObservableOrValue<boolean>;
+        fill?: IObservableOrValue<string>;
+        fillOpacity?: IObservableOrValue<number | string>;
+        fillRule?: IObservableOrValue<"nonzero" | "evenodd" | "inherit">;
+        filter?: IObservableOrValue<string>;
+        filterRes?: IObservableOrValue<number | string>;
+        filterUnits?: IObservableOrValue<number | string>;
+        floodColor?: IObservableOrValue<number | string>;
+        floodOpacity?: IObservableOrValue<number | string>;
+        focusable?: IObservableOrValue<boolean | "auto">;
+        fontFamily?: IObservableOrValue<string>;
+        fontSize?: IObservableOrValue<number | string>;
+        fontSizeAdjust?: IObservableOrValue<number | string>;
+        fontStretch?: IObservableOrValue<number | string>;
+        fontStyle?: IObservableOrValue<number | string>;
+        fontVariant?: IObservableOrValue<number | string>;
+        fontWeight?: IObservableOrValue<number | string>;
+        format?: IObservableOrValue<number | string>;
+        from?: IObservableOrValue<number | string>;
+        fx?: IObservableOrValue<number | string>;
+        fy?: IObservableOrValue<number | string>;
+        g1?: IObservableOrValue<number | string>;
+        g2?: IObservableOrValue<number | string>;
+        glyphName?: IObservableOrValue<number | string>;
+        glyphOrientationHorizontal?: IObservableOrValue<number | string>;
+        glyphOrientationVertical?: IObservableOrValue<number | string>;
+        glyphRef?: IObservableOrValue<number | string>;
+        gradientTransform?: IObservableOrValue<string>;
+        gradientUnits?: IObservableOrValue<string>;
+        hanging?: IObservableOrValue<number | string>;
+        horizAdvX?: IObservableOrValue<number | string>;
+        horizOriginX?: IObservableOrValue<number | string>;
+        href?: IObservableOrValue<string>;
+        ideographic?: IObservableOrValue<number | string>;
+        imageRendering?: IObservableOrValue<number | string>;
+        in2?: IObservableOrValue<number | string>;
+        in?: IObservableOrValue<string>;
+        intercept?: IObservableOrValue<number | string>;
+        k1?: IObservableOrValue<number | string>;
+        k2?: IObservableOrValue<number | string>;
+        k3?: IObservableOrValue<number | string>;
+        k4?: IObservableOrValue<number | string>;
+        k?: IObservableOrValue<number | string>;
+        kernelMatrix?: IObservableOrValue<number | string>;
+        kernelUnitLength?: IObservableOrValue<number | string>;
+        kerning?: IObservableOrValue<number | string>;
+        keyPoints?: IObservableOrValue<number | string>;
+        keySplines?: IObservableOrValue<number | string>;
+        keyTimes?: IObservableOrValue<number | string>;
+        lengthAdjust?: IObservableOrValue<number | string>;
+        letterSpacing?: IObservableOrValue<number | string>;
+        lightingColor?: IObservableOrValue<number | string>;
+        limitingConeAngle?: IObservableOrValue<number | string>;
+        local?: IObservableOrValue<number | string>;
+        markerEnd?: IObservableOrValue<string>;
+        markerHeight?: IObservableOrValue<number | string>;
+        markerMid?: IObservableOrValue<string>;
+        markerStart?: IObservableOrValue<string>;
+        markerUnits?: IObservableOrValue<number | string>;
+        markerWidth?: IObservableOrValue<number | string>;
+        mask?: IObservableOrValue<string>;
+        maskContentUnits?: IObservableOrValue<number | string>;
+        maskUnits?: IObservableOrValue<number | string>;
+        mathematical?: IObservableOrValue<number | string>;
+        mode?: IObservableOrValue<number | string>;
+        numOctaves?: IObservableOrValue<number | string>;
+        offset?: IObservableOrValue<number | string>;
+        opacity?: IObservableOrValue<number | string>;
+        operator?: IObservableOrValue<number | string>;
+        order?: IObservableOrValue<number | string>;
+        orient?: IObservableOrValue<number | string>;
+        orientation?: IObservableOrValue<number | string>;
+        origin?: IObservableOrValue<number | string>;
+        overflow?: IObservableOrValue<number | string>;
+        overlinePosition?: IObservableOrValue<number | string>;
+        overlineThickness?: IObservableOrValue<number | string>;
+        paintOrder?: IObservableOrValue<number | string>;
+        panose1?: IObservableOrValue<number | string>;
+        path?: IObservableOrValue<string>;
+        pathLength?: IObservableOrValue<number | string>;
+        patternContentUnits?: IObservableOrValue<string>;
+        patternTransform?: IObservableOrValue<number | string>;
+        patternUnits?: IObservableOrValue<string>;
+        pointerEvents?: IObservableOrValue<number | string>;
+        points?: IObservableOrValue<string>;
+        pointsAtX?: IObservableOrValue<number | string>;
+        pointsAtY?: IObservableOrValue<number | string>;
+        pointsAtZ?: IObservableOrValue<number | string>;
+        preserveAlpha?: IObservableOrValue<boolean>;
+        preserveAspectRatio?: IObservableOrValue<string>;
+        primitiveUnits?: IObservableOrValue<number | string>;
+        r?: IObservableOrValue<number | string>;
+        radius?: IObservableOrValue<number | string>;
+        refX?: IObservableOrValue<number | string>;
+        refY?: IObservableOrValue<number | string>;
+        renderingIntent?: IObservableOrValue<number | string>;
+        repeatCount?: IObservableOrValue<number | string>;
+        repeatDur?: IObservableOrValue<number | string>;
+        requiredExtensions?: IObservableOrValue<number | string>;
+        requiredFeatures?: IObservableOrValue<number | string>;
+        restart?: IObservableOrValue<number | string>;
+        result?: IObservableOrValue<string>;
+        rotate?: IObservableOrValue<number | string>;
+        rx?: IObservableOrValue<number | string>;
+        ry?: IObservableOrValue<number | string>;
+        scale?: IObservableOrValue<number | string>;
+        seed?: IObservableOrValue<number | string>;
+        shapeRendering?: IObservableOrValue<number | string>;
+        slope?: IObservableOrValue<number | string>;
+        spacing?: IObservableOrValue<number | string>;
+        specularConstant?: IObservableOrValue<number | string>;
+        specularExponent?: IObservableOrValue<number | string>;
+        speed?: IObservableOrValue<number | string>;
+        spreadMethod?: IObservableOrValue<string>;
+        startOffset?: IObservableOrValue<number | string>;
+        stdDeviation?: IObservableOrValue<number | string>;
+        stemh?: IObservableOrValue<number | string>;
+        stemv?: IObservableOrValue<number | string>;
+        stitchTiles?: IObservableOrValue<number | string>;
+        stopColor?: IObservableOrValue<string>;
+        stopOpacity?: IObservableOrValue<number | string>;
+        strikethroughPosition?: IObservableOrValue<number | string>;
+        strikethroughThickness?: IObservableOrValue<number | string>;
+        string?: IObservableOrValue<number | string>;
+        stroke?: IObservableOrValue<string>;
+        strokeDasharray?: IObservableOrValue<string | number>;
+        strokeDashoffset?: IObservableOrValue<string | number>;
+        strokeLinecap?: IObservableOrValue<"butt" | "round" | "square" | "inherit">;
+        strokeLinejoin?: IObservableOrValue<"miter" | "round" | "bevel" | "inherit">;
+        strokeMiterlimit?: IObservableOrValue<number | string>;
+        strokeOpacity?: IObservableOrValue<number | string>;
+        strokeWidth?: IObservableOrValue<number | string>;
+        surfaceScale?: IObservableOrValue<number | string>;
+        systemLanguage?: IObservableOrValue<number | string>;
+        tableValues?: IObservableOrValue<number | string>;
+        targetX?: IObservableOrValue<number | string>;
+        targetY?: IObservableOrValue<number | string>;
+        textAnchor?: IObservableOrValue<string>;
+        textDecoration?: IObservableOrValue<number | string>;
+        textLength?: IObservableOrValue<number | string>;
+        textRendering?: IObservableOrValue<number | string>;
+        to?: IObservableOrValue<number | string>;
+        transform?: IObservableOrValue<string>;
+        u1?: IObservableOrValue<number | string>;
+        u2?: IObservableOrValue<number | string>;
+        underlinePosition?: IObservableOrValue<number | string>;
+        underlineThickness?: IObservableOrValue<number | string>;
+        unicode?: IObservableOrValue<number | string>;
+        unicodeBidi?: IObservableOrValue<number | string>;
+        unicodeRange?: IObservableOrValue<number | string>;
+        unitsPerEm?: IObservableOrValue<number | string>;
+        vAlphabetic?: IObservableOrValue<number | string>;
+        values?: IObservableOrValue<string>;
+        vectorEffect?: IObservableOrValue<number | string>;
+        version?: IObservableOrValue<string>;
+        vertAdvY?: IObservableOrValue<number | string>;
+        vertOriginX?: IObservableOrValue<number | string>;
+        vertOriginY?: IObservableOrValue<number | string>;
+        vHanging?: IObservableOrValue<number | string>;
+        vIdeographic?: IObservableOrValue<number | string>;
+        viewBox?: IObservableOrValue<string>;
+        viewTarget?: IObservableOrValue<number | string>;
+        visibility?: IObservableOrValue<number | string>;
+        vMathematical?: IObservableOrValue<number | string>;
+        widths?: IObservableOrValue<number | string>;
+        wordSpacing?: IObservableOrValue<number | string>;
+        writingMode?: IObservableOrValue<number | string>;
+        x1?: IObservableOrValue<number | string>;
+        x2?: IObservableOrValue<number | string>;
+        x?: IObservableOrValue<number | string>;
+        xChannelSelector?: IObservableOrValue<string>;
+        xHeight?: IObservableOrValue<number | string>;
+        xlinkActuate?: IObservableOrValue<string>;
+        xlinkArcrole?: IObservableOrValue<string>;
+        xlinkHref?: IObservableOrValue<string>;
+        xlinkRole?: IObservableOrValue<string>;
+        xlinkShow?: IObservableOrValue<string>;
+        xlinkTitle?: IObservableOrValue<string>;
+        xlinkType?: IObservableOrValue<string>;
+        xmlBase?: IObservableOrValue<string>;
+        xmlLang?: IObservableOrValue<string>;
+        xmlns?: IObservableOrValue<string>;
+        xmlnsXlink?: IObservableOrValue<string>;
+        xmlSpace?: IObservableOrValue<string>;
+        y1?: IObservableOrValue<number | string>;
+        y2?: IObservableOrValue<number | string>;
+        y?: IObservableOrValue<number | string>;
+        yChannelSelector?: IObservableOrValue<string>;
+        z?: IObservableOrValue<number | string>;
+        zoomAndPan?: IObservableOrValue<string>;
     }
 }
 
@@ -1585,30 +1580,29 @@ window['___LuffGlobal'] = {
     ]
 );
 
-// type Stateable<T> = _IObservableStateSimple<T> | T;
-//
-// function getAttribute<T>(s: Stateable<T>, p: (v: T) => T) {
-//     let state = s as _IObservableStateSimple<T>;
-//     let val = s as T;
-//     if (state) {
-//         return state.SubState(v => p(v))
-//     } {
-//         return p(val);
-//     }
-// }
-//
-// getAttribute(12, v => 5 + 5);
-// let s = Luff.State("12");
-//
-// getAttribute<number>(Luff.State(12), v => v + 4);
-// getAttribute<number>(4, v => v + 4);
-// //Luff.DOM.GetAttrubute = getAttribute;
-// function makeClass(s: Stateable<string>) {
-//
-//     return (
-//         <button className={getAttribute(s, className => className + ' l-button')}>Button 1</button>
-//     )
-// }
+
+function getAttribute<T>(s: IObservableOrValue<T>, p: (v: T) => T) {
+    let state = s as _IObservableStateSimple<T>;
+    let val = s as T;
+    if (state) {
+        return state.SubState(v => p(v))
+    } {
+        return p(val);
+    }
+}
+
+getAttribute(12, v => 5 + 5);
+let s = Luff.State("12");
+
+getAttribute<number>(Luff.State(12), v => v + 4);
+getAttribute<number>(4, v => v + 4);
+//Luff.DOM.GetAttrubute = getAttribute;
+function makeClass(s: IObservableOrValue<string>) {
+
+    return (
+        <button className={getAttribute(s, className => className + ' l-button')}>Button 1</button>
+    )
+}
 
 
 export {React, luffState, luffStateArr, TContentCtor,
@@ -1621,8 +1615,7 @@ export {React, luffState, luffStateArr, TContentCtor,
     _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, _IObservableStateSimpleOrValue as IObservableStateSimpleOrValue, Dict, DictN,
     TPositionObject, TOffset, TValueName, TIDNamePair,
     _IContent as IContent, JSXElement, IElement, IElementBase, ElementBase, IRenderElement, ComponentFactory,
-    State, StateArray, getClosestStateArray,
-
+    State, StateArray, getClosestStateArray, IObservableOrValue,
 
     //AppSettings,
     //components:
