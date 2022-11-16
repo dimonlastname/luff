@@ -2,7 +2,7 @@ import {IContent} from "../Content/IContent";
 import {Dict, IObservableState, IObservableStateSimple} from "../../interfaces";
 import {IRenderElement} from "../Compiler/ComponentFactory";
 
-export type TPropsAttributesDefault<TState = any> = {
+export type TPropsAttributesDefault<TState = {}> = {
     name?: string;
     isVisible?: IObservableStateSimple<boolean> | boolean;
     state?: IObservableStateSimple<TState> | IObservableState<TState>;
@@ -12,7 +12,7 @@ export type TPropsAttributesDefault<TState = any> = {
 type TPropsChildren = {
     children?: any; //IRenderElement
 }
-export type TPropsDefault<TState = any> = TPropsAttributesDefault<TState> & TPropsChildren
+export type TPropsDefault<TState = {}> = TPropsAttributesDefault<TState> & TPropsChildren
 
 
 export interface JSXElement<P = any> /*extends React.ReactElement<any, any>*/ {
