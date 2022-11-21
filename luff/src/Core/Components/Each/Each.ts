@@ -171,8 +171,10 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         comp._HideTransitionFunction();
         comp._Disappear();
     }
-    private _ShowItem(comp: IElement/*, targetDOM: HTMLElement*/) : void {
-        //this._InsertHTML(comp.DOM);
+    private _ShowItem(comp: IElement, isNew: boolean) : void {
+        if (isNew && (comp as ElementBase)._IsHiddenByDefault)
+            return;
+
         comp._ShowTransitionFunction();
         comp._Appear();
     }
@@ -183,7 +185,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             this._GenerateEmptyChildren();
         }
         for (let ch of this._CompEmptyList) {
-            this._ShowItem(ch);
+            this._ShowItem(ch, false);
             // TargetDOM.appendChild(ch.DOM);
             // ch.Show();
         }
@@ -302,7 +304,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 existsItem.Index.SValue = index;
                 index++;
                 this._HideItem(existsItem.Component); //to force mount element //fixme
-                this._ShowItem(existsItem.Component);
+                this._ShowItem(existsItem.Component, false);
                 // this._InsertHTML(existsItem.Component.DOM);
                 // if (this.ParentElement.DOM.isConnected)
                 //     existsItem.Component.Show();
@@ -319,7 +321,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 continue;
             }
             eachItems[key] = this._GenerateItem(valueState, key, index);
-            this._ShowItem(eachItems[key].Component);
+            this._ShowItem(eachItems[key].Component, true);
             index++;
         }
     }

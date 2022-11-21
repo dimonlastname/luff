@@ -289,7 +289,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     //Refresh():void { }
 
 
-    protected _IsHiddenByDefault: boolean = false;
+    _IsHiddenByDefault: boolean = false;
 
     _CompileIsVisible(isVisible: boolean | IObservableStateSimple<boolean>) {
         if (isVisible === void 0 || isVisible === null || !this.HasPermission)
