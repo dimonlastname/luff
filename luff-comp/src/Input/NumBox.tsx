@@ -57,7 +57,7 @@ export default class NumBox extends InputBoxBase<TProps> {
         };
     }
 
-    Render(): any {
+    Render(): Luff.Node {
         const isHideInappropriateValue = this.props.isHideInappropriateValue;
         const min = this.props.min;
         const max = this.props.max;
@@ -76,19 +76,6 @@ export default class NumBox extends InputBoxBase<TProps> {
                 deps.push(maxSt);
 
             valueView = this.props.value.SubState(val => (val < min || val > max) ? '' : val, deps);
-            //
-            // if (isMinState && isMaxState) {
-            //     valueView = this.props.value.SubState(val => (val < minSt.SValue || val > maxSt.SValue) ? '' : val, [minSt, maxSt])
-            // }
-            // else if (isMinState && !isMaxState) {
-            //     valueView = this.props.value.SubState(val => (val < min || val > maxSt.SValue) ? '' : val, [maxSt])
-            // }
-            // else if (!isMinState && isMaxState) {
-            //     valueView = this.props.value.SubState(val => (val < minSt.SValue || val > max) ? '' : val, [minSt])
-            // }
-            // else {
-            //     valueView = this.props.value.SubState(val => (val < min || val > max) ? '' : val)
-            // }
         }
 
 
@@ -112,6 +99,9 @@ export default class NumBox extends InputBoxBase<TProps> {
                    value={valueView}
                    onChange={e => {
                        let value = parseFloat(e.currentTarget.value);
+                       if (value == this.props.value.SValue)
+                           return;
+
                        if (this.props.onChange) {
                            return this.props.onChange(value);
                        }
@@ -122,7 +112,7 @@ export default class NumBox extends InputBoxBase<TProps> {
                    placeholder={this.props.placeholder}
                    min={this.props.min}
                    max={this.props.max}
-                   disabled={this._IsDisabled as any}
+                   disabled={this._IsDisabled}
             />
         )
 

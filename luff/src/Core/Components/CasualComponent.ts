@@ -329,6 +329,8 @@ class CasualComponent extends CasualMountingBase {
                     break;
                 case 'text':
                 case 'number':
+                    resetValue = function () { };
+                    break;
                 case 'password':
                 case 'email':
                 case 'tel':
