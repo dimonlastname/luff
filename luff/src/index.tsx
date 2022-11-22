@@ -1581,29 +1581,6 @@ window['___LuffGlobal'] = {
 );
 
 
-function getAttribute<T>(s: IObservableOrValue<T>, p: (v: T) => T) {
-    let state = s as _IObservableStateSimple<T>;
-    let val = s as T;
-    if (state) {
-        return state.SubState(v => p(v))
-    } {
-        return p(val);
-    }
-}
-
-getAttribute(12, v => 5 + 5);
-let s = Luff.State("12");
-
-getAttribute<number>(Luff.State(12), v => v + 4);
-getAttribute<number>(4, v => v + 4);
-//Luff.DOM.GetAttrubute = getAttribute;
-function makeClass(s: IObservableOrValue<string>) {
-
-    return (
-        <button className={getAttribute(s, className => className + ' l-button')}>Button 1</button>
-    )
-}
-
 
 export {React, luffState, luffStateArr, TContentCtor,
     _ComponentSimple as ComponentSimple,
