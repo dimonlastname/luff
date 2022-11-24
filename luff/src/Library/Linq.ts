@@ -109,6 +109,10 @@ export class LuffLinq<T> {
         };
         return this;
     }
+    AsEnumerable() : LuffLinq<T> {
+        this._Data = this.ToList();
+        return this;
+    }
     ToList() : T[] {
         if (this._CallList.length  < 1)
             return this._Data as any;
