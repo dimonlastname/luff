@@ -31,6 +31,13 @@ export type TPositionObject = {
     x: number;
     y: number;
 }
+
+export type TPositionObjectWithDirection = {
+    x: number;
+    y: number;
+    direction: "left-top" | "left-bottom" | "right-top" | "right-bottom"
+}
+
 export type TOffset = {
     Left: number,
     Top: number
@@ -102,6 +109,7 @@ export type IObservableStateArray<T> = {
 
     AddOnChange(onChange: (newValue?: T[], changedState?: State<T>) => void) : void;
     RemoveOnChange(onChange: TStateOnChange<T>) : void;
+    ForceUpdate() : void;
 
     MakeSortable(compareFn: (a: T, b: T) => number) : void
     MakeFilterable(predicate: (item: T, index?: number) => boolean) : void
@@ -123,6 +131,9 @@ export type IObservableStateArray<T> = {
     readonly length: number;
     FirstOrDefault(predicate?: (val: T, i: number) => boolean) : IObservableState<T>;
     LastOrDefault(predicate?: (val: T, i: number) => boolean) : IObservableState<T>;
+
+
+
     [Symbol.iterator](): Iterator<IObservableState<T>>;
 }
 
