@@ -1,4 +1,5 @@
 import {LibraryCSS} from "./CSS";
+import {TPositionObject, TPositionObjectWithDirection} from "../interfaces";
 
 function _IsVisible(element: Element) {
     let Style = window.getComputedStyle(element);
@@ -292,6 +293,64 @@ export namespace LibraryDOM {
             after.call(thisArg, eventArg);
         }, duration);
         return timeout;
+    }
+
+    export function GetGlobalElementPositionOverAnother(elementToPosition: HTMLElement, elementOver: HTMLElement, margin: TPositionObject = {x: 0, y: 0 }) : TPositionObjectWithDirection {
+        const rectOver = elementOver.getBoundingClientRect();
+        const rectPosition = elementToPosition.getBoundingClientRect();
+        const rectBody = document.body.getBoundingClientRect();
+
+        // const MIN_HEIGHT = 30;
+        // if (rectPosition.height == 0) {
+        //     rectPosition.height = MIN_HEIGHT;
+        // }
+
+        let x = 0;
+        let xDir = "left";
+        let y = 0;
+        let yDir = "top";
+        //x
+        if (rectOver.x + rectOver.width + margin.x + rectPosition.width <= rectBody.width) {
+            x = rectOver.x + rectOver.width + margin.x;
+            xDir = "left";
+        } else {
+            x = rectOver.x - margin.x - rectPosition.width;
+            xDir = "right";
+        }
+        //y
+        if (rectOver.y + rectOver.height + margin.y + rectPosition.height <= rectBody.height - 50) {
+            y = rectOver.y + rectOver.height + margin.y;
+            yDir = "top";
+        } else {
+            y = rectOver.y - margin.y - rectPosition.height;
+            yDir = "bottom";
+        }
+        return {
+            x: x,
+            y: y,
+            direction: `${xDir}-${yDir}` as any
+        };
+    }
+    export function GetGlobalElementPositionByCoords(elementToPosition: HTMLElement, pos: TPositionObject) : TPositionObjectWithDirection {
+        const rectHint = elementToPosition.getBoundingClientRect();
+        const rectBody = document.body.getBoundingClientRect();
+
+        let xDir = "left";
+        let yDir = "top";
+        //x
+        if (pos.x + rectHint.width > rectBody.width) {
+            pos.x = pos.x - rectHint.width;
+            xDir = "right";
+        }
+        //y
+        if (pos.y + rectHint.height > rectBody.height) {
+            pos.y = pos.y - rectHint.height;
+            yDir = "bottom";
+        }
+        return {
+            ...pos,
+            direction: `${xDir}-${yDir}` as any
+        };
     }
 }
 
