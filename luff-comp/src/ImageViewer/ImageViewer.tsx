@@ -117,6 +117,13 @@ export default class LuffImageViewer extends Luff.Content<TProps> {
     GetImage(src: string) : Promise<HTMLImageElement> {
         if (this.ImageCache[src])
             return Promise.resolve(this.ImageCache[src]);
+        if (src.indexOf("data:") == 0) {
+            let img = new Image();
+            img.src = src;
+            return Promise.resolve(img);
+        }
+
+
         this.Load.Show();
         if (this.ImagePrevent.Src === src) {
             this.ImagePrevent.Promise

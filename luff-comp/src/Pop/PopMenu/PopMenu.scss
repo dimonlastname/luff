@@ -20,6 +20,27 @@
     border-bottom: 5px solid transparent;
     transform: rotate(45deg);
   }
+  &.left-top:before {
+    left: 15px;
+    right: unset;
+  }
+  &.right-top:before {
+
+  }
+  &.left-bottom:before {
+    left: 15px;
+    right: unset;
+
+    transform: rotate(225deg);
+    bottom: -5px;
+    top: unset;
+  }
+  &.right-bottom:before {
+    transform: rotate(225deg);
+    bottom: -5px;
+    top: unset;
+  }
+
   &:hover{
     display: block;
   }
@@ -31,7 +52,7 @@
     &:last-child{
       border: none;
     }
-    &:hover{
+    &:hover:not(.static){
       color: var(--l-clr-active);
       cursor: pointer;
     }

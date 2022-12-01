@@ -15,8 +15,8 @@ type TPopMenuProps = {
 }
 
 
-export default class PopMenu extends Luff.Content<TPopMenuProps> {
-    Render(): any {
+export class PopMenu<TPropsExtra = {}> extends Luff.Content<TPopMenuProps & TPropsExtra> {
+    Render(): Luff.Node {
         return (
             <div className="l-pop-popMenu">
                 {
