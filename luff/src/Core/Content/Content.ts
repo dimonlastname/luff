@@ -485,8 +485,22 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
             };
         }
         this._Mount = () => {
+
+
+
+
             if (!this._IsShown)
                 return;
+
+            //cancel hiding
+            if (isAnimateHide) {
+                dialogWrap.ElementAnimate.classList.remove(dialogParams.Animation.Hide);
+                window.clearTimeout(timeoutHide);
+                isLocked = false;
+            }
+
+
+
             this._IsMount = true;
             if (isLocked)
                 return;
