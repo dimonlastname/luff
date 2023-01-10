@@ -164,14 +164,14 @@ export default class LuffImageViewer extends Luff.Content<TProps> {
                 }
                 <div className="l-iv-inner">
                     <div className="l-iv-slider">
-                        <div className="l-iv-control" onClick={() => this.NextImage(-1)}>
-                            <div className="l-iv-control-arrow l-iv-control-arrow-left" isVisible={this._IsArrowsVisible} />
+                        <div className="l-iv-control" onClick={() => this.NextImage(-1)} isVisible={this._IsArrowsVisible} >
+                            <div className="l-iv-control-arrow l-iv-control-arrow-left"/>
                         </div>
                         <div className="l-iv-body" name="l-iv-body">
                             <div className="l-iv-image-holder" name="l-iv-image-holder" style={maxImageHeight}/>
                         </div>
-                        <div className="l-iv-control" onClick={() => this.NextImage(1)}>
-                            <div className="l-iv-control-arrow l-iv-control-arrow-right" isVisible={this._IsArrowsVisible} />
+                        <div className="l-iv-control" onClick={() => this.NextImage(1)} isVisible={this._IsArrowsVisible} >
+                            <div className="l-iv-control-arrow l-iv-control-arrow-right"/>
                         </div>
                     </div>
                     {
