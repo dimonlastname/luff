@@ -7,7 +7,7 @@ enum HintDirection {
 type THintDirection = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 type HintRenderFn = (hintPack: THintPack) => HTMLElement;
 
-const MARGIN_X = 20;
+const MARGIN_X = 30;
 const MARGIN_Y = 8;
 
 interface TLuffHintCtor {
@@ -106,7 +106,7 @@ export class LuffHint {
         hintDom.style.top  = Pos.y + 'px';
     }
     static GetPos(direction: string, rect: DOMRect, rectHint: DOMRect, rectContainment: DOMRect, margin: TPositionObject){
-        console.log('GetPos');
+        //console.log('GetPos');
         let PosX = -rectContainment.x;
         let PosY = -rectContainment.y;
         if (direction === 'bottom-right'){

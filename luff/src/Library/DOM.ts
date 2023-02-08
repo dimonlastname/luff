@@ -87,7 +87,7 @@ export namespace LibraryDOM {
         return parseInt(element.dataset['line']);
     }
     export function Print(element: HTMLElement, CSSPrint: string = '') : void {
-        let MyWindow = window.open('', 'PRINT');//, 'height=800,width=1000');
+        let printWindow = window.open('', 'PRINT');//, 'height=800,width=1000');
         let styles = '';
         for (let i = 0; i < document.styleSheets.length; i++){
             let Sheet = <CSSStyleSheet>document.styleSheets[i];
@@ -119,18 +119,18 @@ export namespace LibraryDOM {
                         ${CSSPrint}
                     }`;
         //console.log('styles', styles);
-        MyWindow.document.write('<html><head><title>' + document.title  + '</title>');
+        printWindow.document.write('<html><head><title>' + document.title  + '</title>');
 
-        MyWindow.document.write(`<style>${styles}</style>`);
-        MyWindow.document.write('</head><body>');
-        MyWindow.document.write(element.innerHTML);
-        MyWindow.document.write('</body></html>');
+        printWindow.document.write(`<style>${styles}</style>`);
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(element.outerHTML);
+        printWindow.document.write('</body></html>');
 
-        MyWindow.document.close(); // necessary for IE >= 10
-        MyWindow.focus(); // necessary for IE >= 10*/
+        printWindow.document.close(); // necessary for IE >= 10
+        printWindow.focus(); // necessary for IE >= 10*/
 
-        MyWindow.print();
-        MyWindow.close();
+        printWindow.print();
+        printWindow.close();
     }
     export function Swap(element1: HTMLElement, element2: HTMLElement){
         const t = element1.parentNode.insertBefore(document.createTextNode(''), element1);

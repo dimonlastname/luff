@@ -1,6 +1,6 @@
 {
   "name": "luff-comp",
-  "version": "3.0.40",
+  "version": "3.0.42",
   "description": "Luff's component library",
   "main": "./src/index.tsx",
   "author": "Dmitrii Pupyrev",
