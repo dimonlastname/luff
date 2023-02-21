@@ -1,15 +1,19 @@
-import Luff, {React, TContentCtor, Each, TPositionObject} from "luff";
+import Luff, {React, TContentCtor, Each, TPositionObject, IObservableOrValue} from "luff";
 import "./PopMenu.scss";
 
 export type TCommonPopContextMenuItem = {
-    Caption: string;
+    Caption?: string;
     OnClick?: () => void;
+    IsVisible?: IObservableOrValue<boolean>;
+    Render?: () => Luff.Node;
 }
 
 type TPopMenuProps = {
     className?: string;
     context?: any;
     offset?: TPositionObject;
+    items?: TCommonPopContextMenuItem[];
+    render?: () => Luff.Node;
 }
 
 export class ContextMenu extends Luff.Content<TPopMenuProps> {
@@ -24,6 +28,39 @@ export class ContextMenu extends Luff.Content<TPopMenuProps> {
 
         return (
             <div className={this.ClassDir.SubState(direction => "l-pop-popMenu " + (this.props.className ? this.props.className : "") + " " + direction)}>
+                {
+                    this.props.items
+                    &&
+                    this.props.items.map(menuItem => {
+
+                        return (
+                            <div className="l-pop-popMenu_li"
+                                 classDict={{
+                                     static: Luff.State(!menuItem.OnClick)
+                                 }}
+                                 onClick={() => {
+                                     let onClick = menuItem?.OnClick;
+                                     if (onClick) {
+                                         onClick.call(this.props.context ? this.props.context: void 0);
+                                         this.Hide();
+                                     }
+
+                                 }}
+                                 isVisible={menuItem.IsVisible}
+
+                            >
+                                {menuItem.Caption}
+                                {menuItem.Render()}
+                            </div>
+                        )
+                    })
+                }
+                {
+                    this.props.render
+                    &&
+                    this.props.render()
+                }
+
                 <Each
                     source={this.Items}
                     render={menuItem => {

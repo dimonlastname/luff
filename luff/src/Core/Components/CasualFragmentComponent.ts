@@ -6,6 +6,9 @@ import {ComponentFactory} from "../Compiler/ComponentFactory";
 export class CasualFragmentComponent extends ElementBase {
     private _CompileChildren() {
         const children = this._RawComponent.Children;
+        if (!children)
+            return;
+
         for (let child of children) {
             let elem = ComponentFactory.Build(child, this, this.ParentComponent);
             if (elem) {
