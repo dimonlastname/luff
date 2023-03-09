@@ -14,7 +14,15 @@ type TPopCtor = {
 type TShowMessageOptions = {
     Duration?: number;
     LogItem?: any;
+    OnClick?: (ctx: IElemContext, e: MouseEvent) => void;
 }
+
+type IElemContext = {
+    DOM: HTMLElement;
+    Hide(): void;
+}
+
+
 let popLogInstanceCounter = 0;
 function createElementFromString(string: string, ownerTagName: string = "div"): HTMLElement {
     let documentFragment = document.createDocumentFragment();
@@ -60,13 +68,24 @@ export class PopLog {
         const div = createElementFromString(templateDefault);
         const lifeLine    = <HTMLElement>div.querySelector('.l-pop-log__life');
         const buttonClose = <HTMLElement>div.querySelector('.l-pop-log__close');
-        buttonClose.addEventListener('click', () => {
-            clearTimeout(destroyTimeout);
-            div.style.opacity = '0';
-            setTimeout(() => {
-                div.remove();
-            }, Math.round(animationDuration))
-        });
+
+        const elemContext : IElemContext = {
+            DOM: div,
+            Hide: () => {
+                clearTimeout(destroyTimeout);
+                div.style.opacity = '0';
+                setTimeout(() => {
+                    div.remove();
+                }, Math.round(animationDuration))
+            },
+        };
+        buttonClose.addEventListener('click', elemContext.Hide);
+        if (opt.OnClick) {
+            const txtElem = <HTMLElement>div.querySelector('.l-pop-log__text');
+            txtElem.addEventListener('click', e => {
+                opt.OnClick(elemContext, e);
+            });
+        }
 
         let destroyTimeout = setTimeout(()=>{
             div.style.opacity = '0';
