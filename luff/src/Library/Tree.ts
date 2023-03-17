@@ -58,10 +58,30 @@ export namespace LibraryTree {
         }
         return null;
     }
-    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T) => void) : void {
+
+    function ForEachProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void, parent?: T) : void {
         for (let item of tree) {
-            action(item);
-            ForEach((item as any)[subKey], subKey, action);
+            action(item, parent);
+            ForEachProcess((item as any)[subKey], subKey, action, item);
+        }
+    }
+    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void) : void {
+        for (let item of tree) {
+            action(item, null);
+            ForEachProcess((item as any)[subKey], subKey, action, item);
+        }
+    }
+
+    function ForEachFromReverseProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void, parent?: T) : void {
+        for (let item of tree) {
+            ForEachFromReverseProcess((item as any)[subKey], subKey, action, item);
+            action(item, parent);
+        }
+    }
+    export function ForEachReverse<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void) : void {
+        for (let item of tree) {
+            ForEachFromReverseProcess((item as any)[subKey], subKey, action, item);
+            action(item, null);
         }
     }
 }
