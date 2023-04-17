@@ -168,7 +168,7 @@ export class Router {
     };
     GoToDefault() : number {
         this.CurrentContent = null;
-        let defaultContent = AppRouter.ContentRoot.find(x => x.HasRoute || x.GroupType);
+        let defaultContent = AppRouter.ContentRoot.find(x => x.Permission.IsAllow && (x.HasRoute || x.GroupType));
         if (!defaultContent)
             defaultContent = AppRouter.ContentRoot.find(x => !(x  as any)._IsDialog);
         if (!defaultContent)
