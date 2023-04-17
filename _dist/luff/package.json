@@ -1,6 +1,6 @@
 {
   "name": "luff",
-  "version": "3.0.44",
+  "version": "3.0.45",
   "description": "JavaScript framework for building user interfaces",
   "main": "index.js",
   "author": "Dmitrii Pupyrev",
