@@ -415,7 +415,6 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
         const text = this.State.TextBoxValue.SValue;
 
         if (this.props.isSearchEnabled && !this.props.searchSuggestionDataAsync) {
-            console.log('casual search');
             if (!this._ListComponent._IsShown) {
                 this._ListComponent.Show();
                 //this.State.IsOfferListVisible.SValue = true;
