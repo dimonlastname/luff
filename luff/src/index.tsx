@@ -60,6 +60,7 @@ import {ICssStyle} from "./ICssStyle";
 
 namespace Luff  {
     export const createElement = React.createElement;
+    export const ComponentBuilder = ComponentFactory.Build;
     //export const React = _React;
     export const Content = _Content;
     export type Content = _Content;
