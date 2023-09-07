@@ -1,9 +1,10 @@
 {
   "name": "luff-comp",
-  "version": "3.0.43",
+  "version": "3.0.45",
   "description": "Luff's component library",
   "main": "./src/index.tsx",
   "author": "Dmitrii Pupyrev",
+  "homepage": "https://luff.one",
   "license": "MIT",
   "dependencies": {
     "luff": "latest"
