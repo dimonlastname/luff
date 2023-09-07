@@ -224,10 +224,10 @@ export class Route<T = any> {
             r.SetActive(isActive);
         }
     }
-    AddRouteLink(routeLink: IRouteLink) : void {
+    public AddRouteLink(routeLink: IRouteLink) : void {
         this.RouteLinks.push(routeLink);
     }
-    RemoveRouteLink(routeLink: IRouteLink) : void {
+    public RemoveRouteLink(routeLink: IRouteLink) : void {
         LibraryArray.Remove(this.RouteLinks, x => x === routeLink);
         //this.RouteLinks.push(routeLink);
     }
@@ -253,6 +253,11 @@ export class Route<T = any> {
         //console.log('[Luff.Route] Go', this.Content.RouteName);
         this.SetLinksActive(true);
         this.Content.Show();
+    }
+
+
+    public CheckRouteLink() : void {
+        this.RouteLinks.map(rLink => rLink.CheckPermission() );
     }
     // Back() : void {
     //     //console.log('[Luff.Route] Back', this.Content.RouteName);

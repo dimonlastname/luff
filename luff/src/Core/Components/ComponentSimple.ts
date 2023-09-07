@@ -1,6 +1,6 @@
 import {JSXElement, TRawComponent} from "./IElement";
 import {ElementBase} from "./ElementBase";
-import {ComponentFactory} from "../Compiler/ComponentFactory";
+import {ComponentFactory, IRenderElement} from "../Compiler/ComponentFactory";
 
 export class ComponentSimple<TProps = {}> extends ElementBase<TProps> {
     Render(): JSXElement {
@@ -13,11 +13,11 @@ export class ComponentSimple<TProps = {}> extends ElementBase<TProps> {
         super._GenerateDOM();
         this._GenerateDOM = null;
         this.BeforeBuild();
-        const renderElement = this.Render();
+        const renderElement = this.Render() as IRenderElement;
         if (!renderElement) {
             return void 0;
         } 
-        const build = ComponentFactory.Build(renderElement as any, this, this.ParentComponent);
+        const build = ComponentFactory.Build(renderElement, this, this.ParentComponent);
         if (!build) {
             this._RemoveComponent();
             return;
@@ -27,14 +27,9 @@ export class ComponentSimple<TProps = {}> extends ElementBase<TProps> {
         const dom = build._GenerateDOM();
         this.DOM = build.GetFirstDOM();
         this.AfterBuild();
-        // if (this._IsShown)
-        //     build._Mount(true); //TODO: is it really needed?
         return dom;
     }
     constructor(rawComponent?: TRawComponent) {
         super(rawComponent);
-        if (!this.HasPermission) {
-            return;
-        }
     }
 }
