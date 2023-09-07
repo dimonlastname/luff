@@ -170,6 +170,18 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
         return void 0;
     }
+    _LazyCheck() {
+        console.warn("[_LazyCheck] " + this.Name);
+
+        if (!this._GenerateDOM) // done already
+            return;
+
+        this._InitializeComponent();
+        if (!this.HasPermission)
+            return;
+        this._GenerateDOM();
+        this._Mount(true);
+    }
     _DoShow() {
         if (this._IsShowingParentRequired()) {
             const closestParentToShow = this._GetFirstNotShownParent();
@@ -678,8 +690,8 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
 
         this.AfterBuild();
-        if (this._IsShown)
-            built._Mount(true);
+        // if (this._IsShown)
+        //     built._Mount(true);
         return this.DOM;
     }
 
@@ -763,6 +775,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
         this._Permission = new PermissionManager(ctor.Permission, this);
         this.HasPermission = this._Permission.IsAllow;
+        if (this._Route)
+            this._Route.CheckRouteLink();
+
         if (!this.HasPermission) {
             return;
         }
