@@ -94,13 +94,12 @@ export class PermissionManager {
             const complexRole = <Dict<number>>role;
 
             for (let subRoleProperty in complexRole){              //ex.  Role: {PropertyName: RoleWithSubID}, like:  Role = {'ID':1488} for proto, or {'.ID':228} for Controller item
-                if (role.hasOwnProperty(subRoleProperty)){         //'ID'
+                if (complexRole.hasOwnProperty(subRoleProperty)){         //'ID'
                     let RoleValue = complexRole[subRoleProperty];  //1488
                     if (appUser.SubRolesByID[RoleValue]){     //ex. Luff.User.SubRoles = {1488:[12,13,15], 228:[5,10,13],...}
                         let state;
                         let Property = subRoleProperty;
                         if (subRoleProperty.substring(0,1) === '.'){  // '.ID' - Controller.Data[i].ID
-                            //Obj = Owner.Controller.Data; //TODO controller
                             Property = subRoleProperty.substring(1);
                         }
                         else {                                        //  'ID'  - Proto.Data.ID
