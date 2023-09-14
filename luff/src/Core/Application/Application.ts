@@ -70,18 +70,6 @@ const Application = {
             if (ctn)
                 ctn.Show();
         }
-
-        // if (Luff.LuffContent.Route.Enabled){
-        //     Luff.LuffContent.Route.Init();
-        // }
-
-        //TODO app run perf
-
-        // let scripts = (performance.now()-Luff._perfStart).toFixed(2);
-        // //console.log(`[Luff.Application.Run] ${(performance.now()-Luff._perfStart).toFixed(2)}ms`);
-        // setTimeout(()=>{
-        //     console.log(`[Luff.Application.Run] ${(performance.now()-Luff._perfStart).toFixed(2)}ms (scripts ${scripts}ms)`);
-        // })
     },
 
 

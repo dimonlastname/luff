@@ -36,7 +36,7 @@ export class ComponentFactory {
         }
         else if (renderElement instanceof StateSingle) {
             element = new CasualTextComponent({
-                Attributes: {textNode: renderElement}, //TODO make normal
+                Attributes: {textNode: renderElement},
                 ParentElement: parentElement,
                 ParentComponent: parentComponent
             });
