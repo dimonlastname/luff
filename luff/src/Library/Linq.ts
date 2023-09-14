@@ -1,13 +1,21 @@
-import {Dict} from "../interfaces";
+import {Dict, DictN, TKeyValuePair} from "../interfaces";
 import {LibraryObject} from "./Object";
+import Luff from "../index";
+import get = Reflect.get;
 
 type cbWhere  = (item: any, index?: number) => boolean;
 type cbSelect = (item: any, index?: number) => any;
 type cbToDictionary = (item: any, index?: number) => any;
 
 type TCallItem = {
-    Type: number;
-    Delegate: cbWhere | cbSelect;
+    Type: DelegateType;
+    Delegate: cbWhere | cbSelect | TOrderByFn;
+}
+type TOrderByFn = (item1: any, item2: any) => number;
+type TQST = {
+    IsPassed: boolean;
+    Value: any;
+    IsMany: boolean;
 }
 
 enum DelegateType  {
@@ -15,6 +23,8 @@ enum DelegateType  {
     Where = 1,
     ToDictionary = 2,
     SelectMany = 3,
+
+    Order = 4,
 }
 
 interface GArray<T, K> extends Array<T>{
@@ -30,25 +40,24 @@ function defaultComparer(a: any, b: any) : number {
         return 0;
 }
 
-
 export class LuffLinq<T> {
     private _CallList: TCallItem[] = [];
     private _Data: T[];
-    private _OrderBy: (item1: any, item2: any) => number;
+    private _HasOrder = false;
 
-    Select<U>(selector: (item: T, index?: number) => U ): LuffLinq<U> {
+    public Select<U>(selector: (item: T, index?: number) => U ): LuffLinq<U> {
         this._CallList.push({Type: DelegateType.Select, Delegate: selector});
         return <any>this;
     }
-    SelectMany<U>(selector: (item: T, index?: number) => U[] ): LuffLinq<U> {
+    public SelectMany<U>(selector: (item: T, index?: number) => U[] ): LuffLinq<U> {
         this._CallList.push({Type: DelegateType.SelectMany, Delegate: selector});
         return <any>this;
     }
-    Where(predicate: (item: T, index?: number) => boolean) : LuffLinq<T> {
+    public Where(predicate: (item: T, index?: number) => boolean) : LuffLinq<T> {
         this._CallList.push({Type: DelegateType.Where, Delegate: predicate});
         return this;
     }
-    ToDictionary<K, V>(selectorKey: (item: T, index?: number) => K, selectorValue?: (item: T, index?: number) => V | T) : Dict<V> {
+    public ToDictionary<K, V>(selectorKey: (item: T, index?: number) => K, selectorValue?: (item: T, index?: number) => V | T) : Dict<V> {
         if (!selectorValue)
             selectorValue = val => val;
         let ar : any[] = this.ToList();
@@ -59,7 +68,7 @@ export class LuffLinq<T> {
         }
         return dict;
     }
-    ToLookUp<K>(keySelector: (item: T) => K) : Dict<T[]> {
+    public ToLookUp<K>(keySelector: (item: T) => K) : Dict<T[]> {
         let lookHash : Dict<T[]> = {};
         let ar : any[] = this.ToList();
 
@@ -77,11 +86,25 @@ export class LuffLinq<T> {
         return lookHash;
 
     }
-    Contains(item: T) : boolean {
-        return this._Data.indexOf(item) > -1;
+    public Contains(item: T) : boolean {
+        let getter = this._GetRowGetter(this._CallList);
+        for (let i = 0; i < this._Data.length; i++) {
+            let val = getter(this._Data[i]);
+            if (!val.IsPassed)
+                continue;
+            if (!val.IsMany && val.Value === item)
+                return true;
+            if (val.IsMany) {
+                for (let k = 0; k < val.Value.length; k++) {
+                    if (val.Value[k] === item)
+                        return true;
+                }
+            }
+        }
+        return false;
     }
-    GroupBy<U>(keyGetter: (item: T) => U) : LuffLinq<GArray<T, U>> {
-        let items : any[] = this.ToList(); //get items with applied previous functions
+    public GroupBy<U>(keyGetter: (item: T) => U) : LuffLinq<GArray<T, U>> {
+        let items : any[] = this.ToList();
         const groups : GArray<T, U>[] = [];
         for (let item of items) {
             let key = keyGetter(item);
@@ -102,137 +125,236 @@ export class LuffLinq<T> {
         this._Data = groups as any;
         return <any>this;
     }
-    OrderBy<U>(keyGetter: (item: T) => U, comparer: (item1: U, item2: U) => number = defaultComparer) : LuffLinq<T> {
-        //todo: make real order by;
-        this._OrderBy = function(item1, item2) {
-            return comparer(keyGetter(item1), keyGetter(item2));
-        };
+    public OrderBy<U>(keyGetter: (item: T) => U, comparer: (item1: U, item2: U) => number = defaultComparer) : LuffLinq<T> {
+        this._HasOrder = true;
+        this._CallList.push({Type: DelegateType.Order, Delegate: function(item1, item2) {
+                return comparer(keyGetter(item1), keyGetter(item2));
+            }});
         return this;
     }
-    AsEnumerable() : LuffLinq<T> {
+    public OrderByDescending<U>(keyGetter: (item: T) => U, comparer: (item1: U, item2: U) => number = defaultComparer) : LuffLinq<T> {
+        this._HasOrder = true;
+        this._CallList.push({Type: DelegateType.Order, Delegate: function(item1, item2) {
+                return comparer(keyGetter(item2), keyGetter(item1));
+            }});
+        return this;
+    }
+
+    public AsEnumerable() : LuffLinq<T> {
         this._Data = this.ToList();
         return this;
     }
-    ToList() : T[] {
-        if (this._CallList.length  < 1)
-            return this._Data as any;
-        let resultArr = [];
-        for (let i = 0; i < this._Data.length; i++) {
-            let item = this._Data[i];
-            let isResolve = true;
-            let result: any = item;
+
+    private _QuickSortFilter(data: any[], rowGetter: (item) => TQST, sorter) : any {
+        if (data.length < 2 || (!rowGetter && !sorter)) {
+            return data;
+        }
 
 
-            for (let cb of this._CallList){
-                const isItemArray = Array.isArray(result);
+        const pivotKey = Math.floor(data.length/2);
+        const pivotValue = rowGetter(data[pivotKey]).Value;
 
-                if (cb.Type == DelegateType.Where ){
+        let left = [];
+        let right = [];
+        let equal = [];
+
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+            let valueItem = rowGetter(item);
+            if (!valueItem.IsPassed) {
+                continue;
+            }
+            if (sorter && sorter(valueItem.Value, pivotValue) < 0){
+                left.push(valueItem.Value)
+            }
+            else if (sorter && sorter(valueItem.Value, pivotValue) > 0){
+                right.push(valueItem.Value)
+            }
+            else {
+                equal.push(valueItem.Value);
+            }
+
+        }
+        return this._QuickSortFilter(left, rowGetter, sorter).concat(equal, this._QuickSortFilter(right, rowGetter, sorter));
+    }
+
+    private _GetRowGetter(cbX: TCallItem[]) : (item) => TQST {
+        return function getDataa(item) : TQST {
+            let itemResult = item;
+
+            let isPassed = true;
+            let isMany = false;
+            for (let c = 0; c < cbX.length; c++) {
+                let cb = cbX[c];
+
+                if (cb.Type == DelegateType.Where) {
+                    const isItemArray = Array.isArray(itemResult);
+                    let where = cb.Delegate as cbWhere;
                     if (!isItemArray) { //if wasn't SelectMany
-                        isResolve = cb.Delegate(result);
+                        isPassed = where(itemResult);
                     }
                     else { //after SelectMany
                         let subResult = [];
-                        for (let sumItem of result) {
-                            if (cb.Delegate(sumItem)) {
+                        for (let sumItem of itemResult) {
+                            if (where(sumItem)) {
                                 subResult.push(sumItem)
                             }
                         }
-                        result = subResult;
+                        itemResult = subResult;
                     }
-                    continue;
                 }
-                if (!isResolve){
-                    break;
-                }
-                if (cb.Type == DelegateType.Select){
-                    result = cb.Delegate(result, i);
-                }
-                if (cb.Type == DelegateType.SelectMany){
-                    result = cb.Delegate(result, i);
+                else if (cb.Type == DelegateType.Select || cb.Type == DelegateType.SelectMany) {
+                    let select = cb.Delegate as cbSelect;
+                    itemResult = select(itemResult);
+                    isMany = cb.Type == DelegateType.SelectMany;
                 }
             }
-            const isItemArray = Array.isArray(result);
-            if (isResolve) {
-                if (!isItemArray)
-                    resultArr.push(result);
-                else
-                    resultArr.push(...result);
+            return {
+                IsPassed: isPassed,
+                Value: itemResult,
+                IsMany: isMany,
             }
+        }
+    }
+    private _GetData(data: any[], cbX: TCallItem[], hasMany: boolean, sorter: TOrderByFn) : any[] {
+        let rowGetter = this._GetRowGetter(cbX);
+        let resultArr;
+
+
+        if (!sorter) {
 
         }
-        if (this._OrderBy) {
-            resultArr = resultArr.sort(this._OrderBy);
-            this._OrderBy = null;
+
+        if (!hasMany && sorter) {
+            resultArr = this._QuickSortFilter(this._Data, rowGetter, sorter);
         }
-        this._CallList = [];
+
+        else {
+            let dataProcess = [];
+            for (let r = 0; r < data.length; r++) {
+                let rowPack = rowGetter(data[r]);
+                if (rowPack.IsPassed) {
+                    if (rowPack.IsMany){
+                        dataProcess.push(...rowPack.Value);
+                    }
+                    else {
+                        dataProcess.push(rowPack.Value);
+                    }
+                }
+            }
+            resultArr = dataProcess;
+            if (sorter)
+                resultArr = resultArr.sort(sorter);
+        }
         return resultArr;
     }
+    private _GetFirst(isReverseDirection: boolean) : T {
+        let getter = this._GetRowGetter(this._CallList);
+        let i = 0;
+        let cond = () => i < this._Data.length;
+        let isGo = true;
+        if (isReverseDirection) {
+            i = this._Data.length - 1;
+            cond = () => i >= 0;
+        }
+        while (isGo) {
+            let pack = getter(this._Data[i]);
+            if (pack.IsPassed) {
+                if (pack.IsMany) {
+                    if (pack.Value.length > 0) {
+                        return isReverseDirection ? pack.Value[pack.Value.length - 1] : pack.Value[0];
+                    }
+                    return null;
+                }
 
-    FirstOrDefault<U>() :  T {
-        //TODO: select many is ignored
-        if (this._CallList.length  < 1){
-            if (this._Data.length > 0) {
-                return this._Data[0];
+                return pack.Value;
             }
-            return null
+            isGo = cond();
         }
-            //return this._Data[0] ? this._Data[0] : null;
-        for (let i = 0; i < this._Data.length; i++) {
-            let item = this._Data[i];
-            let isResolve = true;
-            let result: any = item;
-            for (let cb of this._CallList){
-                if (cb.Type == DelegateType.Where && !cb.Delegate(result)){
-                    isResolve = false;
-                }
-                if (!isResolve){
-                    break;
-                }
-                if (cb.Type == DelegateType.Select){
-                    result = cb.Delegate(result, i);
-                }
-            }
-            if (isResolve)
-                return result;
-        }
+
+        return null;
     }
-    LastOrDefault<U>() :  T {
-        if (this._CallList.length  < 1) {
-            if (this._Data.length > 0) {
-                return this._Data[this._Data.length - 1];
+
+    public ToList() : T[] {
+        if (this._CallList.length < 1)
+            return this._Data as any;
+
+        let resultArr = this._Data;
+        let cbX = [];
+
+        let data = this._Data;
+
+        let hasMany = false;
+
+        for (let i = 0; i < this._CallList.length; i++) {
+            let cb = this._CallList[i];
+            if (cb.Type == DelegateType.Where || cb.Type == DelegateType.Select) {
+                cbX.push(cb);
             }
-            return null
-        }
-        for (let i = this._Data.length - 1; i > 0; i--) {
-            let item = this._Data[i];
-            let isResolve = true;
-            let result: any = item;
-            for (let cb of this._CallList){
-                if (cb.Type == DelegateType.Where && !cb.Delegate(result)){
-                    isResolve = false;
-                }
-                if (!isResolve){
-                    break;
-                }
-                if (cb.Type == DelegateType.Select){
-                    result = cb.Delegate(result, i);
-                }
+            else if (cb.Type == DelegateType.SelectMany) {
+                cbX.push(cb);
+                hasMany = true;
             }
-            if (isResolve)
-                return result;
+            else if (cb.Type == DelegateType.Order) {
+                resultArr = this._GetData(data, cbX, hasMany, cb.Delegate as TOrderByFn);
+                cbX = [];
+                hasMany = false;
+            }
         }
+
+        if (cbX.length > 0) {
+            resultArr = this._GetData(resultArr, cbX, hasMany, null);
+        }
+
+        return resultArr;
+
+    }
+
+
+    public FirstOrDefault<U>() :  T {
+        if (this._Data.length == 0)
+            return null;
+
+        if (!this._HasOrder) {
+            return this._GetFirst(false);
+        }
+        let res = this.ToList();
+        return res[0];
+    }
+    public LastOrDefault<U>() :  T {
+        if (this._Data.length == 0)
+            return null;
+
+        if (!this._HasOrder) {
+            return this._GetFirst(true);
+        }
+
+        let res = this.ToList();
+        return res[res.length - 1];
     }
 
     constructor(array: T[]){
         this._Data = array;
     }
 }
+export function luffLinq<T, K, F extends Array<T> | Dict<T> | Map<K, T> >(arrayOrDict: F )
+    : F extends (infer ElementType)[] ?  LuffLinq<ElementType> :
+      F extends Dict<infer ElementType> ? LuffLinq<TKeyValuePair<string, ElementType>>:
+      F extends Map<infer ElementType, infer ElementType2> ? LuffLinq<TKeyValuePair<ElementType, ElementType2>> :
+      unknown  {
 
+    if (Array.isArray(arrayOrDict))
+        return new LuffLinq<T>(arrayOrDict) as any;
 
-export function luffLinq<T>(array: T[]) {
-    return new LuffLinq<T>(array);
+    if (arrayOrDict instanceof Map) {
+        let array = [];
+        for (let k of arrayOrDict.keys())
+            array.push({Key: k, Value: arrayOrDict.get(k)});
+        return new LuffLinq<TKeyValuePair<K, T>>(array) as any;
+    }
+    let array = Object.getOwnPropertyNames(arrayOrDict).map(key => ({Key: key, Value: arrayOrDict[key]}));
+    return new LuffLinq<TKeyValuePair<string, T>>(array) as any;
 }
-
 
 
 

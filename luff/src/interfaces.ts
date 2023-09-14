@@ -27,6 +27,11 @@ export type DictN<TValue> = {
     [key: number]: TValue;
 }
 
+export type TKeyValuePair<K, V> = {
+    Key: K;
+    Value: V;
+}
+
 export type TPositionObject = {
     x: number;
     y: number;
@@ -138,6 +143,7 @@ export type IObservableStateArray<T> = {
 }
 
 export type IObservableOrValue<T> = IObservableStateSimple<T> | T;
+export type IObservableArrayOrValue<T> = IObservableStateArray<T> | T[];
 
 
 export type RequireOnlyOne<T, Keys extends keyof T = keyof T> =
