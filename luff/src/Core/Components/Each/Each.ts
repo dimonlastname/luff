@@ -186,12 +186,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         }
         for (let ch of this._CompEmptyList) {
             this._ShowItem(ch, false);
-            // TargetDOM.appendChild(ch.DOM);
-            // ch.Show();
         }
-        // for (let emt of this._ChildrenWhenEmpty){
-        //     emt.Refresh(); //TODO check refresh each
-        // }
     }
     private _HideEmptyChildren(): void {
         for (let ch of this._CompEmptyList){
@@ -242,11 +237,12 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 equal.push(key);
             }
         }
-        return [
-            ...this._QuickSortFilter(left),
-            ...equal,
-            ...this._QuickSortFilter(right)
-        ];
+        return this._QuickSortFilter(left).concat(equal, this._QuickSortFilter(right));
+        // return [
+        //     ...this._QuickSortFilter(left),
+        //     ...equal,
+        //     ...this._QuickSortFilter(right)
+        // ];
     }
     private _GetKeysForRender(objectKeys?: number[]): number[]  {
         this._FilteredKeys = [];
