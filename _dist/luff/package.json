@@ -1,8 +1,14 @@
 {
   "name": "luff",
-  "version": "3.0.45",
+  "version": "3.0.47",
   "description": "JavaScript framework for building user interfaces",
   "main": "index.js",
   "author": "Dmitrii Pupyrev",
-  "license": "MIT"
+  "homepage": "https://luff.one",
+  "license": "MIT",
+  "keywords": [
+    "js",
+    "UI",
+    "framework"
+  ]
 }

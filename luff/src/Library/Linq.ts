@@ -252,10 +252,12 @@ export class LuffLinq<T> {
         let getter = this._GetRowGetter(this._CallList);
         let i = 0;
         let cond = () => i < this._Data.length;
+        let indexChanger = () => i++;
         let isGo = true;
         if (isReverseDirection) {
             i = this._Data.length - 1;
             cond = () => i >= 0;
+            indexChanger = () => i--;
         }
         while (isGo) {
             let pack = getter(this._Data[i]);
@@ -269,6 +271,7 @@ export class LuffLinq<T> {
 
                 return pack.Value;
             }
+            indexChanger();
             isGo = cond();
         }
 
