@@ -40,6 +40,15 @@ function defaultComparer(a: any, b: any) : number {
         return 0;
 }
 
+//for _QuickSortFilter internal use
+function rowGetterInner(item) : TQST {
+    return {
+        IsPassed: true,
+        IsMany: false,
+        Value: item,
+    }
+}
+
 export class LuffLinq<T> {
     private _CallList: TCallItem[] = [];
     private _Data: T[];
@@ -145,6 +154,14 @@ export class LuffLinq<T> {
         return this;
     }
 
+    private static rowGetterInner(item) : TQST {
+        return {
+            IsPassed: true,
+            IsMany: false,
+            Value: item,
+        }
+    }
+
     private _QuickSortFilter(data: any[], rowGetter: (item) => TQST, sorter) : any {
         if (data.length < 2 || (!rowGetter && !sorter)) {
             return data;
@@ -175,7 +192,7 @@ export class LuffLinq<T> {
             }
 
         }
-        return this._QuickSortFilter(left, rowGetter, sorter).concat(equal, this._QuickSortFilter(right, rowGetter, sorter));
+        return this._QuickSortFilter(left, rowGetterInner, sorter).concat(equal, this._QuickSortFilter(right, rowGetterInner, sorter));
     }
 
     private _GetRowGetter(cbX: TCallItem[]) : (item) => TQST {
