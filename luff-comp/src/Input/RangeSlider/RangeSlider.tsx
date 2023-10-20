@@ -120,8 +120,10 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
             const wBody = this.ValueBodyDOM.getBoundingClientRect().width;
             const wViewHalf = this.ValueView1DOM.getBoundingClientRect().width / 2;
             const offset = (wViewHalf / wBody) * 100;
-
-            return (v - offset) + '%';
+            let dt = v - offset;
+            if (dt < 0)
+                dt = 0;
+            return dt + '%';
         });
         const widthView2 = this.Value2.SubState(v => {
             if (!this.props.value2)
@@ -131,7 +133,10 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
             const wBody = this.ValueBodyDOM.getBoundingClientRect().width;
             const wViewHalf = this.ValueView2DOM.getBoundingClientRect().width / 2;
             const offset = (wViewHalf / wBody) * 100;
-            return (100 - v - offset) + '%';
+            let dt = (100 - v - offset);
+            if (dt > 100)
+                dt = 100;
+            return dt + '%';
         });
 
         //document.addEventListener('mouseup', () => this.IsActive = false);
