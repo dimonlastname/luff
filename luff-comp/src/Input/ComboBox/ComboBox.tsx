@@ -221,7 +221,7 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
             return {
                 Item: null,
                 //View: tbxValue.SValue,
-                View: 'tbxValue.SValue',
+                View: this.props.value.SValue.toString(),
             };
         let item = this._offerData.find(x => x.Value === value);
         if (!item) {
@@ -469,9 +469,6 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
             //     ...state,
             //     textBoxValue: _Textbox.current.value.trim(),
             // });
-            if (this.props.isInputMode) {
-                return this._TryCommit();
-            }
             return this._OnOfferClick(this.State.CursorItem.SValue);
         }
         // thi1s._CursorClear();
