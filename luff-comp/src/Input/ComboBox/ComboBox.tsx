@@ -221,7 +221,7 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
             return {
                 Item: null,
                 //View: tbxValue.SValue,
-                View: this.props.value.SValue.toString(),
+                View: this.props.value.SValue?.toString() ?? "",
             };
         let item = this._offerData.find(x => x.Value === value);
         if (!item) {
