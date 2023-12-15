@@ -1,10 +1,10 @@
-import Luff, {React} from "luff";
+import Luff, {IObservableOrValue, React} from "luff";
 
 import EditableBase from "./EditableBase";
-import TextBox from "../Input/TextBox";
+import TextBox, {TInputMask} from "../Input/TextBox";
 
 
-export default class EditableText extends EditableBase<string> {
+export default class EditableText extends EditableBase<string, {mask?: IObservableOrValue<TInputMask>;}> {
     private TextBox: TextBox;
 
     protected AfterBuild(): void {
@@ -26,6 +26,7 @@ export default class EditableText extends EditableBase<string> {
                 value={this.ValueTemp}
                 onKeyEnter={() => this.Confirm()}
                 onKeyEsc={() => this.GoToView()}
+                mask={this.props.mask}
             />
         )
     }
