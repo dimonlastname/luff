@@ -46,7 +46,6 @@ export default class PhoneInput extends Luff.Content<TPhoneInputProps, TState> {
     };
 
     _onKeyDown(e: KeyboardEvent) {
-        console.log('keydown');
         let textbox = e.target as HTMLInputElement;
         if (e.keyCode == 8) {//backspace
             let index = textbox.selectionStart;
@@ -60,7 +59,6 @@ export default class PhoneInput extends Luff.Content<TPhoneInputProps, TState> {
         }
     }
     _onChange(e: KeyboardEvent) {
-        console.log('keyup');
         const input = e.target as HTMLInputElement;
 
         const countryPrefix = '+' + this.State.CountryProps.SValue.Code + ' ';
@@ -83,7 +81,7 @@ export default class PhoneInput extends Luff.Content<TPhoneInputProps, TState> {
         }
 
     }
-    Render(): any {
+    Render(): Luff.Node {
         const valueMasked = this.State.Value.SubState(value => '+' + this.State.CountryProps.SValue.Code + ' ' + getPhone(value, this.State.CountryProps.SValue).PhoneMasked , [this.State.CountryProps]);
         const placeholder = this.State.CountryProps.SubState(countryProps => `+${countryProps.Code} ${countryProps.Mask}`);
         const countryIconClass = this.State.CountryProps.SubState(countryProps => "l-phone-input_country-icon l-flag-icon__"+ countryProps.Country);
