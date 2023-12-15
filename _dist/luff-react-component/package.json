@@ -4,6 +4,7 @@
   "description": "React component integrator",
   "main": "src/index.tsx",
   "author": "Dmitrii Pupyrev",
+  "homepage": "https://luff.one",
   "license": "MIT",
   "dependencies": {
     "react": "^16.13.1",
