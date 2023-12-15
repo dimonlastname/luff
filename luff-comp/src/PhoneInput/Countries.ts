@@ -21,6 +21,11 @@ const countries : TPhoneInputCountry[] = [
         Code: 7,
         Mask: '(___) ___-__-__',
     },
+    {
+        Country: 'uz',
+        Code: 998,
+        Mask: '(___) ___-__-__',
+    },
 ];
 
 export default countries;
