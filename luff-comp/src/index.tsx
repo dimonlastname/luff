@@ -5,7 +5,7 @@ import ButtonBusy from "./ButtonBusy/ButtonBusy";
 import LuffChart from "./Chart/Chart";
 import {LuffHint} from "./FlowHint/FlowHint";
 import CheckBox from "./Input/CheckBox/Checkbox";
-import TextBox from "./Input/TextBox";
+import TextBox, { TInputMask } from "./Input/TextBox";
 import {ProgressBar} from "./ProgressBar/ProgressBar";
 import PhoneInput from "./PhoneInput/PhoneInput";
 import NumBox from "./Input/NumBox";
@@ -32,11 +32,10 @@ import {SelectButtons} from "./Input/SelectButtons/SelectButtons";
 import {InputValidator} from "./Input/InputValidator";
 
 
-
 export {
     TextBox, TextBoxRich, NumBox, CheckBox, RadioButton, ComboBox, ComboBoxTree, DateBox, DateBoxRange, TimeBox, RangeSlider, SelectButtons,
     EditableText, EditableNumber, EditableSelect, EditableDate, EditableSpecial, EditableSpecialArr, EditableMini,
-    InputValidator,
+    InputValidator, TInputMask,
 
     ButtonBusy,
     LuffChart, ChartDrawing,
