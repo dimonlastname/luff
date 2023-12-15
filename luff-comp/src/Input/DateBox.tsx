@@ -96,6 +96,9 @@ export default class DateBox extends InputBoxBase<TProps> {
 
         return (
             <div className={classState}
+                 classDict={{
+                     disabled: this._IsDisabled
+                 }}
                  onClick={() => this.CallDatePicker()}
             >
                 <PeriodPicker
