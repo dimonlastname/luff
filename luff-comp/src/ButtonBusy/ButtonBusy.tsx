@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple} from "luff";
+import Luff, {React, IObservableStateSimple, Dict} from "luff";
 
 import './ButtonBusy.scss';
 
@@ -10,6 +10,7 @@ type TConformationWindow = {
 
 type ButtonBusyProps = {
     className?: string | IObservableStateSimple<string>;
+    classDict?: Dict<IObservableStateSimple<boolean>>;
     onClick: (e: MouseEvent) => Promise<any>;
     disabled?: IObservableStateSimple<boolean>;
     justLock?: boolean;
@@ -111,6 +112,7 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
         return (
             <button name="button"
                     className={this.GetClassName()}
+                    classDict={this.props.classDict}
                     onClick={e => this._onClick(e as any) }
                     disabled={this.props.disabled}
                     title={this.props.title}
