@@ -414,7 +414,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             })
         }
         const deps = rawComponent.Attributes['deps'] as IObservableState<any>[];
-        if (rawComponent.Attributes['deps']) {
+        if (deps) {
             for (let dep of deps) {
                 dep.AddOnChange(() => {
                     this.Refresh();

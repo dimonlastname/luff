@@ -5,8 +5,10 @@
   "main": "./src/index.tsx",
   "author": "Dmitrii Pupyrev",
   "license": "MIT",
+  "homepage": "https://luff.one",
   "keywords": [
     "luff",
+    "luffjs",
     "UI",
     "framework"
   ],
@@ -27,7 +29,7 @@
     "resolve-url-loader": "^3.1.1",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.2.1",
-    "ts-loader": "^6.2.2",
+    "ts-loader": "^8.0.18",
     "typescript": "^4.2.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

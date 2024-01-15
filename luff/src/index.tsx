@@ -12,7 +12,7 @@ import {
     IObservableStateAny as _IObservableStateAny,
     IObservableStateSimpleOrValue as _IObservableStateSimpleOrValue,
     DictN,
-    Dict, TOffset, TValueName, TIDNamePair, IObservableOrValue
+    Dict, TOffset, TValueName, TIDNamePair, IObservableOrValue, IObservableArrayOrValue
 } from "./interfaces";
 import _Application from "./Core/Application/Application";
 import {getClosestStateArray, State, StateArray, luffState, luffStateArr} from "./Core/State";
@@ -52,6 +52,7 @@ import {IFilterMan} from "./Core/Components/Each/FilterManager";
 import {ISortMan} from "./Core/Components/Each/EachSorter";
 import {LibraryTree} from "./Library/Tree";
 import {ICssStyle} from "./ICssStyle";
+import {DynamicRenderComponent} from "./Core/Components/DynamicRenderComponent";
 
 //type Booleanish = boolean | 'true' | 'false';
 
@@ -101,16 +102,25 @@ namespace Luff  {
     export const Fragment = CasualFragmentComponent;
     export type Node = JSXElement;
 
-    export function GetStateOrValue<T>(s: IObservableOrValue<T>, p: (v: T) => T) {
-        let state = s as _IObservableStateSimple<T>;
-        let val = s as T;
+    export function GetSubStateOrValue<T, K>(stateOrVal: IObservableOrValue<T>, subStateSelector: (v: T) => K) : IObservableOrValue<K|T>{
+        let state = stateOrVal as _IObservableStateSimple<T>;
+        let val = stateOrVal as T;
         if (state) {
-            return state.SubState(v => p(v))
+            if (subStateSelector)
+                return state.SubState(v => subStateSelector(v));
+            return state;
         } {
-            return p(val);
+            return val;
         }
     }
 
+    export function Perf(callback: () => void, caption: string = "") : number {
+        let v1 = window.performance.now();
+        callback();
+        let perf = window.performance.now() - v1;
+        console.log(`[Perf] ${caption}: ` + perf);
+        return perf;
+    }
 
 
 
@@ -1585,6 +1595,7 @@ window['___LuffGlobal'] = {
 
 export {React, luffState, luffStateArr, TContentCtor,
     _ComponentSimple as ComponentSimple,
+    DynamicRenderComponent,
     _Application as Application,
     Route, RouteLink, Each, EachPaging, ISortMan, IFilterMan,
     luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryTree, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,
