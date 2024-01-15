@@ -146,8 +146,6 @@ export class State<T = any> {
             childState = child;
         }
         else {
-            // TODO is it important to check array item?
-
             //NOTE: experimental: gives +30% _Compile boost with same data count, ~ +15% boost with LuffComponent update
             let isChildUpdated = this._TryRefreshChild(propertyName, child, ss);
             if (isChildUpdated){
@@ -546,7 +544,7 @@ export class StateArray<T> extends State<T> {
     _Add(item: T, ss: TSubscriber[]) : void {
         let data = this.__SValue;
         let i = data.length;
-        let childState : State = this._GetChildState(item, i.toString(), ss); //TODO check _GetChildState
+        let childState : State = this._GetChildState(item, i.toString(), ss);
         Object.defineProperty(this, i, {
             value: childState,
             configurable: true,
