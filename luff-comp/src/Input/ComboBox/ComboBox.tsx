@@ -7,7 +7,7 @@ import Luff, {
     IObservableStateArray,
     IObservableStateSimple,
     LibraryString,
-    luffState, IObservableState
+    luffState, IObservableState, DynamicRenderComponent, JSXElement
 } from "luff";
 import BusyLocker from "../../BusyLocker/BusyLocker";
 
@@ -275,13 +275,15 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
     }
 
     _OnOfferClick(offerItem: TComboBoxOfferItem<TDataItem>){
+        // this.State.SValue = {
+        //     ...this.State.SValue,
+        //     SelectedItem: offerItem,
+        //     //IsOfferListVisible: false,
+        //     IsBusy: !!this.props.onChangeAsync,
+        // } as TState<TDataItem>;
+        //this.State.SelectedItem.SValue = offerItem;
+        this.State.IsBusy.SValue = !!this.props.onChangeAsync;
 
-        this.State.SValue = {
-            ...this.State.SValue,
-            SelectedItem: offerItem,
-            IsOfferListVisible: false,
-            IsBusy: !!this.props.onChangeAsync,
-        } as TState<TDataItem>;
         this._ListComponent.Hide();
         if (this.props.onChange) {
             this.props.onChange(offerItem.Value, offerItem.Original, offerItem.View);
@@ -526,6 +528,11 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
 
         //const isShowList = state.IsOfferListVisible.SValue && !state.IsBusy.SValue;
 
+        const isUseTextBox = !this.props.dataRender;
+        const isUseRender = this.props.dataRender && this.props.dataDelegateView == defaultProps.dataDelegateView;
+
+
+        let orig = state.SelectedItem.Original;
 
         return (
             <div className={this.GetClassName()}
@@ -561,10 +568,32 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
                                state.TextBoxValueSearch.SValue = value;
                            }
                        }}
-                       ////onDoubleClick={() => state.IsBusy.SValue = !state.IsBusy.SValue}
+                    ////onDoubleClick={() => state.IsBusy.SValue = !state.IsBusy.SValue}
                        onKeyUp={(e) => this._onKeyUp(e)}
                        disabled={this._IsDisabled.SubState(isDisabled => isDisabled || ((!isInputMode && !isSearchEnabled) || state.IsBusy.SValue) , [state.IsBusy])}
+                       isVisible={isUseTextBox}
                 />
+                {
+                    isUseRender
+                    &&
+                    <div className="l-cb-render">
+                        <DynamicRenderComponent
+                            deps={[state.SelectedItem]}
+                            render={() => {
+                                let si = state.SelectedItem.SValue;
+                                if (!si || !si.Original)
+                                    return (
+                                        <span>{this.props.notFoundValue}</span>
+                                    );
+
+                                return this.props.dataRender(state.SelectedItem.Original as IObservableState<TDataItem>)
+                            }}
+                        />
+                        {/*{state.SelectedItem.SubState(x => x?.Original ? JSON.stringify(x.Original) : "nullex")}*/}
+                        {/*{this.props.dataRender(state.SelectedItem.Original )}*/}
+                    </div>
+                }
+
                 <RouteLink route={this.RouteComboBoxOfferList} disabled={Luff.State(true)}>
                     <div className="l-cb-drop-icon"
                          onClick={e => {

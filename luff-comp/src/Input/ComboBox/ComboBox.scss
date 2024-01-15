@@ -24,7 +24,8 @@
   &.l-cb-disabled{
     border: 1px var(--clr-disabled) solid;
   }
-  .l-cb-textbox {
+  .l-cb-textbox,
+  .l-cb-render {
     //height: 2em;
     width: calc(100% - 1.75em);
     display: block;
