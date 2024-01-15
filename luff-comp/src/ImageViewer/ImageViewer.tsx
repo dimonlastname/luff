@@ -28,7 +28,7 @@ ImgNoImage.src = 'img/no-image.svg';
 
 
 
-export default class LuffImageViewer extends Luff.Content<TProps> {
+export class LuffImageViewer extends Luff.Content<TProps> {
     static defaultProps = {
         isBuildIn: false,
         isShowPaging: true,
@@ -50,13 +50,13 @@ export default class LuffImageViewer extends Luff.Content<TProps> {
         this.ImageCanvas = this.GetComponentByName('l-iv-body').GetFirstDOM();
     }
 
-    Run(ImageSrcList: string[]) : void {
+    Run(ImageSrcList: string[], startIndex: number = 0) : void {
         if (!ImageSrcList || ImageSrcList.length < 1) {
             //console.log('[Luff.ImageViewer] Images source is empty');
             ImageSrcList = ['img/no-image.svg'];
         }
         this.ImageSrcList.SValue = ImageSrcList;
-        this.ImageIndex.SValue = 0;
+        this.ImageIndex.SValue = startIndex;
         this.NextImage(0);
         this.Show();
     }

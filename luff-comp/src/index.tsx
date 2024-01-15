@@ -10,7 +10,8 @@ import {ProgressBar} from "./ProgressBar/ProgressBar";
 import PhoneInput from "./PhoneInput/PhoneInput";
 import NumBox from "./Input/NumBox";
 import PeriodPicker, {TPeriodPickerOnChange} from "./PeriodPicker/PeriodPicker";
-import LuffImageViewer from "./ImageViewer/ImageViewer";
+import {LuffImageViewer} from "./ImageViewer/ImageViewer";
+import {ImageCarousel} from "./ImageViewer/ImageCarousel";
 import {PopMenu, TCommonPopPopMenuItem} from "./Pop/PopMenu/PopMenu";
 import {ContextMenu, TCommonPopContextMenuItem} from "./Pop/PopMenu/ContextMenu";
 //import {ContextMenuStatic, TCommonPopContextMenuItemStatic} from "./Pop/PopMenu/ContextMenuStatic";
@@ -47,5 +48,7 @@ export {
 
     //complex:
     DatePickBar, Paginator,
-    LuffImageViewer
+
+    //images
+    LuffImageViewer, LuffImageViewer as ImageViewer, ImageCarousel
 };

@@ -25,6 +25,7 @@ type TProps = {
     onKeyDown?: (e: Luff.KeyboardEvent) => void;
     onKeyEnter?: () => void;
     onKeyEsc?: () => void;
+    onFocus?: (e: Luff.FocusEvent<HTMLInputElement>) => void;
     placeholder?: string;
     autocomplete?: string;
 }
@@ -167,8 +168,10 @@ export default class TextBox extends InputBoxBase<TProps> {
         });
 
         if (this.IsMasking) {
-            el.addEventListener("focus", () => {
+            el.addEventListener("focus", (e) => {
                 this.IsMasking && this.CheckMask();
+                if (this.props.onFocus)
+                    this.props.onFocus(e as Luff.FocusEvent<HTMLInputElement>)
             });
             el.addEventListener("blur", () => el.value === this.pattern && (el.value=""));
         }

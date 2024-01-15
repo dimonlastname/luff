@@ -20,6 +20,7 @@ type TProps = {
     onKeyUp?: (e: Luff.KeyboardEvent) => void;
     onKeyEnter?: () => void;
     onKeyEsc?: () => void;
+    onFocus?: (e: Luff.FocusEvent<HTMLInputElement>) => void;
 }
 
 type TState<T> = {
@@ -109,6 +110,7 @@ export default class NumBox extends InputBoxBase<TProps> {
                    }}
                    onKeyUp={keyUpFn}
                    onClick={this.props.onClick}
+                   onFocus={this.props.onFocus}
                    placeholder={this.props.placeholder}
                    min={this.props.min}
                    max={this.props.max}
