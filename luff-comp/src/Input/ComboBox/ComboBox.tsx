@@ -528,7 +528,7 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
 
         //const isShowList = state.IsOfferListVisible.SValue && !state.IsBusy.SValue;
 
-        const isUseTextBox = !this.props.dataRender;
+        const isUseTextBox = !this.props.dataRender || (this.props.dataRender && this.props.dataDelegateView != defaultProps.dataDelegateView);
         const isUseRender = this.props.dataRender && this.props.dataDelegateView == defaultProps.dataDelegateView;
 
 
