@@ -553,13 +553,13 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
                        type="text"
                        placeholder={placeholder}
                        autocomplete="off"
-                       value={state.TextBoxValue as any}
+                       value={state.TextBoxValue}
                        onFocus={e => e.target.select()}
                        onChange={e => {
                            let value = e.currentTarget.value;
                            if (isInputMode){
                                if (onChange)
-                                   onChange(value as any);
+                                   onChange(value as any as TValue);
                                else
                                    this.props.value.SValue = value as any;
                            }
