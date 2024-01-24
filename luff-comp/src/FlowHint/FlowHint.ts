@@ -7,7 +7,7 @@ enum HintDirection {
 type THintDirection = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 type HintRenderFn = (hintPack: THintPack) => HTMLElement;
 
-const MARGIN_X = 30;
+const MARGIN_X = 15;
 const MARGIN_Y = 8;
 
 interface TLuffHintCtor {
@@ -110,19 +110,19 @@ export class LuffHint {
         let PosX = -rectContainment.x;
         let PosY = -rectContainment.y;
         if (direction === 'bottom-right'){
-            PosX += rect.x + rect.width + margin.x - MARGIN_X;
+            PosX += rect.x + rect.width / 2 + margin.x - MARGIN_X;
             PosY += rect.y + rect.height + margin.y + MARGIN_Y;
         }
         else if (direction === 'bottom-left'){
-            PosX += rect.x - rectHint.width + MARGIN_X;
+            PosX += rect.x - rectHint.width + rect.width / 2 - margin.x + MARGIN_X;
             PosY += rect.y + rect.height + margin.y + MARGIN_Y;
         }
         else if (direction === 'top-right'){
-            PosX += rect.x /*+ rect.width*/ + margin.x - MARGIN_X;
+            PosX += rect.x + rect.width / 2 + margin.x - MARGIN_X;
             PosY += rect.y - rectHint.height - margin.y - MARGIN_Y;
         }
         else if (direction === 'top-left'){
-            PosX += rect.x - rectHint.width - margin.x + MARGIN_X;
+            PosX += rect.x - rectHint.width + rect.width / 2 - margin.x + MARGIN_X;
             PosY += rect.y - rectHint.height - margin.y - MARGIN_Y;
         }
         return {
@@ -253,7 +253,7 @@ export class LuffHint {
                         let HintText = HintPack.Target.dataset[this.Config.DataProp];
                         if (HintText === '')
                             return null;
-                        return LibraryDOM.CreateElementFromString(`<div class="l-flow-hint ${this.Config.ExtraClassNames}">${HintText}</div>`);
+                        return LibraryDOM.CreateElementFromString(`<div class="l-flow-hint ${this.Config.ExtraClassNames}"><pre>${HintText}</pre></div>`);
                     }
                 } : TLuffHintCtor = {}){
         this._ListenToShowSafeContext = this._ListenToShow.bind(this);
