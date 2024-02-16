@@ -53,6 +53,7 @@ import {ISortMan} from "./Core/Components/Each/EachSorter";
 import {LibraryTree} from "./Library/Tree";
 import {ICssStyle} from "./ICssStyle";
 import {DynamicRenderComponent} from "./Core/Components/DynamicRenderComponent";
+import {RawHtmlComponent} from "./Core/Components/RawHtmlComponent";
 
 //type Booleanish = boolean | 'true' | 'false';
 
@@ -67,6 +68,7 @@ namespace Luff  {
     export type Content = _Content;
     export const ComponentSimple = _ComponentSimple;
     export type ComponentSimple = _ComponentSimple;
+    export type ComponentRawHtml = RawHtmlComponent;
     export type ContentCtor = TContentCtor;
     export type IContent = _IContent;
     export type IObservableState<T> = _IObservableState<T>;
@@ -1596,6 +1598,7 @@ window['___LuffGlobal'] = {
 export {React, luffState, luffStateArr, TContentCtor,
     _ComponentSimple as ComponentSimple,
     DynamicRenderComponent,
+    RawHtmlComponent,
     _Application as Application,
     Route, RouteLink, Each, EachPaging, ISortMan, IFilterMan,
     luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryTree, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,

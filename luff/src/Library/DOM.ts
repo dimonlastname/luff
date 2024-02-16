@@ -352,5 +352,65 @@ export namespace LibraryDOM {
             direction: `${xDir}-${yDir}` as any
         };
     }
+
+    function _GetPos(direction: string, relRect: DOMRect, thisRect: DOMRect, MARGIN_X, MARGIN_Y) : TPositionObject {
+        let PosX = 0;
+        let PosY = 0;
+        if (direction === 'below-righter'){
+            PosX += relRect.x + relRect.width + MARGIN_X;
+            PosY += relRect.y + relRect.height + MARGIN_Y;
+        }
+        else if (direction === 'below-lefter'){
+            PosX += relRect.x - thisRect.width - MARGIN_X;
+            PosY += relRect.y + relRect.height +  MARGIN_Y;
+        }
+        else if (direction === 'upper-righter'){
+            PosX += relRect.x + relRect.width + MARGIN_X;
+            PosY += relRect.y - thisRect.height - MARGIN_Y;
+        }
+        else if (direction === 'upper-lefter'){
+            PosX += relRect.x - thisRect.width - MARGIN_X;
+            PosY += relRect.y - thisRect.height - MARGIN_Y;
+        }
+        return {
+            x: PosX,
+            y: PosY,
+        }
+    }
+
+    export function GetPopPosition(
+        {
+            thisElement ,
+            relativeElement,
+            //container,
+            MARGIN_X,
+            MARGIN_Y,
+        }: {thisElement: HTMLElement, relativeElement: HTMLElement,  MARGIN_X: number, MARGIN_Y: number})
+    {
+        let thisRect = thisElement.getBoundingClientRect();
+        let relRect = relativeElement.getBoundingClientRect();
+        let h = window.innerHeight;
+        let w = window.innerWidth;
+
+        let directions = ["below", "righter"];
+        if (relRect.y + relRect.height + thisRect.height > h ){
+            directions[0] = 'upper';
+        }
+        // else if (relRect.y - thisRect.height /*- this.Config.Margin.y*/ < h){
+        //     directions[0] = 'bottom';
+        // }
+
+        if (relRect.x + relRect.width + thisRect.width /*+ this.Config.Margin.x*/ > w){
+            directions[1] = 'lefter';
+        }
+        // else if (relRect.x - thisRect.width /*- this.Config.Margin.x*/ < w){
+        //     directions[1] = 'right';
+        // }
+        let direction = directions.join('-');
+        return {
+            ..._GetPos(direction, relRect, thisRect, MARGIN_X, MARGIN_Y),
+            direction: direction,
+        };
+    }
 }
 

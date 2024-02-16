@@ -1,7 +1,7 @@
 import {ElementBase} from "./ElementBase";
 import Application from "../Application/Application";
 
-class CasualMountingBase extends ElementBase {
+class CasualMountingBase<ExtraProps = {}> extends ElementBase<ExtraProps> {
     _Mount(isFirstMount: boolean = false) : void {
         if (!this._IsShown || this._IsMount)
             return;

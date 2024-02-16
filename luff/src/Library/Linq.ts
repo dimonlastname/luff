@@ -151,6 +151,8 @@ export class LuffLinq<T> {
 
     public AsEnumerable() : LuffLinq<T> {
         this._Data = this.ToList();
+        this._HasOrder = false;
+        this._CallList = [];
         return this;
     }
 

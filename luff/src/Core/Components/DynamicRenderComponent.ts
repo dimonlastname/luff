@@ -6,7 +6,7 @@ import { ComponentFactory } from "../Compiler/ComponentFactory";
 type TProps<T> = {
     render: () => JSXElement;
     deps?: (IObservableStateSimple<any> | IObservableState<any> | IObservableStateArray<any>)[];
-} | TPropsDefault;
+} & TPropsDefault;
 
 export class DynamicRenderComponent<TIterationItem = any> extends ElementBase<TProps<TIterationItem>>  {
     private readonly _ChildRender: () => ElementBase;

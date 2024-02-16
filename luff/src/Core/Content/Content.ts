@@ -397,6 +397,13 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
     }
 
+    public ResetDialogAnimationShow(animationClassName: string) : void {
+        if (this._IsShown) {
+            this.DOM.classList.remove(this._RawContent.Dialog.Animation.Show);
+            this.DOM.classList.add(animationClassName);
+        }
+        this._RawContent.Dialog.Animation.Show = animationClassName;
+    }
 
     Load: LuffLoadNative;
 
