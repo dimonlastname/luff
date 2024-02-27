@@ -40,7 +40,7 @@ import {ComponentSimple as _ComponentSimple} from "./Core/Components/ComponentSi
 import {CasualFragmentComponent} from "./Core/Components/CasualFragmentComponent";
 import {IElementBase, ElementBase} from "./Core/Components/ElementBase";
 
-
+import { State as LuffState } from "./Core/State";
 
 
 import {TPositionObject} from "./interfaces";
@@ -107,12 +107,14 @@ namespace Luff  {
     export function GetSubStateOrValue<T, K>(stateOrVal: IObservableOrValue<T>, subStateSelector: (v: T) => K) : IObservableOrValue<K|T>{
         let state = stateOrVal as _IObservableStateSimple<T>;
         let val = stateOrVal as T;
-        if (state) {
+        if (state instanceof LuffState) {
             if (subStateSelector)
                 return state.SubState(v => subStateSelector(v));
             return state;
-        } {
-            return val;
+        } else {
+            if (!subStateSelector)
+                return val;
+            return subStateSelector(val);
         }
     }
 
