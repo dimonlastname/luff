@@ -1,22 +1,19 @@
 export namespace LibraryBlob {
-    export function SaveAs(blob: Blob, fileName: string) : void {
+    function DoSave(fileName: string, href: string) : void {
         let a = document.createElement("a");
-        document.body.appendChild(a);
         a.style.display = "none";
-        a.href = window.URL.createObjectURL(blob);
+        document.body.appendChild(a);
+        a.href = href;
         a.download = fileName;
         a.click();
         window.URL.revokeObjectURL(a.href);
         a.remove();
     }
+    export function SaveAs(blob: Blob, fileName: string) : void {
+        DoSave(fileName, window.URL.createObjectURL(blob));
+    }
     export function SaveAsByBase64(base64Full: string, fileName: string) : void {
-        let a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style.display = "none";
-        a.href = base64Full;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(a.href);
+        DoSave(fileName, base64Full);
     }
     export function ToBase64(blob: Blob, isRawBase64: boolean = false) : Promise<string> {
         return new Promise( (res, rej)=>{
@@ -40,7 +37,7 @@ export namespace LibraryBlob {
         return base64Prefix + window.btoa(binaryStr);
     }
     export function ToByteArrayBuffer(blob: Blob) : Promise<ArrayBuffer> {
-        return new Promise( (res, rej)=>{
+        return new Promise( (res, rej) => {
             const reader = new FileReader();
 
             reader.onloadend = function() {
