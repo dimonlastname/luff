@@ -218,18 +218,18 @@ namespace Luff  {
     type FormEventHandler<T = Element> = EventHandler<FormEvent<T>>;
     type ChangeEventHandler<T = Element> = EventHandler<ChangeEvent<T>>;
 
-    type ClipboardEventHandler<T = Element> = EventHandler<ClipboardEvent<T>>;
-    type CompositionEventHandler<T = Element> = EventHandler<CompositionEvent<T>>;
-    type DragEventHandler<T = Element> = EventHandler<DragEvent<T>>;
-    type FocusEventHandler<T = Element> = EventHandler<FocusEvent<T>>;
+    export type ClipboardEventHandler<T = Element> = EventHandler<ClipboardEvent<T>>;
+    export type CompositionEventHandler<T = Element> = EventHandler<CompositionEvent<T>>;
+    export type DragEventHandler<T = Element> = EventHandler<DragEvent<T>>;
+    export type FocusEventHandler<T = Element> = EventHandler<FocusEvent<T>>;
     export type KeyboardEventHandler<T = Element> = EventHandler<KeyboardEvent<T>>;
     export type MouseEventHandler<T = Element> = EventHandler<MouseEvent<T>>;
-    type TouchEventHandler<T = Element> = EventHandler<TouchEvent<T>>;
-    type PointerEventHandler<T = Element> = EventHandler<PointerEvent<T>>;
-    type UIEventHandler<T = Element> = EventHandler<UIEvent<T>>;
-    type WheelEventHandler<T = Element> = EventHandler<WheelEvent<T>>;
-    type AnimationEventHandler<T = Element> = EventHandler<AnimationEvent<T>>;
-    type TransitionEventHandler<T = Element> = EventHandler<TransitionEvent<T>>;
+    export type TouchEventHandler<T = Element> = EventHandler<TouchEvent<T>>;
+    export type PointerEventHandler<T = Element> = EventHandler<PointerEvent<T>>;
+    export type UIEventHandler<T = Element> = EventHandler<UIEvent<T>>;
+    export type WheelEventHandler<T = Element> = EventHandler<WheelEvent<T>>;
+    export type AnimationEventHandler<T = Element> = EventHandler<AnimationEvent<T>>;
+    export type TransitionEventHandler<T = Element> = EventHandler<TransitionEvent<T>>;
 
     export type DetailedHTMLPropsLuff<E extends HTMLAttributes<T>, T> = E;
 
