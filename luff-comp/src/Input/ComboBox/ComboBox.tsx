@@ -737,6 +737,7 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
         const cbx = this.props.comboBox;
 
 
+        let itemRender = this.props.comboBox.props.dataRender;
         return (
             <div className={"l-cb-offer-list_wrap " + cbx.props.listClassName}>
                 <div className="l-cb-offer-list" name="offerListContainer" style={`--l-combobox-lines: ${this.props.comboBox.props.listVisibleLinesCount}`}>
@@ -748,37 +749,50 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
                         }}
                         deps={[cbx.State.TextBoxValueSearch]}
                         renderOnEmpty={() => <div className="l-cb-offer-empty">{cbx.props.listEmptyText}</div>}
-                        render={(x, i) => {
-                            const styleState = state.SelectedItem.SubState(selectedItem => {
-                                const isSelected = selectedItem === x.SValue;
-                                const isCursored = state.CursorItem.SValue === x.SValue;
-                                return "l-cb-offer-item" + (isSelected ? ' l-cb-selected':'') + (isCursored ? ' l-cb-cursored':'');
+                        render={x => {
 
-                            }, [state.CursorItem, x]);
+                            const isSelected = state.SelectedItem.SubState(selectedItem => selectedItem == x.SValue, [x]);
+                            const isCursored = state.CursorItem.SubState(cursorItem => cursorItem == x.SValue, [x]);
 
-                            const render = this.props.comboBox.props.dataRender;
+                            if (!itemRender) {
+                                return (
+                                    <div
+                                        className="l-cb-offer-item"
+                                        classDict={{
+                                            "l-cb-selected": isSelected,
+                                            "l-cb-cursored": isCursored,
+                                        }}
+                                        onClick={e => {
+                                            this.props.comboBox._OnOfferClick(x.SValue);
+                                            e.stopPropagation();
+                                        }}
+                                    >
+                                        {x.View}
+                                    </div>
+                                )
+                            }
 
-                            return (
-                                <div className={styleState}
-                                     onClick={e => {
-                                         this.props.comboBox._OnOfferClick(x.SValue);
-                                         e.stopPropagation();
-                                     }}
-                                >
-                                    {
-                                        render
-                                        &&
-                                        render(x.Original as IObservableState<TDataItem>, this.props.comboBox)
-                                    }
-                                    {
-                                        !render
-                                        &&
-                                        x.View
-                                    }
-                                </div>
-                            )
-                        }
-                        }
+                            let r = itemRender(x.Original as IObservableState<TDataItem>, this.props.comboBox);
+                            if (!r["Attributes"])
+                                r["Attributes"] = {};
+                            let props = r["Attributes"];
+
+                            props.onClick = e => {
+                                this.props.comboBox._OnOfferClick(x.SValue);
+                                e.stopPropagation();
+                            };
+                            if (props.className)
+                                props.className = Luff.GetSubStateOrValue(r["Attributes"].className, c => "l-cb-offer-item " + c);
+                            else if (props.className)
+                                props.class = Luff.GetSubStateOrValue(r["Attributes"].class, c => "l-cb-offer-item " + c);
+                            else
+                                props.className = "l-cb-offer-item";
+                            props.classDict = {
+                                "l-cb-selected": isSelected,
+                                "l-cb-cursored": isCursored,
+                            };
+                            return r;
+                        }}
                     />
                 </div>
             </div>
