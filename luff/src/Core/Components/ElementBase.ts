@@ -63,6 +63,22 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     _InitializeComponent(props?: TProps): void {};
 
     Render() : JSXElement {return null};
+    RenderSafe() : JSXElement {
+        try {
+            return this.Render();
+        }
+        catch (e) {
+            let path = "";
+            let p: IElement = this;
+            while (p) {
+                path += " > " + p.Name;
+                p = p.ParentComponent;
+            }
+            console.error("[Luff.Render] Error:" + path);
+            console.error(e);
+        }
+    };
+
 
     Hide(): void {
         this._HideTransitionFunction();

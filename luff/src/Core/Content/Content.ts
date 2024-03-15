@@ -667,7 +667,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
 
 
         this.BeforeBuild();
-        this._TempRender = this.Render() as any as IRenderElement;
+        this._TempRender = this.RenderSafe() as any as IRenderElement;
         this._BeforeGenerateDOM();
 
         let built = ComponentFactory.Build(this._TempRender, this, this);

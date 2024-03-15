@@ -13,7 +13,7 @@ export class ComponentSimple<TProps = {}> extends ElementBase<TProps> {
         super._GenerateDOM();
         this._GenerateDOM = null;
         this.BeforeBuild();
-        const renderElement = this.Render() as IRenderElement;
+        let renderElement = this.RenderSafe() as IRenderElement;
         if (!renderElement) {
             return void 0;
         } 
