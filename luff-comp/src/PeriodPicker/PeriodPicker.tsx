@@ -242,8 +242,8 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         this._SetNavDate(Luff.Date(dateTarget));
         if (dateValue) {
             this._CurrentSelection.SValue = {
-                DateStart: Luff.Date(dateValue).DayStart,
-                DateFinish: Luff.Date(dateValue).DayEnd
+                DateStart: Luff.Date(dateValue),
+                DateFinish: Luff.Date(dateValue)
             };
         } else {
             this._CurrentSelection.SValue = {
@@ -265,8 +265,8 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         if (dateValues) {
             this._SetNavDate(Luff.Date(dateValues[0]));
             this._CurrentSelection.SValue = {
-                DateStart: Luff.Date(dateValues[0]).DayStart,
-                DateFinish: Luff.Date(dateValues[1]).DayStart
+                DateStart: Luff.Date(dateValues[0]),
+                DateFinish: Luff.Date(dateValues[1])
             };
         } else {
             this._CurrentSelection.SValue = {
