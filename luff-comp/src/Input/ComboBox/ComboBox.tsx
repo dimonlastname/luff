@@ -285,25 +285,24 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
         this.State.IsBusy.SValue = !!this.props.onChangeAsync;
 
         this._ListComponent.Hide();
-        if (this.props.onChange) {
-            this.props.onChange(offerItem.Value, offerItem.Original, offerItem.View);
-        }
-        else if (this.props.onChangeAsync) {
-            this.props.onChangeAsync(offerItem.Value, offerItem.Original, offerItem.View)
-                .finally(() => {
-                    this.State.IsBusy.SValue = false;
-                });
-        }
-        else {
-            if (offerItem) {
-                this.props.value.SValue = offerItem.Value;
+
+        if (offerItem) {
+            if (this.props.onChange){
+                this.props.onChange(offerItem.Value, offerItem.Original, offerItem.View);
+            }
+            else if (this.props.onChangeAsync) {
+                this.props.onChangeAsync(offerItem.Value, offerItem.Original, offerItem.View)
+                    .finally(() => {
+                        this.State.IsBusy.SValue = false;
+                    });
             }
             else {
-                this.RefreshValue();
+                this.props.value.SValue = offerItem.Value;
             }
-            this.State.IsBusy.SValue = false;
         }
-
+        else {
+            this.RefreshValue();
+        }
     }
     _CursorItem(item: IObservableState<TComboBoxOfferItem<TDataItem>>) : void {
         if (!item) {
