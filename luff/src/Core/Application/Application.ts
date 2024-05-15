@@ -33,6 +33,9 @@ const Application = {
                 continue;
             ctn._GenerateDOM();
             ctn._Mount(true);
+            if (ctn._IsShown && ctn._IsMount){
+                ctn._Appear();
+            }
             // const dom = ctn._GenerateDOM();
             // if (dom) {
             //     rootDOM.appendChild(dom);

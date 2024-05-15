@@ -531,7 +531,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
             if (isAnimateShow)
                 dialogWrap.ElementAnimate.classList.add(dialogParams.Animation.Show);
             doMount();
-            if (this._OutsideClickListener) { //FIXME crutch
+            if (this._OutsideClickListener  && this._OutsideClickListenerID == void 0) { //FIXME crutch
                 setTimeout(() => this._OutsideClickListenerID = outsideClickManager.Add(wrapper, this._OutsideClickListener), 0);
                 //this._OutsideClickListenerID = outsideClickManager.Add(wrapper, this._OutsideClickListener);
             }
