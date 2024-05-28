@@ -119,6 +119,15 @@ export namespace LibraryDOM {
                         ${CSSPrint}
                     }`;
         //console.log('styles', styles);
+
+        element.querySelectorAll("input").forEach(inp => {
+            inp.setAttribute("value", inp.value);
+            if (inp.checked)
+                inp.setAttribute("checked", "checked");
+            else
+                inp.removeAttribute("checked");
+        });
+
         printWindow.document.write('<html><head><title>' + document.title  + '</title>');
 
         printWindow.document.write(`<style>${styles}</style>`);

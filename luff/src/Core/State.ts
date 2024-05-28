@@ -17,7 +17,7 @@ type TSubscriber = {
     State: State;
     ChangedState: State;
 };
-export type TStateOnChange<T> = (newValue?: T/* | T[]*/, changedState?: State<T>) => void;
+export type TStateOnChange<T> = (newValue?: T/* | T[]*/, changedState?: State) => void;
 //export type TStateOnChange<T> = (newValue?: T/* | T[]*/, changedState?: (T extends object ? IObservableState<T> : IObservableStateSimple<T>)) => void;
 
 
