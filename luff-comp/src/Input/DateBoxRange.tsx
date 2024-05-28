@@ -83,7 +83,7 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
     }
 
     Render(): any {
-        let classState = this._IsDisabled.SubState(isDis => 'l-textbox' + this.props.className + (isDis ? '': ' l-pointer'));
+        let classState = this._IsDisabled.SubState(isDis => 'l-textbox ' + this.props.className + (isDis ? '': ' l-pointer'));
         const formatFull = `${this.props.formatDate} ${this.props.formatTime}`;
 
         return (
