@@ -1,116 +1,96 @@
-import Luff, {React, TContentCtor, IObservableStateSimple} from "luff"
+import Luff, {React, TContentCtor, IObservableStateSimple, IObservableState, Dict} from "luff"
 
 import "./PhoneInput.scss";
-import countries, {TPhoneInputCountry} from "./Countries";
+import countries, {countrySet, TPhoneInputCountry} from "./Countries";
+import ComboBox from "../Input/ComboBox/ComboBox";
+import TextBox, {TInputMask} from "../Input/TextBox";
 
 
 type TPhoneInputProps = {
     value: IObservableStateSimple<string>;
     onChange?: (phone: string, phoneMasked?: string) => void;
 
+    className?: string;
+    classDict?: Dict<IObservableStateSimple<boolean>>;
+
     isReadOnlyMode?: boolean;
     isShowCountryPicker?: boolean;
     defaultCountry?: string;
     allowedCountries?: string[];
     excludeCountries?: string[];
+
+    onKeyEnter?: () => void;
 }
 
-const maskRegex = new RegExp("[ \\(\\)\\-\\D]", 'g');
 
-type TPhonePack = {
-    PhoneClean: string;
-    PhoneMasked: string;
-}
 
-function getPhone(value: string, countryProps: TPhoneInputCountry) : TPhonePack {
-    value = value.replace(`+${countryProps.Code}`, '').replace(maskRegex, '');
-    let phoneMasked = countryProps.Mask;
-    for (let i = 0; i < value.length; i++) {
-        phoneMasked = phoneMasked.replace('_', value[i]);
-    }
-    return {
-        PhoneClean: value,
-        PhoneMasked: phoneMasked
-    };
-}
-type TState = {
-    CountryProps: TPhoneInputCountry;
-    Value: string;
-}
-export default class PhoneInput extends Luff.Content<TPhoneInputProps, TState> {
+export default class PhoneInput extends Luff.ComponentSimple<TPhoneInputProps> {
     static defaultProps = {
         isShowCountryPicker: true,
         isReadOnlyMode: false,
         defaultCountry: 'ru',
-
     };
+    //private CountryData = Luff.State<TPhoneInputCountry>(countrySet[this.props.defaultCountry]);
+    private CountryData : IObservableState<TPhoneInputCountry>= this.props.value.SubState(v => {
+        if (v.trim().length == 0)
+            return countrySet[this.props.defaultCountry];
 
-    _onKeyDown(e: KeyboardEvent) {
-        let textbox = e.target as HTMLInputElement;
-        if (e.keyCode == 8) {//backspace
-            let index = textbox.selectionStart;
-            let text = textbox.value;
-            if (text[index-1] === '-' || text[index-1] === ')') {
-                textbox.setSelectionRange(index - 1, index - 1);
-            }
-            else if (text[index-1] === ' ') {
-                textbox.setSelectionRange(index - 2, index - 2);
-            }
+        for (let cd of countries) {
+            if (v.includes("+" + cd.Code + " ")) // space afterwards needs for get exact picking "+ 7 (919...", and not: "+ 720 (402..."
+                return cd;
         }
-    }
-    _onChange(e: KeyboardEvent) {
-        const input = e.target as HTMLInputElement;
+        return countrySet[this.props.defaultCountry];
+    });
 
-        const countryPrefix = '+' + this.State.CountryProps.SValue.Code + ' ';
-
-        let phone = getPhone(input.value, this.State.CountryProps.SValue);
-        let phoneMasked = countryPrefix + phone.PhoneMasked;
-        let cursorPos = phoneMasked.indexOf('_');
-        if (cursorPos < 0)
-            cursorPos = phoneMasked.length;
-
-        input.value = phoneMasked;
-        input.focus();
-        input.setSelectionRange(cursorPos, cursorPos);
-
-        if (this.props.onChange) {
-            this.props.onChange(countryPrefix + phone.PhoneClean, phoneMasked);
-        }
-        else {
-            this.props.value.SValue = countryPrefix + phone.PhoneClean;
-        }
-
-    }
     Render(): Luff.Node {
-        const valueMasked = this.State.Value.SubState(value => '+' + this.State.CountryProps.SValue.Code + ' ' + getPhone(value, this.State.CountryProps.SValue).PhoneMasked , [this.State.CountryProps]);
-        const placeholder = this.State.CountryProps.SubState(countryProps => `+${countryProps.Code} ${countryProps.Mask}`);
-        const countryIconClass = this.State.CountryProps.SubState(countryProps => "l-phone-input_country-icon l-flag-icon__"+ countryProps.Country);
+        const mask : IObservableState<TInputMask> = this.CountryData.SubState(data => {
+            return {
+                Mask: `+${data.Code} ${data.Mask}`
+            }
+        });
+        let mainClassCss = "l-phone-input";
+        if (this.props.isReadOnlyMode)
+            mainClassCss += " __readonly";
+        if (this.props.className)
+            mainClassCss += " " + this.props.className;
+
         return (
-            <div className={"l-phone-input" + (this.props.isReadOnlyMode ? ' l-phone-input__readonly':'')}>
+            <div
+                className={mainClassCss}
+                classDict={this.props.classDict}
+            >
                 {
                     this.props.isShowCountryPicker &&
-                    <div className="l-phone-input_country-picker">
-                        <div className={countryIconClass}/>
-                    </div>
+                    <ComboBox
+                        value={this.CountryData.Country}
+                        dataStatic={countries}
+                        dataDelegateValue={x => x.Country}
+                        dataRender={x => {
+                            return (
+                                <div className="l-phone-input_country-item">
+                                    <div className={x.Country.SubState(country => "l-phone-input_country-icon l-flag-icon__" + country )}/>
+                                    <div className="l-phone-input_country-caption">{x.Caption}</div>
+                                </div>
+                            )
+                        }}
+                        onChange={c => {
+                            this.CountryData.SValue = countrySet[c];
+                            this.props.value.SValue = "";
+                        }}
+                        listWidth="180px"
+                    />
                 }
-                <input className="l-phone-input_input"
-                       type="text"
-                       placeholder={placeholder}
-                       value={valueMasked}
-                       onKeyDown={e => this._onKeyDown(e as any)}
-                       onInput={e => this._onChange(e as any)}
-                       disabled={this.props.isReadOnlyMode}
+                <TextBox
+                    value={this.props.value}
+
+                    mask={mask}
+                    placeholder={mask.Mask}
+                    onKeyEnter={this.props.onKeyEnter}
+
+                    disabled={this.props.isReadOnlyMode}
                 />
             </div>
         )
-    }
-    Ctor(): TContentCtor<TState> {
-        return {
-            State: {
-                CountryProps: countries.find(x => x.Country == this.props.defaultCountry),
-                Value: this.props.value as any,
-            }
-        }
     }
 }
 
