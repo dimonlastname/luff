@@ -50,7 +50,7 @@ export class LuffDate {
         if (date === null || typeof date === 'undefined')
             return '';
         let day = date.getDay();
-        day = day !== 0 ? day - 1 : 7; //monday as first weekday
+        day = day !== 0 ? day - 1 : 6; //monday as first weekday
         const data = date.getDate();
         const mo = date.getMonth() + 1;
         const year = date.getFullYear();
