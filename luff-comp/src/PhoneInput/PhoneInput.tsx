@@ -32,6 +32,9 @@ export default class PhoneInput extends Luff.ComponentSimple<TPhoneInputProps> {
     };
     //private CountryData = Luff.State<TPhoneInputCountry>(countrySet[this.props.defaultCountry]);
     private CountryData : IObservableState<TPhoneInputCountry>= this.props.value.SubState(v => {
+        if (v.trim().length == 0 && this.CountryData?.SValue)
+            return this.CountryData.SValue;
+
         if (v.trim().length == 0)
             return countrySet[this.props.defaultCountry];
 
@@ -75,7 +78,6 @@ export default class PhoneInput extends Luff.ComponentSimple<TPhoneInputProps> {
                         }}
                         onChange={c => {
                             this.CountryData.SValue = countrySet[c];
-                            this.props.value.SValue = "";
                         }}
                         listWidth="180px"
                     />
