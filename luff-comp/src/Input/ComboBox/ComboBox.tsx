@@ -724,7 +724,7 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
     }
     protected BeforeBuild(): void {
         this.OnScroll = e => {
-            if (e.target !== this.ListContainer) {
+            if (e.target !== this.ListContainer && e.target != this.props.comboBox._TextBox) {
                 //this.props.comboBox.State.IsOpen.SValue = false;
                 this.Hide();
             }
