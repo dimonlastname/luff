@@ -66,6 +66,8 @@ type TComboBoxProps<TDataItem, TValue> = {
     //OnSelect?(value: any, text: string, originalItem: any) : void;     //callback function when !IsInputMode
     //OnInput?(value: string) : void;                  //callback keyup when IsInputMode
     //OnSetValue?: (value: any, text: string, originalItem: any) => void;   //callback function when set .Value
+    inputFilterRegex?: RegExp;
+    isAlwaysShowAllList?    : boolean;
 }
 type TComboBoxState<T> = {
     textBoxValue: string;
@@ -122,6 +124,7 @@ const defaultProps = {
     listVisibleLinesCount: 5,
     isPermissionWriteRequired: false,
     searchSuggestionDataAsyncDelay: 1000,
+    isAlwaysShowAllList: false,
     //searchDelegate: (item: TComboBoxOfferItem, search: string) => false,
 
 
@@ -421,6 +424,10 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
                 //this.State.IsOfferListVisible.SValue = true;
             }
             const items = this._offerData;
+            if (this.props.isAlwaysShowAllList) {
+                this.State.OfferDataFiltered.SValue = items;
+                return;
+            }
             if (
                 (!this.props.isSearchEnabled)
                 || (this.State.SelectedItem.SValue && this.State.SelectedItem.View.SValue === this.State.TextBoxValue.SValue)
@@ -530,7 +537,7 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
         const isUseTextBox = !this.props.dataRender || (this.props.dataRender && this.props.dataDelegateView != defaultProps.dataDelegateView);
         const isUseRender = this.props.dataRender && this.props.dataDelegateView == defaultProps.dataDelegateView;
 
-
+        const inputRegex = this.props.inputFilterRegex;
         let orig = state.SelectedItem.Original;
 
         return (
@@ -556,6 +563,16 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
                        onFocus={e => e.target.select()}
                        onChange={e => {
                            let value = e.currentTarget.value;
+
+                           if (inputRegex) {
+                               inputRegex.lastIndex = 0;
+                               const isNotOk = value.replace(inputRegex, "") != ""; //value has something else
+                               if (isNotOk) {
+                                   e.preventDefault();
+                                   return;
+                               }
+                           }
+
                            if (isInputMode){
                                if (onChange)
                                    onChange(value as any as TValue);
@@ -744,7 +761,7 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
                         name="EachCBOfferItems"
                         source={state.OfferDataFiltered}
                         filter={x => {
-                            return LibraryString.IsTextIncludes(cbx.State.TextBoxValueSearch.SValue, x.View);
+                            return this.props.comboBox.props.isAlwaysShowAllList || LibraryString.IsTextIncludes(cbx.State.TextBoxValueSearch.SValue, x.View);
                         }}
                         deps={[cbx.State.TextBoxValueSearch]}
                         renderOnEmpty={() => <div className="l-cb-offer-empty">{cbx.props.listEmptyText}</div>}
