@@ -364,6 +364,8 @@ class CasualComponent extends CasualMountingBase {
                             const valuePrev = this._AttributeByName['value'].Gen();
 
                             let eventCloned = LibraryDOM.EventClone(e);
+                            eventCloned.preventDefault = () => e.preventDefault();
+                            eventCloned.stopPropagation = () => e.stopPropagation();
                             let caretPosition = dom.selectionStart;
 
                             fn.call(this.ParentComponent, eventCloned);
