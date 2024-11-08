@@ -1,8 +1,8 @@
 {
   "name": "luff-comp",
-  "version": "3.1.7",
+  "version": "3.2.0",
   "description": "Luff's component library",
-  "main": "./src/index.tsx",
+  "main": "index.js",
   "author": "Dmitrii Pupyrev",
   "homepage": "https://luff.one",
   "license": "MIT",
