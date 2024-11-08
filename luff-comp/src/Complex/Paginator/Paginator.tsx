@@ -94,19 +94,27 @@ export default class Paginator extends Luff.ComponentSimple<TProps> {
         return (
             <div className={"l-paginator " + this.props.className}>
                 <div className="l-paginator-elem">
-                    <button className="l-button button" onClick={() => this.FirstPage() }>&lt;&lt;</button>
+                    <button className="l-button button" onClick={() => this.FirstPage() }>
+                        <div class="l-paginator-control-icon prev prev-max" />
+                    </button>
                 </div>
                 <div className="l-paginator-elem">
-                    <button className="l-button button" onClick={() => this.PrevPage() }>&lt;</button>
+                    <button className="l-button button" onClick={() => this.PrevPage() }>
+                        <div class="l-paginator-control-icon prev" />
+                    </button>
                 </div>
                 <div class="l-paginator-elem">Стр. {this.CurrentPage} из {this.PagesCount} </div>
                 <div className="l-paginator-elem">
-                    <button className="l-button button" onClick={() => this.NextPage() }>&gt;</button>
+                    <button className="l-button button" onClick={() => this.NextPage() }>
+                        <div class="l-paginator-control-icon next" />
+                    </button>
                 </div>
                 <div className="l-paginator-elem">
-                    <button className="l-button button" onClick={() => this.LastPage() }>&gt;&gt;</button>
+                    <button className="l-button button" onClick={() => this.LastPage() }>
+                        <div class="l-paginator-control-icon next next-max" />
+                    </button>
                 </div>
-                <div className="l-paginator-elem l-paginator-item-take l-row l-flexa-center">
+                <div className="l-paginator-elem l-paginator-item-take">
                     <div className="div">Показывать по </div>
                     <ComboBox
                         value={p.Take}

@@ -10,13 +10,50 @@
 
   .l-paginator-elem {
     padding: 5px 7px;
-  }
-  .l-paginator-item-take {
-    .l-combo-box {
-      width: 62px;
-      margin-left: 0.5em;
+    .l-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .l-paginator-control-icon {
+      display: inline-block;
+      mask-size: contain;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      background-color: var(--l-clr-button-text);
+      &.rotate {
+        transform: rotate(180deg);
+      }
+      &.next,
+      &.prev {
+        width: 0.67em;
+        height: 1em;
+        mask-image: url("img/l-icon-one-arrow.svg");
+        &.prev {
+          transform: rotate(180deg);
+        }
+      }
+      &.next-max,
+      &.prev-max {
+        width: 1.2em;
+        height: 1em;
+        mask-image: url("img/l-icon-double-arrow.svg");
+        background-color: var(--l-clr-button-text);
+      }
     }
   }
+  .l-paginator-item-take {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .l-combo-box {
+      width: 64px;
+      margin-left: 0.5em;
+      font-size: 0.8em;
+    }
+  }
+
   //.l-paginator-children {
   //  height: 100%;
   //  width: 100%;
