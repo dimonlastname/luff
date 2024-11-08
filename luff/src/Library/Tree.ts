@@ -59,16 +59,16 @@ export namespace LibraryTree {
         return null;
     }
 
-    function ForEachProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void, parent?: T) : void {
+    function ForEachProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => void, parent: T, depth: number) : void {
         for (let item of tree) {
-            action(item, parent);
-            ForEachProcess((item as any)[subKey], subKey, action, item);
+            action(item, parent, depth);
+            ForEachProcess((item as any)[subKey], subKey, action, item, depth + 1);
         }
     }
-    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void) : void {
+    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => void) : void {
         for (let item of tree) {
-            action(item, null);
-            ForEachProcess((item as any)[subKey], subKey, action, item);
+            action(item, null, 0);
+            ForEachProcess((item as any)[subKey], subKey, action, item, 1);
         }
     }
 
