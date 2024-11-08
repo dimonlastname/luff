@@ -3,12 +3,12 @@ import {ElementBase} from "./ElementBase";
 import {IElement, TRawComponent, TPropsDefault, JSXElement} from "./IElement";
 import { ComponentFactory } from "../Compiler/ComponentFactory";
 
-type TProps<T> = {
+type TProps = {
     render: () => JSXElement;
     deps?: (IObservableStateSimple<any> | IObservableState<any> | IObservableStateArray<any>)[];
 } & TPropsDefault;
 
-export class DynamicRenderComponent<TIterationItem = any> extends ElementBase<TProps<TIterationItem>>  {
+export class DynamicRenderComponent extends ElementBase<TProps>  {
     private readonly _ChildRender: () => ElementBase;
     private _MapElements = new Map<string, IElement>();
 
