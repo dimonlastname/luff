@@ -34,8 +34,8 @@ import {PopLog} from "./System/Pop/Pop";
 
 import {RouteLink} from "./Core/Components/RouteLink";
 import {Route} from "./Core/Application/Route";
-import {Each, EachPaging} from "./Core/Components/Each/Each";
-import {JSXElement, IElement} from "./Core/Components/IElement";
+import {Each, EachPaging, EachSorter} from "./Core/Components/Each/Each";
+import {JSXElement, IElement, TRawComponent, TPropsDefault} from "./Core/Components/IElement";
 import {ComponentSimple as _ComponentSimple} from "./Core/Components/ComponentSimple";
 import {CasualFragmentComponent} from "./Core/Components/CasualFragmentComponent";
 import {IElementBase, ElementBase} from "./Core/Components/ElementBase";
@@ -617,7 +617,7 @@ namespace Luff  {
         /** Defines the human readable text alternative of aria-valuenow for a range widget. */
         'aria-valuetext'?: IObservableOrValue<string>;
     }
-    export type CSSProperties = Partial<ICssStyle> | Dict<string>;
+    export type CSSProperties = Partial<ICssStyle> | Dict<IObservableOrValue<string>>;
     export type AttributeStyleType = IObservableOrValue<string> | CSSProperties | IObservableState<CSSProperties>;
 
     export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
@@ -1602,13 +1602,13 @@ export {React, luffState, luffStateArr, TContentCtor,
     DynamicRenderComponent,
     RawHtmlComponent,
     _Application as Application,
-    Route, RouteLink, Each, EachPaging, ISortMan, IFilterMan,
+    Route, RouteLink, Each, EachPaging, EachSorter, ISortMan, IFilterMan,
     luffDate, luffDate as LDate, LuffDate, LibraryArray, LibraryTree, LibraryDOM, LibraryString, LibraryBlob, LibraryNumber, LibraryObject, _Culture as Culture, PropTypes, LuffListener, luffLinq,
     FilePicker,
 
     _IObservableState as IObservableState, _IObservableStateSimple as IObservableStateSimple, _IObservableStateArray as IObservableStateArray, _IObservableStateAny as IObservableStateAny, _IObservableStateSimpleOrValue as IObservableStateSimpleOrValue, Dict, DictN,
     TPositionObject, TOffset, TValueName, TIDNamePair,
-    _IContent as IContent, JSXElement, IElement, IElementBase, ElementBase, IRenderElement, ComponentFactory,
+    _IContent as IContent, JSXElement, IElement, IElementBase, ElementBase, IRenderElement, ComponentFactory, TRawComponent, TPropsDefault,
     State, StateArray, getClosestStateArray, IObservableOrValue,
 
     //AppSettings,
