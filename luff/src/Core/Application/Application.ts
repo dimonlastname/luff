@@ -6,6 +6,7 @@ import {IElement} from "../Components/IElement";
 let rootDOM;
 
 const Application = {
+    Debug: false,
     Entry: <string>null,
     IsRun: false,
     RootElementID: 'root',
@@ -44,7 +45,7 @@ const Application = {
         this.RootComps = roots;
         let perAppend = window.performance.now();
         //console.info(`[Luff.Application.Perf] AppendDOM:   `, perAppend - perfGen);
-        console.info(`[Luff.Application.Perf] Build total: `, perAppend - perf, 'ms');
+        console.info(`[Luff.Application.Perf] Build total: `, Math.round((perAppend - perf) * 100) / 100, 'ms');
 
         //GenerateRouteLinks();
         let routeStat = 0;
