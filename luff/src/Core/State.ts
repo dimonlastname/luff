@@ -1,5 +1,11 @@
 import {PropTypes} from "../Library/PropTypes";
-import {IObservableState, IObservableStateArray, SelectDelegate, WhereDelegate} from "../interfaces";
+import {
+    IObservableState,
+    IObservableStateArray, IObservableStateSimple,
+    IObservableStateSimpleOrValue,
+    SelectDelegate,
+    WhereDelegate
+} from "../interfaces";
 import {LibraryArray} from "../Library/Array";
 import {LibraryNumber} from "../Library";
 
@@ -656,7 +662,24 @@ export function getClosestStateArray(state: State) : TClosestArr {
 }
 
 
+function concatString(classList: IObservableStateSimpleOrValue<string>[]) : string {
+    return classList.reduce((full, cls) => full + (cls ? " " + cls.valueOf() : "")) as string;
+}
 
+function stateStringConcat(...classList: IObservableStateSimpleOrValue<string>[]) : IObservableStateSimpleOrValue<string> {
+    const hasStates  = classList.filter(cls => cls instanceof State ).length > 0;
+    if (!hasStates)
+        return concatString(classList);
+    else {
+        let states: IObservableStateSimple<string>[] = [];
+        for (let cls of classList) {
+            if (cls instanceof State){
+                states.push(cls);
+            }
+        }
+        return states[0].SubState(_ => concatString(classList), states.splice(1));
+    }
+}
 
 //export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T>) {
 export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
@@ -672,6 +695,7 @@ export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObse
         State: state
     }) as any;
 }
+luffState.Concat = stateStringConcat;
 
 export function luffStateArr<T>(state: T[], params: TStateCtor = {State: ''}) : IObservableStateArray<T> {
     if (state instanceof State || StateArray.isPrototypeOf(state) )
