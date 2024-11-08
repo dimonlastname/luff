@@ -662,14 +662,19 @@ export function getClosestStateArray(state: State) : TClosestArr {
 }
 
 
-function concatString(classList: IObservableStateSimpleOrValue<string>[]) : string {
-    return classList.reduce((full, cls) => full + (cls ? " " + cls.valueOf() : "")) as string;
+function concatString(separator: string, classList: IObservableStateSimpleOrValue<string>[]) : string {
+    return classList.reduce((full, cls) => full + (cls ? separator + cls.valueOf() : "")) as string;
 }
 
-function stateStringConcat(...classList: IObservableStateSimpleOrValue<string>[]) : IObservableStateSimpleOrValue<string> {
+function stateStringConcatDefault(...classList: IObservableStateSimpleOrValue<string>[]) : IObservableStateSimpleOrValue<string> {
+    return stateStringConcatFull(" ", ...classList);
+}
+stateStringConcatDefault.WithSeparator = stateStringConcatFull;
+
+function stateStringConcatFull(separator: string, ...classList: IObservableStateSimpleOrValue<string>[]) : IObservableStateSimpleOrValue<string> {
     const hasStates  = classList.filter(cls => cls instanceof State ).length > 0;
     if (!hasStates)
-        return concatString(classList);
+        return concatString(separator, classList);
     else {
         let states: IObservableStateSimple<string>[] = [];
         for (let cls of classList) {
@@ -677,7 +682,7 @@ function stateStringConcat(...classList: IObservableStateSimpleOrValue<string>[]
                 states.push(cls);
             }
         }
-        return states[0].SubState(_ => concatString(classList), states.splice(1));
+        return states[0].SubState(_ => concatString(separator, classList), states.splice(1));
     }
 }
 
@@ -695,7 +700,7 @@ export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObse
         State: state
     }) as any;
 }
-luffState.Concat = stateStringConcat;
+luffState.Concat = stateStringConcatDefault;
 
 export function luffStateArr<T>(state: T[], params: TStateCtor = {State: ''}) : IObservableStateArray<T> {
     if (state instanceof State || StateArray.isPrototypeOf(state) )
