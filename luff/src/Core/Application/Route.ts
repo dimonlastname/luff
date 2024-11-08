@@ -152,6 +152,7 @@ export class Router {
         if (isBack && currentContent && currentContent._IsShown && currentContent._RawContent.Dialog && currentContent !== ctx)
             currentContent._DoHide();
 
+        this.CurrentPath = routeString;
         const isNewOrEmptyRouteParam = ctx._RouteParam !== routeParam || routeParam.length === 0;
         if (ctx && ctx.Permission.IsAllow && (/*!ctx._IsShown ||*/ isNewOrEmptyRouteParam)) {
 
