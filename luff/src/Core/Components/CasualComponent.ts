@@ -6,6 +6,7 @@ import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
 import {ElementBase} from "./ElementBase";
 import {when} from "q";
+import Application from "../Application/Application";
 
 const eventNames = ["onabort", "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose",
     "oncontextmenu", "oncuechange", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover",
@@ -107,6 +108,9 @@ class CasualComponent extends CasualMountingBase {
     }
     private _CompileSingleAttribute(attName: string, attValue: any, attributeType: AttributeType) : void {
         let gen;
+        if (attName == "isVisible") {
+            return;
+        }
 
         if (eventNames.indexOf(attName.toLowerCase()) > -1) { //onclick, onchange, etc.\
             this._EventListeners[attName.substring(2).toLowerCase()] = attValue;
@@ -312,6 +316,10 @@ class CasualComponent extends CasualMountingBase {
     private _GenerateAttributes(){
         for (let att of this._Attributes) {
             this._SetAttribute(att.Name, att.Type, att.Gen());
+        }
+        if (Application.Debug){
+            this.DOM.setAttribute("data-comp-path", this.GetComponentPath(true));
+            this.DOM["luffContent"] = this.ParentComponent;
         }
     }
     private _GenerateEventListeners(){

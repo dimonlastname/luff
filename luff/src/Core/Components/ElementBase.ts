@@ -68,16 +68,22 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             return this.Render();
         }
         catch (e) {
-            let path = "";
-            let p: IElement = this;
-            while (p) {
-                path += " > " + p.Name;
-                p = p.ParentComponent;
-            }
-            console.error("[Luff.Render] Error:" + path);
+            console.error("[Luff.Render] Error:" + this.GetComponentPath(false));
             console.error(e);
         }
     };
+    GetComponentPath(isExcludedCurrent: boolean) : string {
+        let path = "";
+        let p: IElement = this;
+        if (isExcludedCurrent){
+            p = this.ParentComponent;
+        }
+        while (p) {
+            path = p.Name + (path.length > 0 ? " > " + path : "");
+            p = p.ParentComponent;
+        }
+        return path;
+    }
 
 
     Hide(): void {
@@ -335,7 +341,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     _RemoveComponent(from?: string) : void {
         this.Render = null;
         this._GenerateDOM = null;
-        console.warn('[RemoveComponent] from: ', from, this.Name, this);
+        //console.warn('[RemoveComponent] from: ', from, this.Name, this);
 
 
         if (this.ParentElement) {
@@ -380,7 +386,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
                 }
 
                 this._CompileIsVisible(rawComponent.Attributes['isVisible']);
-                delete rawComponent.Attributes['isVisible'];
+                //delete rawComponent.Attributes['isVisible'];
             }
 
 

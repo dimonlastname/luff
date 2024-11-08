@@ -3,11 +3,11 @@ import {ElementBase} from "../ElementBase";
 import {IElement, TRawComponent, TPropsDefault, JSXElement} from "../IElement";
 import {ComponentFactory, IRenderElement} from "../../Compiler/ComponentFactory";
 import {State, StateArray, luffState} from "../../State";
-import {EachSorterMan, ISortMan, SortFn} from "./EachSorter";
+import {EachSorter, EachSorterMan, ISortMan, SortFn} from "./EachSorter";
 import EachPaging from "./EachPaging";
 import {EachFilterMan, IFilterMan, TFilterFn} from "./FilterManager";
 
-export {EachPaging};
+export {EachPaging, EachSorter};
 
 type TRenderFn<T> = (item: IObservableStateAny<T> , index?: IObservableStateSimple<number>, each?: Each<T>) => JSXElement;
 
@@ -26,6 +26,7 @@ type TEachProps<T> = {
 
     renderOnEmpty?: (item: T) => any;
     pageSize?: number;
+    disableRowCache?: boolean;
 } | TPropsDefault;
 
 
@@ -300,7 +301,11 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 existsItem.Index.SValue = index;
                 index++;
                 this._HideItem(existsItem.Component); //to force mount element //fixme
-                this._ShowItem(existsItem.Component, false);
+                const isVisibleProp = existsItem.Component.props.isVisible;
+                if (isVisibleProp === void 0 || isVisibleProp === true || isVisibleProp.SValue === true){
+                    this._ShowItem(existsItem.Component, false);
+                }
+
                 // this._InsertHTML(existsItem.Component.DOM);
                 // if (this.ParentElement.DOM.isConnected)
                 //     existsItem.Component.Show();
