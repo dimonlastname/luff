@@ -193,7 +193,7 @@ input, select {
   padding: 5px 10px;
   user-select: none;
   text-align: center;
-  &:active{
+  &:active:not(:disabled){
     position: relative;
     left: 1px;
     top:1px
