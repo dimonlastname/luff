@@ -11,6 +11,7 @@ luff-react-component/package-lock.json
 _dist/luff/*
 _dist/luff-comp/*
 _dist/luff-react-component/*
+_dist_wp/
 !_dist/luff/package.json
 !_dist/luff-comp/package.json
 !_dist/luff-react-component/package.json
