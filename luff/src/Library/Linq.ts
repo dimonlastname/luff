@@ -1,7 +1,5 @@
 import {Dict, DictN, TKeyValuePair} from "../interfaces";
 import {LibraryObject} from "./Object";
-import Luff from "../index";
-import get = Reflect.get;
 
 type cbWhere  = (item: any, index?: number) => boolean;
 type cbSelect = (item: any, index?: number) => any;
