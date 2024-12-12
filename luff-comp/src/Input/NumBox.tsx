@@ -76,7 +76,7 @@ export default class NumBox extends InputBoxBase<TProps> {
             if (isMaxState)
                 deps.push(maxSt);
 
-            valueView = this.props.value.SubState(val => (val < (min.valueOf() as number) || val > (max.valueOf() as number)) ? '' : val, deps);
+            valueView = this.props.value.SubState(val => (val < min || val > max) ? '' : val, deps);
         }
 
 
