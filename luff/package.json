@@ -24,11 +24,11 @@
     "@types/node": "^22.7.5",
     "autoprefixer": "^10.4.20",
     "path": "^0.12.7",
+    "rollup-plugin-dts-bundle": "^1.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.82.0",
     "typescript": "^4.9.5",
-    "vite": "^5.4.9",
-    "rollup-plugin-dts-bundle": "^1.0.0"
+    "vite": "^5.4.9"
   },
   "dependencies": {
 

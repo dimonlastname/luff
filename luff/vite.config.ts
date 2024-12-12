@@ -8,7 +8,6 @@ const OUT_DIR = resolve(__dirname, "../_dist/luff");
 
 export default defineConfig({
     plugins: [
-
         {
             ...rollupTs({
                 check: true,
@@ -20,7 +19,6 @@ export default defineConfig({
                 },
 
             }),
-
             // run before build
             enforce: 'pre',
 
@@ -29,14 +27,9 @@ export default defineConfig({
             bundle: {
                 name: 'luff',
                 main: '../_dist/luff/index.d.ts',
-                out: 'indexX.d.ts',
-
+                out: 'index.d.ts',
                 removeSource: true,
-
-            },
-            deleteOnComplete: [
-                '../_dist/luff/Core',
-            ],
+            }
         })
     ],
     build: {
@@ -62,7 +55,7 @@ export default defineConfig({
         },
     },
     esbuild: {
-        minifyWhitespace: false,
+        minifyWhitespace: true,
         minifyIdentifiers: false,
         keepNames: true,
         jsxFactory: "Luff.createElement",

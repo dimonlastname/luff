@@ -65,7 +65,7 @@ export default defineConfig({
         },
     },
     esbuild: {
-        minifyWhitespace: false,
+        //minifyWhitespace: true,
         minifyIdentifiers: false,
         keepNames: true,
         jsxFactory: "Luff.createElement",
