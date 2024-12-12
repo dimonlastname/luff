@@ -35,7 +35,7 @@ function validateEmail(email) {
 }
 
 export default class TextBox extends InputBoxBase<TProps> {
-    DOM: HTMLInputElement;
+    declare DOM: HTMLInputElement;
     static Type = {
         Text: 'text',
         Email: 'email',

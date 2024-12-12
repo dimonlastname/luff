@@ -467,7 +467,7 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
             return;
         }
 
-        let dateValue : Luff.Date;
+        let dateValue : LuffDate;
         try {
             dateValue = Luff.Date(textValue, Luff.Culture.Current.DateFormat);
         } catch (e) {

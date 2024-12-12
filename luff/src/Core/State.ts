@@ -685,7 +685,13 @@ function stateStringConcatFull(separator: string, ...classList: IObservableState
         return states[0].SubState(_ => concatString(separator, classList), states.splice(1));
     }
 }
+function trySubState<T, U>(potentialState: IObservableStateSimpleOrValue<T>, selector: (value: T) => U) : IObservableStateSimpleOrValue<U> {
+    if (potentialState instanceof StateSingle || potentialState instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(potentialState)) )
+        return (potentialState as IObservableStateSimple<T>).SubState(selector);
 
+    return selector(potentialState as T);
+
+}
 //export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T>) {
 export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
     if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
@@ -701,6 +707,10 @@ export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObse
     }) as any;
 }
 luffState.Concat = stateStringConcatDefault;
+luffState.GetSubStateOrValue = trySubState;
+luffState.ValueOf = function<T> (potentialState: IObservableStateSimpleOrValue<T>) : T {
+    return potentialState.valueOf() as T;
+};
 
 export function luffStateArr<T>(state: T[], params: TStateCtor = {State: ''}) : IObservableStateArray<T> {
     if (state instanceof State || StateArray.isPrototypeOf(state) )

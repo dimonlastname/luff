@@ -5,24 +5,25 @@
   ],
   "compilerOptions": {
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "declarationDir": "d",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es7", "dom", "es2018"],
+    "lib": ["es7", "dom"],
     "module": "es6",
     "moduleResolution": "node",
+    "moduleDetection": "force",
     "sourceMap": true,
     "sourceRoot": "/",
     "target": "es6",
     "jsx": "react" ,
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "baseUrl": "./",
-    "paths": {
-      "luff": ["../luff/src/index.tsx"]
-    }
+
+    "noEmit": true,
+    "baseUrl": "."
   },
+  "include": ["vite.config.ts"],
   "exclude": ["Build", "node_modules"]
 }
 

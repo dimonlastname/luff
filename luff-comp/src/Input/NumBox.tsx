@@ -40,13 +40,13 @@ export default class NumBox extends InputBoxBase<TProps> {
         const { value, min, max } = this.props;
         const v = value.SValue;
 
-        if (min !== void 0 && v < min.valueOf()) {
+        if (min !== void 0 && v < (min.valueOf() as number)) {
             return {
                 IsValid: false,
                 Message: 'Значение меньше минимума'
             };
         }
-        if (max !== void 0 && v > max.valueOf()) {
+        if (max !== void 0 && v > (min.valueOf() as number)) {
             return {
                 IsValid: false,
                 Message: 'Значение больше максимума'
@@ -76,7 +76,7 @@ export default class NumBox extends InputBoxBase<TProps> {
             if (isMaxState)
                 deps.push(maxSt);
 
-            valueView = this.props.value.SubState(val => (val < min || val > max) ? '' : val, deps);
+            valueView = this.props.value.SubState(val => (val < (min.valueOf() as number) || val > (max.valueOf() as number)) ? '' : val, deps);
         }
 
 

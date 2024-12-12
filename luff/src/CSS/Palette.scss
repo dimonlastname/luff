@@ -1,10 +1,12 @@
+@use "sass:color";
+
 :root {
   /* basic */
   --l-clr-base: #5C9BAA;
   --l-clr-base-contrast: #fff;
-  --l-clr-base-light: #{lighten(#5C9BAA, 10%)};
+  --l-clr-base-light: #{color.adjust(#5C9BAA, $lightness: 10%)};
   --l-clr-base-dark: #4A7F87;
-  --l-clr-base-dark-more: #{darken(#4A7F87, 3%)};
+  --l-clr-base-dark-more: #{color.adjust(#4A7F87, $lightness: -3%)};
 
   --l-clr-content: #e3e7e8;
   --l-clr-text-default: #111;
@@ -35,10 +37,10 @@
   /* events */
   --l-clr-notice: #ffb24d;
   --l-clr-success: #45c971;
-  --l-clr-success-dark: darken(#45c971, 5%);
+  --l-clr-success-dark: color.adjust(#45c971, $lightness: -5%);
   --l-clr-warn: darkorange;//#ffb24d;
   --l-clr-danger: #f44034;
-  --l-clr-danger-dark: darken(#f44034, 5%);
+  --l-clr-danger-dark: color.adjust(#f44034, $lightness: -5%);
   --l-clr-error: #f44034; //#d00
 
 

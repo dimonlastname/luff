@@ -7,7 +7,7 @@ import Luff, {
     IObservableStateArray,
     IObservableStateSimple,
     LibraryString,
-    luffState, IObservableState, DynamicRenderComponent, JSXElement
+    luffState, IObservableState, DynamicRenderComponent,
 } from "luff";
 import BusyLocker from "../../BusyLocker/BusyLocker";
 

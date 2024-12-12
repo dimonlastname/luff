@@ -74,6 +74,9 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     public GetFilteredKeys() : number[] {
         return this._FilteredKeys;
     }
+    public GetAllItems<TypeOf extends IElement>() : TypeOf[] {
+        return this._CompList as TypeOf[];
+    }
     public GetDOMByItemState(itemState: IObservableState<TIterationItem>) : HTMLElement {
         let item = this._MapElements.get(itemState as any as State);
         return item.Component.GetFirstDOM();

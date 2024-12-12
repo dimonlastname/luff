@@ -1,4 +1,5 @@
 export enum ChartSeriesType {
+    Unknown = 0,
     Line = 1,
     Bar = 2,
     Pie = 3,
