@@ -5,7 +5,6 @@ import {luffState, State} from "../State";
 import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
 import {ElementBase} from "./ElementBase";
-import {when} from "q";
 import Application from "../Application/Application";
 
 const eventNames = ["onabort", "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose",
