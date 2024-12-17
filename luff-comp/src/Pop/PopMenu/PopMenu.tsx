@@ -3,9 +3,10 @@ import "./PopMenu.scss";
 
 export type TCommonPopPopMenuItem = {
     Caption?: string;
-    Render?: () => JSXElement,
-    OnClick?: () => void;
+    Render?: (context?: PopMenu) => JSXElement,
+    OnClick?: (e?: Luff.MouseEvent, menuCtx?: PopMenu) => void;
     IsVisible?: IObservableStateSimple<boolean>;
+    IsCustomClick?: boolean;
 }
 
 type TPopMenuProps = {
@@ -23,12 +24,15 @@ export class PopMenu<TPropsExtra = {}> extends Luff.Content<TPopMenuProps & TPro
                     this.props.items.map(menuItem => {
                         let content : JSXElement = menuItem.Caption as any;
                         if (menuItem.Render) {
-                            content = menuItem.Render();
+                            content = menuItem.Render(this);
                         }
                         return (
                             <div className="l-pop-popMenu_li"
-                                 onClick={() => {
-                                     menuItem?.OnClick.call(this.props.context ? this.props.context: void 0);
+                                 onClick={e => {
+                                     if (menuItem.IsCustomClick)
+                                         return;
+
+                                     menuItem?.OnClick.call(this.props.context ? this.props.context: void 0, e, this);
                                      this.Hide();
                                  }}
                                  isVisible={menuItem.IsVisible}
