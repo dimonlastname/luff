@@ -128,4 +128,57 @@ export namespace LibraryString {
             return -1;
         return 0;
     }
+
+    export class DummyTextGen {
+        private static Words = [
+            "давным", "данные", "приехал", "товариши", "немыслимые", "привет",
+            "в", "в", "над", "под", "вместе", "как-то", "никогда",
+            "десять", "два", "однако", "яблок", "квинтессенция", "зачем",
+            "крышка", "конструктивно", "один", "шерсти", "не", "никак",
+            "каких-то", "марафон", "красивый", "весёлый", "потрясающего", "разумно",
+            "придумывающий", "смотрящий", "рисующего", "рассматриваемый", "поликарбонатный", "библиотечная",
+            "рынка", "свободная", "искать", "ищет", "делает", "пользуется",
+            "пишет", "звонит", "собирает", "чтобы", "по этому", "кстати", "чайников",
+            "информационный", "письменный", "действует", "чтения", "среди", "удаляет",
+            //"", "", "", "", "", "",
+        ];
+        private static GetWord() {
+            const words = DummyTextGen.Words;
+            return words[Math.floor(Math.random() * words.length)];
+        }
+        public static Generate(length: number) : string {
+            const words = DummyTextGen.Words;
+
+            let sentenceLength = 0;
+
+
+            let text = "";
+            for (let i = 0; i < length; i++) {
+                sentenceLength++;
+                let nextWord = DummyTextGen.GetWord();
+                if (i == 0) {
+                    nextWord = Capitalize(nextWord);
+                }
+                if (sentenceLength > 7 && LibraryNumber.GetRandom(100) > 50 && (i + 7 < length)) {
+                    let sentenceEnd = ".";
+                    let lastWord = nextWord;
+                    if (lastWord.length < 3) {
+                        lastWord = DummyTextGen.GetWord();
+                        while (lastWord.length < 3){
+                            lastWord = `${lastWord} ${DummyTextGen.GetWord()}`;
+                            i++;
+                        }
+                        nextWord = Capitalize(nextWord);
+                    }
+                    text += ` ${lastWord}.`;
+                    nextWord = Capitalize(nextWord);
+                    sentenceLength = 0;
+                }
+
+                text += (i != 0 ? " ": "") + nextWord;
+            }
+
+            return text;
+        }
+    }
 }

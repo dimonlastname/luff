@@ -59,29 +59,39 @@ export namespace LibraryTree {
         return null;
     }
 
-    function ForEachProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => void, parent: T, depth: number) : void {
+    function ForEachProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => boolean | void, parent: T, depth: number) : void {
         for (let item of tree) {
-            action(item, parent, depth);
+            if (action(item, parent, depth))
+                break;
             ForEachProcess((item as any)[subKey], subKey, action, item, depth + 1);
         }
     }
-    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => void) : void {
+    /**
+     * @action returns {boolean} isBreak
+     * */
+    export function ForEach<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T, depth: number) => boolean | void /* isBreak */ ) : void {
         for (let item of tree) {
-            action(item, null, 0);
+            if (action(item, null, 0))
+                break;
             ForEachProcess((item as any)[subKey], subKey, action, item, 1);
         }
     }
 
-    function ForEachFromReverseProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void, parent?: T) : void {
+    function ForEachFromReverseProcess<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => boolean | void, parent?: T) : void {
         for (let item of tree) {
             ForEachFromReverseProcess((item as any)[subKey], subKey, action, item);
-            action(item, parent);
+            if (action(item, parent))
+                break;
         }
     }
-    export function ForEachReverse<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => void) : void {
+    /**
+     * @action returns {boolean} isBreak
+     * */
+    export function ForEachReverse<T, U>(tree: Iterable<T>, subKey: (keyof T), action: (item: T, parent: T) => boolean | void) : void {
         for (let item of tree) {
             ForEachFromReverseProcess((item as any)[subKey], subKey, action, item);
-            action(item, null);
+            if (action(item, null))
+                break;
         }
     }
 }
