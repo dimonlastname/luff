@@ -1,8 +1,7 @@
 import Luff, {Dict, React, TContentCtor} from "luff";
 
 import './ImageViewer.scss';
-import './img/no-image.svg';
-
+import noImageIcon from "./img/no-image.svg";
 type TState = {
     ImageSrcList: string[],
     ImageIndex: number,
@@ -24,7 +23,7 @@ type TImageSource = {
     Promise: Promise<HTMLImageElement>;
 }
 const ImgNoImage = new Image();
-ImgNoImage.src = 'img/no-image.svg';
+ImgNoImage.src = noImageIcon;
 
 
 
@@ -53,7 +52,7 @@ export class LuffImageViewer extends Luff.Content<TProps> {
     Run(ImageSrcList: string[], startIndex: number = 0) : void {
         if (!ImageSrcList || ImageSrcList.length < 1) {
             //console.log('[Luff.ImageViewer] Images source is empty');
-            ImageSrcList = ['img/no-image.svg'];
+            ImageSrcList = [noImageIcon];
         }
         this.ImageSrcList.SValue = ImageSrcList;
         this.ImageIndex.SValue = startIndex;
@@ -64,6 +63,7 @@ export class LuffImageViewer extends Luff.Content<TProps> {
     NextImage(direction: number) : void {
         if (this.Load.IsActive)
             return;
+
         this.ChangeIndex(direction);
         this.GetImage(this.ImageSrcList[this.ImageIndex.SValue].SValue)
             .then(image => {

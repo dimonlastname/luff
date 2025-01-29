@@ -8,7 +8,6 @@ import Luff, {
 } from "luff";
 
 import './ImageViewer.scss';
-import './img/no-image.svg';
 import {LuffImageViewer} from "./ImageViewer";
 
 

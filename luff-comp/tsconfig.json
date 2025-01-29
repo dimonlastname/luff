@@ -23,7 +23,7 @@
     "noEmit": true,
     "baseUrl": "."
   },
-  "include": ["vite.config.ts"],
+  "include": ["vite.config.ts", "custom.d.ts"],
   "exclude": ["Build", "node_modules"]
 }
 
