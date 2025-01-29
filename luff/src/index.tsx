@@ -1582,18 +1582,18 @@ window['___LuffGlobal'] = {
     Inputs: {}
 };
 
-(function preloadImages(imageSRCs: string[]) {
-    let images = [];
-    for (let i = 0; i < imageSRCs.length; i++) {
-        images[i] = new Image();
-        images[i].src = imageSRCs[i];
-    }
-})(
-    [
-        'img/l-icon-load.svg',
-        //'img/l-radio.svg',
-    ]
-);
+// (function preloadImages(imageSRCs: string[]) {
+//     let images = [];
+//     for (let i = 0; i < imageSRCs.length; i++) {
+//         images[i] = new Image();
+//         images[i].src = imageSRCs[i];
+//     }
+// })(
+//     [
+//         'img/l-icon-load.svg',
+//         //'img/l-radio.svg',
+//     ]
+// );
 
 
 
