@@ -4,7 +4,7 @@ import EditableBase, {EditableContent, TEditableProps} from "./EditableBase";
 
 type TExtraProps<T> = {
     value: IObservableState<T>;
-    specialRender: (props: TEditableProps<T>, valueTemp: IObservableState<T>, valueView: IObservableStateSimple<string>) => Luff.Node;
+    specialRender: (props: TEditableProps<T>, valueTemp: IObservableStateSimple<T>, valueView: IObservableStateSimple<string>) => Luff.Node;
 }
 export default class EditableSpecial<T> extends EditableBase<T, TExtraProps<T>> {
 

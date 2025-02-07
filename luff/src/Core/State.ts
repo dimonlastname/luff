@@ -679,7 +679,7 @@ function stateStringConcatFull(separator: string, ...classList: IObservableState
         let states: IObservableStateSimple<string>[] = [];
         for (let cls of classList) {
             if (cls instanceof State){
-                states.push(cls);
+                states.push(cls as IObservableStateSimple<string>);
             }
         }
         return states[0].SubState(_ => concatString(separator, classList), states.splice(1));
@@ -687,13 +687,16 @@ function stateStringConcatFull(separator: string, ...classList: IObservableState
 }
 function trySubState<T, U>(potentialState: IObservableStateSimpleOrValue<T>, selector: (value: T) => U) : IObservableStateSimpleOrValue<U> {
     if (potentialState instanceof StateSingle || potentialState instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(potentialState)) )
-        return (potentialState as IObservableStateSimple<T>).SubState(selector);
+        return (potentialState as IObservableStateSimple<T>).SubState(selector) as IObservableStateSimple<U>;
 
     return selector(potentialState as T);
 
 }
-//export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T>) {
-export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
+//export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
+export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+  T extends object ? IObservableState<T> :
+  T extends true | false ? IObservableStateSimple<boolean> :
+    IObservableStateSimple<T>) {
     if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
         return state as any;
     if (Array.isArray(state))
@@ -720,6 +723,42 @@ export function luffStateArr<T>(state: T[], params: TStateCtor = {State: ''}) : 
         State: state
     }) as any;
 }
+
+
+// export function luffStateXY<T>(state: T, params: TStateCtor = {State: ''}) : (T extends object ?
+//    T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T> :
+//    T extends number ? IObservableStateSimple<number> :
+//    T extends true | false ? IObservableStateSimple<boolean> :
+//       IObservableStateSimple<T>) {
+//     return null;
+// }
+// export function luffStateX<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+//   T extends object ? IObservableState<T> :
+//     IObservableStateSimple<T>)
+// {
+//     return null;
+// }
+//
+// type TTest = {
+//     Id: number;
+//     Keke: string;
+// }
+// let a : TTest;
+// let ar: TTest[] = [];
+//
+//
+//
+// let s1 = luffStateX<TTest>(null);
+// let s2 = luffStateX<TTest[]>([]);
+//
+// let s11 = luffStateX(a);
+// let s22 = luffStateX(ar);
+//
+//
+// let s111 = luffState<TTest>(null);
+// let s222 = luffState<TTest[]>([]);
+//
+
 //
 // export function getStateFromObservable<T>(state: IObservableState<T>) : State<T> {
 //     return state as any;

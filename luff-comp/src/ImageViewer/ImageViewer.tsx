@@ -84,7 +84,7 @@ export class LuffImageViewer extends Luff.Content<TProps> {
         this.ImageIndex.SValue = nextIndex;
     };
     PreventingImage(direction: number) : TImageSource {
-        let indexPrevent = this.ImageIndex + direction;
+        let indexPrevent = this.ImageIndex.SValue + direction;
         if (indexPrevent >= this.ImageSrcList.length){
             indexPrevent = 0;
         }

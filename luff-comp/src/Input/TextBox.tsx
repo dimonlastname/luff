@@ -15,7 +15,7 @@ type TProps = {
     value: IObservableStateSimple<string>;
 
     mask?: IObservableOrValue<TInputMask>;
-    type?: string;
+    type?: IObservableOrValue<string>;
     className?: string;
     classDict?: Dict<IObservableStateSimple<boolean>>;
 
@@ -39,7 +39,8 @@ export default class TextBox extends InputBoxBase<TProps> {
     static Type = {
         Text: 'text',
         Email: 'email',
-        Phone: 'tel'
+        Phone: 'tel',
+        Search: 'search'
     };
     static defaultProps = {
         type: TextBox.Type.Text,

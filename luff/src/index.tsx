@@ -104,19 +104,6 @@ namespace Luff  {
     export const Fragment = CasualFragmentComponent;
     export type Node = JSXElement;
 
-    export function GetSubStateOrValue<T, K>(stateOrVal: IObservableOrValue<T>, subStateSelector: (v: T) => K) : IObservableOrValue<K|T>{
-        let state = stateOrVal as _IObservableStateSimple<T>;
-        let val = stateOrVal as T;
-        if (state instanceof LuffState) {
-            if (subStateSelector)
-                return state.SubState(v => subStateSelector(v));
-            return state;
-        } else {
-            if (!subStateSelector)
-                return val;
-            return subStateSelector(val);
-        }
-    }
 
     export function Perf(callback: () => void, caption: string = "") : number {
         let v1 = window.performance.now();

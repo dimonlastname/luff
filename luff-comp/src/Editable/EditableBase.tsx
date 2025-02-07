@@ -53,7 +53,7 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
 
     protected Mode = Luff.State(-1);
     protected IsBusy = Luff.State(false);
-    protected ValueTemp = Luff.State<any>('default');
+    protected ValueTemp  = Luff.State<T>('default' as any) as IObservableStateSimple<T>;
     protected ValueView: IObservableStateSimple<string>;
 
     protected BeforeBuild(): void {
