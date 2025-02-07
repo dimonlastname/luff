@@ -16,6 +16,7 @@
   "scripts": {
     "vv": "vite dev",
     "vvb": "vite build",
+    "vvw": "vite build --watch",
     "vvp": "vite preview",
     "dev": "vite build"
   },
