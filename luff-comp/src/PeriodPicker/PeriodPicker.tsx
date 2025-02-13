@@ -670,55 +670,59 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
                                         />
                                     </div>
                                 </div>
-                                <div className="l-pp-date-additional {{Settings.IsOnlyDay ? 'none':''}}">
-                                    <div className="l-pp-textbox-gap">
-                                        <div> —</div>
+                                {
+                                    !this.props.isOnlyDay
+                                    &&
+                                    <div className="l-pp-date-additional">
+                                        <div className="l-pp-textbox-gap">
+                                            <div> —</div>
+                                        </div>
+                                        <div className="l-pp-time-face l-pp-time-face-end">
+                                            <div className="l-pp-time-part l-pp-tp-end-hour">
+                                                <ComboBox
+                                                  value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Hours : 0)}
+                                                  dataStatic={(new Array(24).fill(0).map((x, i) => i))}
+                                                  dataDelegateView={dateTimeDelegateView}
+                                                  isSearchEnabled={true}
+                                                  listEmptyText={''}
+                                                  disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
+                                                  onChange={v => {
+                                                      this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetHours(v);
+                                                      return Promise.resolve(1)}
+                                                  }
+                                                />
+                                            </div>
+                                            <div className="l-pp-time-part l-pp-tp-end-minute" isVisible={this._TimePickerResolution.SubState(r => r >= TimePickerResolution.Minute)}>
+                                                <ComboBox
+                                                  value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Minutes : 0)}
+                                                  dataStatic={(new Array(60).fill(0).map((x, i) => i))}
+                                                  dataDelegateView={dateTimeDelegateView}
+                                                  isSearchEnabled={true}
+                                                  listEmptyText={''}
+                                                  disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
+                                                  onChange={v => {
+                                                      this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetMinutes(v);
+                                                      return Promise.resolve(1)}
+                                                  }
+                                                />
+                                            </div>
+                                            <div className="l-pp-time-part l-pp-tp-end-second" isVisible={this._TimePickerResolution.SubState(r => r >= TimePickerResolution.Second)}>
+                                                <ComboBox
+                                                  value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Seconds : 0)}
+                                                  dataStatic={(new Array(60).fill(0).map((x, i) => i))}
+                                                  dataDelegateView={dateTimeDelegateView}
+                                                  isSearchEnabled={true}
+                                                  listEmptyText={''}
+                                                  disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
+                                                  onChange={v => {
+                                                      this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetSeconds(v);
+                                                      return Promise.resolve(1)}
+                                                  }
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="l-pp-time-face l-pp-time-face-end">
-                                        <div className="l-pp-time-part l-pp-tp-end-hour">
-                                            <ComboBox
-                                                value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Hours : 0)}
-                                                dataStatic={(new Array(24).fill(0).map((x, i) => i))}
-                                                dataDelegateView={dateTimeDelegateView}
-                                                isSearchEnabled={true}
-                                                listEmptyText={''}
-                                                disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
-                                                onChange={v => {
-                                                    this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetHours(v);
-                                                    return Promise.resolve(1)}
-                                                }
-                                            />
-                                        </div>
-                                        <div className="l-pp-time-part l-pp-tp-end-minute" isVisible={this._TimePickerResolution.SubState(r => r >= TimePickerResolution.Minute)}>
-                                            <ComboBox
-                                                value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Minutes : 0)}
-                                                dataStatic={(new Array(60).fill(0).map((x, i) => i))}
-                                                dataDelegateView={dateTimeDelegateView}
-                                                isSearchEnabled={true}
-                                                listEmptyText={''}
-                                                disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
-                                                onChange={v => {
-                                                    this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetMinutes(v);
-                                                    return Promise.resolve(1)}
-                                                }
-                                            />
-                                        </div>
-                                        <div className="l-pp-time-part l-pp-tp-end-second" isVisible={this._TimePickerResolution.SubState(r => r >= TimePickerResolution.Second)}>
-                                            <ComboBox
-                                                value={this._CurrentSelection.DateFinish.SubState(df => df ? df.Seconds : 0)}
-                                                dataStatic={(new Array(60).fill(0).map((x, i) => i))}
-                                                dataDelegateView={dateTimeDelegateView}
-                                                isSearchEnabled={true}
-                                                listEmptyText={''}
-                                                disabled={this._CurrentSelection.DateFinish.SubState(df => !df)}
-                                                onChange={v => {
-                                                    this._CurrentSelection.DateFinish.SValue = this._CurrentSelection.DateFinish.SValue.SetSeconds(v);
-                                                    return Promise.resolve(1)}
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
 
@@ -752,12 +756,14 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
 ___LuffGlobal.PeriodPicker = PeriodPicker;
 document.addEventListener('DOMContentLoaded', () => {
     PeriodPicker.GlobalSinglePicker = new PeriodPicker({
+        InnerIndex: void 0,
         Attributes: {
             //Target: document.body,
             isOnlyDay: true,
         } as TPeriodPickerProps
     });
     PeriodPicker.GlobalRangePicker = new PeriodPicker({
+        InnerIndex: void 0,
         Attributes: {
             //Target: document.body,
             isOnlyDay: false,
