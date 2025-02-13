@@ -10,6 +10,7 @@ import {luffState} from "../State";
 import {LuffLoadNative} from "../../System/Load/LoadNative";
 import {LuffContentUserPermission, appUserPermission, PermissionManager} from "./Permission";
 import {LibraryCSS} from "../../Library/CSS";
+import {CasualFragmentComponent} from "../Components/CasualFragmentComponent";
 
 
 
@@ -96,6 +97,34 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
 
 
     Render() : JSXElement {return null};
+    public RenderForce(): void {
+        this._RenderUpdate(null);
+    }
+    public _RenderUpdate(render): void {
+        console.log(`[Luff.Content] _RenderUpdate, `, this.Name);
+        if (!render)
+            render = this.RenderSafe();
+
+        if (typeof render.Tag == "string") {
+            this.Children[0]._RenderUpdate(render);
+            return;
+        }
+
+        if (this instanceof render.Tag) {
+            this.Children[0]._RenderUpdate(this.RenderSafe());
+            return;
+        }
+        if (render.Tag == CasualFragmentComponent){
+            this.Children[0]._RenderUpdate(render);
+            return;
+        }
+        for (let i = 0; i < render.Children.length; i++) {
+            let renderNewChild = render.Children[i];
+            this.Children[i]._RenderUpdate(renderNewChild);
+        }
+        this.Children[0]._RenderUpdate(render);
+        //this.Children[0]._RenderUpdate(render.Children[0]);
+    }
 
     protected BeforeShow() : void {}
     protected BeforeHide() : void {}
@@ -615,38 +644,38 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         // };
         // return dialogWrapped.HtmlElement;
     }
-    _MakeContentDialog2() : void {
-        const dialogParams = this._RawContent.Dialog;
-        const dialogWrap : IRenderElement = {
-            Tag: 'div',
-            Attributes: {
-                className: 'l-dialog-wrapper',
-            },
-            Children: [
-                {
-                    Tag: 'div',
-                    Attributes:{
-                        className: 'l-dialog-wrapper-bg',
-                        onClick: dialogParams.OnWrapperClick
-                    },
-                    Children: []
-                },
-                {
-                    Tag: 'div',
-                    Attributes: {
-                        className: 'l-dialog-wrapper-content'
-                    },
-                    Children: this.props.children,
-                }
-            ]
-
-        };
-        if (dialogParams.HasWrapperBG) {
-            dialogWrap.Children.push({Tag: 'div', Attributes: {className: 'l-dialog-wrapper-bg'}})
-        }
-
-
-    }
+    // _MakeContentDialog2() : void {
+    //     const dialogParams = this._RawContent.Dialog;
+    //     const dialogWrap : IRenderElement = {
+    //         Tag: 'div',
+    //         Attributes: {
+    //             className: 'l-dialog-wrapper',
+    //         },
+    //         Children: [
+    //             {
+    //                 Tag: 'div',
+    //                 Attributes:{
+    //                     className: 'l-dialog-wrapper-bg',
+    //                     onClick: dialogParams.OnWrapperClick
+    //                 },
+    //                 Children: []
+    //             },
+    //             {
+    //                 Tag: 'div',
+    //                 Attributes: {
+    //                     className: 'l-dialog-wrapper-content'
+    //                 },
+    //                 Children: this.props.children,
+    //             }
+    //         ]
+    //
+    //     };
+    //     if (dialogParams.HasWrapperBG) {
+    //         dialogWrap.Children.push({Tag: 'div', Attributes: {className: 'l-dialog-wrapper-bg'}})
+    //     }
+    //
+    //
+    // }
     _BeforeShowDialog: () => void;
     _BeforeHideDialog: () => void;
 

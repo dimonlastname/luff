@@ -35,7 +35,11 @@ class CasualTextComponent extends CasualMountingBase {
             }
         }
     }
-
+    _RenderUpdate(renderNew) {
+        this._RawComponent = renderNew;
+        this._CompileNodeValue();
+        this.DOM.nodeValue = this._NodeValue;
+    }
     _GenerateDOM() : HTMLElement {
         super._GenerateDOM();
         if (this._IsDynamic) {

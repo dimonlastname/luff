@@ -22,13 +22,14 @@ function isClass(func) {
 }
 
 export class ComponentFactory {
-    static Build(renderElement: IRenderElement, parentElement: IElement = null, parentComponent: IContent) : IElement {
+    static Build(renderElement: IRenderElement, parentElement: IElement = null, parentComponent: IContent = null, innerIndex: number = 0) : IElement {
         let element : ElementBase;
         if (!renderElement)
             return void 0;
 
         if (renderElement.Tag === 'textNode') {
             element = new CasualTextComponent({
+                InnerIndex: innerIndex,
                 Attributes: renderElement.Attributes,
                 ParentElement: parentElement,
                 ParentComponent: parentComponent
@@ -36,6 +37,7 @@ export class ComponentFactory {
         }
         else if (renderElement instanceof StateSingle) {
             element = new CasualTextComponent({
+                InnerIndex: innerIndex,
                 Attributes: {textNode: renderElement},
                 ParentElement: parentElement,
                 ParentComponent: parentComponent
@@ -43,6 +45,7 @@ export class ComponentFactory {
         }
         else if (Array.isArray(renderElement)) { //return props.children
             element = new CasualFragmentComponent({
+                InnerIndex: innerIndex,
                 ParentElement: parentElement,
                 ParentComponent: parentComponent,
                 Children: renderElement
@@ -50,6 +53,7 @@ export class ComponentFactory {
         }
         else if (typeof renderElement.Tag === 'string') {
             element = new CasualComponent({
+                InnerIndex: innerIndex,
                 Tag: renderElement.Tag,
                 Attributes: renderElement.Attributes,
                 ParentElement: parentElement,
@@ -65,6 +69,7 @@ export class ComponentFactory {
         }
         else if (renderElement.Tag === void 0) { //fragment
             element = new CasualFragmentComponent({
+                InnerIndex: innerIndex,
                 ParentElement: parentElement,
                 ParentComponent: parentComponent,
                 Children: renderElement.Children
@@ -75,6 +80,7 @@ export class ComponentFactory {
 
             if (isClass(luffComponent)) {
                 element = new luffComponent({
+                    InnerIndex: innerIndex,
                     Tag: renderElement.Tag,
                     Attributes: renderElement.Attributes,
                     ParentElement: parentElement,

@@ -6,6 +6,7 @@ import {TPropsDefault} from "./IElement";
 import {State} from "../State";
 import {LibraryArray} from "../../Library";
 import Application from "../Application/Application";
+import { IRenderElement} from "../Compiler/ComponentFactory";
 
 
 export interface IElementBase<TProps = any> {
@@ -31,6 +32,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     _SpecialTargetToRender: HTMLElement;
 
     _ID: number;
+    _InnerIndex: number;
     _RawComponent: TRawComponent;
 
     ParentElement : IElement = null;
@@ -62,10 +64,14 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
 
     _InitializeComponent(props?: TProps): void {};
 
+    _RenderUpdate(renderNew: IRenderElement) : void {
+        console.error(`[_RenderUpdate] not implemented`, this);
+    }
+
     Render() : JSXElement {return null};
-    RenderSafe() : JSXElement {
+    RenderSafe() : IRenderElement {
         try {
-            return this.Render();
+            return this.Render() as IRenderElement;
         }
         catch (e) {
             console.error("[Luff.Render] Error:" + this.GetComponentPath(false));
@@ -356,6 +362,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
         // }
     }
     constructor(rawComponent?: TRawComponent) {
+        this._InnerIndex = rawComponent?.InnerIndex ?? 0;
         this._ID = LibraryNumber.GetID();
         this._RawComponent = rawComponent;
         this.Name = this.constructor.name;

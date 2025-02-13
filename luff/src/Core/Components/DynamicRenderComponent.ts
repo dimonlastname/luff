@@ -1,7 +1,7 @@
 import {DictN, IObservableState, IObservableStateArray, IObservableStateSimple, IObservableStateAny} from "../../interfaces";
 import {ElementBase} from "./ElementBase";
 import {IElement, TRawComponent, TPropsDefault, JSXElement} from "./IElement";
-import { ComponentFactory } from "../Compiler/ComponentFactory";
+import {ComponentFactory, IRenderElement} from "../Compiler/ComponentFactory";
 
 type TProps = {
     render: () => JSXElement;
@@ -9,8 +9,9 @@ type TProps = {
 } & TPropsDefault;
 
 export class DynamicRenderComponent extends ElementBase<TProps>  {
-    private readonly _ChildRender: () => ElementBase;
-    private _MapElements = new Map<string, IElement>();
+    //private readonly _ChildRender: () => ElementBase;
+    //private _MapElements = new Map<string, IElement>();
+    private _Child: IElement;
 
     private _HideItem(comp: IElement) : void {
         comp._HideTransitionFunction();
@@ -24,35 +25,47 @@ export class DynamicRenderComponent extends ElementBase<TProps>  {
         comp._Appear();
     }
 
-
+    public _RenderUpdate(render): void {
+        console.log(`[DynamicRenderComponent] _RenderUpdate`);
+        this._Child._RenderUpdate(render);
+    }
     private Refresh(): void {
-        const rendered = this._ChildRender() as any;
-        const renderedKey = JSON.stringify(rendered);
-
-        let item = this._MapElements.get(renderedKey);
-
-        const generatedKeys = this._MapElements.keys();
-        for (let key of generatedKeys) {
-            const generatedItem = this._MapElements.get(key);
-            if (generatedItem != item) {
-                this._HideItem(generatedItem);
-            }
-        }
-
-        if (item) {
-            this._ShowItem(item, true);
-            return;
-        }
-
-        item = ComponentFactory.Build(rendered, this, this.ParentComponent);
-        item._GenerateDOM();
-        this._ShowItem(item, true);
-        this._MapElements.set(renderedKey, item);
+        this._RenderUpdate(this.props.render() as IRenderElement);
+        return;
+        // const rendered = this._ChildRender() as any;
+        // const renderedKey = JSON.stringify(rendered);
+        //
+        // let item = this._MapElements.get(renderedKey);
+        //
+        // const generatedKeys = this._MapElements.keys();
+        // for (let key of generatedKeys) {
+        //     const generatedItem = this._MapElements.get(key);
+        //     if (generatedItem != item) {
+        //         this._HideItem(generatedItem);
+        //     }
+        // }
+        //
+        // if (item) {
+        //     this._ShowItem(item, true);
+        //     return;
+        // }
+        //
+        // item = ComponentFactory.Build(rendered, this, this.ParentComponent);
+        // item._GenerateDOM();
+        // this._ShowItem(item, true);
+        // this._MapElements.set(renderedKey, item);
     }
 
     _GenerateDOM() {
         super._GenerateDOM();
-        this.Refresh();
+        const rendered = this.props.render() as IRenderElement;
+        const renderedKey = JSON.stringify(rendered);
+
+        this._Child = ComponentFactory.Build(rendered, this, this.ParentComponent);
+        this._Child._GenerateDOM();
+        this._ShowItem(this._Child, true);
+
+        //this.Refresh();
         return void 0;
     }
     constructor(rawComponent: TRawComponent) {
@@ -61,7 +74,7 @@ export class DynamicRenderComponent extends ElementBase<TProps>  {
             return;
         }
 
-        this._ChildRender = rawComponent.Attributes['render'];
+        //this._ChildRender = rawComponent.Attributes['render'];
         const deps = rawComponent.Attributes['deps'] as IObservableState<any>[];
         if (deps) {
             for (let dep of deps) {

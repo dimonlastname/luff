@@ -4,16 +4,28 @@ import {ComponentFactory} from "../Compiler/ComponentFactory";
 
 
 export class CasualFragmentComponent extends ElementBase {
+    public _RenderUpdate(render): void {
+        console.log(`[Luff.CasualFragmentComponent] _RenderUpdate, `, this.Name);
+        if (render.Children) {
+            for (let i = 0; i < render.Children.length; i++) {
+                let renderNewChild = render.Children[i];
+                this.Children[i]._RenderUpdate(renderNewChild);
+            }
+        }
+    }
+
     private _CompileChildren() {
         const children = this._RawComponent.Children;
         if (!children)
             return;
 
+        let i = 0;
         for (let child of children) {
-            let elem = ComponentFactory.Build(child, this, this.ParentComponent);
+            let elem = ComponentFactory.Build(child, this, this.ParentComponent, i);
             if (elem) {
                 this.Children.push(elem);
             }
+            i++;
         }
     }
 
@@ -50,6 +62,7 @@ export class CasualFragmentComponent extends ElementBase {
             this._HideTransitionFunction();
         return this.DOM;
     }
+
 
     constructor(rawComponent: TRawComponent) {
         super(rawComponent);

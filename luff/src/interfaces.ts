@@ -1,4 +1,4 @@
-import {State, TStateOnChange} from "./Core/State";
+import {luffState, State, TStateOnChange} from "./Core/State";
 import {LuffDate} from "./Library";
 
 
@@ -125,7 +125,7 @@ export type IObservableStateArray<T> = {
     MakeSortable(compareFn: (a: T, b: T) => number) : void
     MakeFilterable(predicate: (item: T, index?: number) => boolean) : void
     Add(obj: T): void;
-    AddState(state: IObservableState<T>) : void;
+    AddState(state: IObservableState<T> | IObservableStateSimple<T>) : void;
     AddRange(obj: T[]): void;
     Remove(value: T): void;
     RemoveAll(predicate: (item: T, index?: number) => boolean): void
@@ -160,8 +160,14 @@ export type RequireOnlyOne<T, Keys extends keyof T = keyof T> =
     & Partial<Record<Exclude<Keys, K>, undefined>>
 }[Keys]
 
-
-
+//
+// function getS(s: IObservableState<boolean>) {
+//
+// }
+//
+// let stax = luffState(true);
+//
+// getS(stax);
 
 
 

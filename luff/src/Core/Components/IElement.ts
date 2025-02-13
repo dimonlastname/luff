@@ -20,9 +20,10 @@ export interface JSXElement<P = any> /*extends React.ReactElement<any, any>*/ {
     props?: P;
     key?: any | null;
 }
- 
+
 export interface IElement<P = any> extends JSXElement<P> {
     _ID: number;
+    _InnerIndex: number;
     _RawComponent: TRawComponent;
 
     Tag: string; // for Element component (casual html element)
@@ -41,6 +42,7 @@ export interface IElement<P = any> extends JSXElement<P> {
     _IsMount: boolean;
     readonly _IsVisible: boolean;
 
+    _RenderUpdate(renderNew: IRenderElement): void;
     Render() : any;
     _InitializeComponent(props?: any): void;
 
@@ -70,6 +72,7 @@ export interface IElement<P = any> extends JSXElement<P> {
 }
 
 export type TRawComponent =  {
+    InnerIndex: number;
     Tag?: string;
     Attributes?: Dict<any>;
 

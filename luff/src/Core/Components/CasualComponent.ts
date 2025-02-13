@@ -303,11 +303,13 @@ class CasualComponent extends CasualMountingBase {
 
     private _CompileChildren() {
 
+        let i = 0;
         for (let child of this._RawComponent.Children) {
-            let elem = ComponentFactory.Build(child, this, this.ParentComponent);
+            let elem = ComponentFactory.Build(child, this, this.ParentComponent, i);
             if (elem) {
                 this.Children.push(elem);
             }
+            i++;
 
         }
     }
@@ -433,6 +435,50 @@ class CasualComponent extends CasualMountingBase {
         return this.DOM;
     }
 
+    _RenderUpdate(renderNew) {
+        this._RawComponent = renderNew;
+        this._CompileAttributes();
+        this._GenerateAttributes();
+        this._GenerateEventListeners();
+
+        this._RenderUpdateChildren(renderNew.Children);
+    }
+    protected _RenderUpdateChildren(children: IRenderElement[]) : void {
+        if (children) {
+            let used: number[] = [];
+            for (let index = 0; index < children.length; index++) {
+                let renderNewChild = children[index];
+                if (!renderNewChild)
+                    continue;
+
+                let current = this.Children.find(c => c._InnerIndex == index);
+                if (!current) {
+                    console.log(`[_RenderUpdateChildren]`, this.GetComponentPath(false), index);
+                    let newChild = ComponentFactory.Build(renderNewChild, this, this.ParentComponent, index);
+                    this.Children.splice(index, 0, newChild);
+                    if (newChild.HasPermission){
+                        newChild._GenerateDOM();
+                        newChild._ShowTransitionFunction();
+                        newChild._Appear();
+                        used.push(index);
+                    }
+                    continue;
+                }
+                current._RenderUpdate(renderNewChild);
+                current._ShowTransitionFunction();
+                current._Appear();
+                used.push(index);
+            }
+            //hide unused items:
+            for (let c of this.Children) {
+                if (used.includes(c._InnerIndex)){
+                    continue;
+                }
+                c._HideTransitionFunction();
+                c._Disappear();
+            }
+        }
+    }
     constructor(rawComponent: TRawComponent) {
         super(rawComponent);
         if (!this.HasPermission) {
