@@ -798,9 +798,9 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
                                 e.stopPropagation();
                             };
                             if (props.className)
-                                props.className = Luff.GetSubStateOrValue(r["Attributes"].className, c => "l-cb-offer-item " + c);
+                                props.className = Luff.State.GetSubStateOrValue(r["Attributes"].className, c => "l-cb-offer-item " + c);
                             else if (props.className)
-                                props.class = Luff.GetSubStateOrValue(r["Attributes"].class, c => "l-cb-offer-item " + c);
+                                props.class = Luff.State.GetSubStateOrValue(r["Attributes"].class, c => "l-cb-offer-item " + c);
                             else
                                 props.className = "l-cb-offer-item";
                             props.classDict = {
