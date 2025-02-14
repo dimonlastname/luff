@@ -69,10 +69,18 @@ export type IObservableStateKeys<T> =
 //export type IObservableStateUnknown<T> = (T extends object ? IObservableState<T> : IObservableStateSimple<T>);
 type ExcludeProps<T extends object> = Exclude<T[keyof T], Function | Date | LuffDate>;
 
-export type IObservableState<T> = IObservableStateKeys<T>
-    & IObservableStateSingleObject<T>
-    & IObservableStateSimple<T>
-    & IObservableExtra<T>
+export type IObservableState<T> = T extends object ? IObservableStateComplex<T>
+  : T extends (infer ElementType)[] ? IObservableStateArray<ElementType>
+  : T extends boolean ? IObservableStateSimple<boolean> //wtf typeScrypt???
+  //: T extends true | false ? IObservableStateSimple<boolean> //wtf typeScrypt???
+  : T extends string | number | Date ? IObservableStateSimple<T>
+  : IObservableStateSimple<T>;
+
+export type IObservableStateComplex<T> =
+    IObservableStateKeys<T>
+  & IObservableStateSingleObject<T>
+  & IObservableStateSimple<T>
+  //& IObservableExtra<T>
 export type IObservableStateAny<T> = T extends object ? (T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T>) :
     T extends number ? IObservableStateSimple<number> :
     T extends true | false ? IObservableStateSimple<boolean> :
@@ -160,18 +168,57 @@ export type RequireOnlyOne<T, Keys extends keyof T = keyof T> =
     & Partial<Record<Exclude<Keys, K>, undefined>>
 }[Keys]
 
+// <<<<<<< HEAD
+// //
+// // function getS(s: IObservableState<boolean>) {
+// //
+// // }
+// //
+// // let stax = luffState(true);
+// //
+// // getS(stax);
 //
-// function getS(s: IObservableState<boolean>) {
+//
+//
+//
+// =======
+//
+// enum EnX {
+//     One,
+//     Two
+// }
+// let b: IObservableState<true>;
+// let enu: IObservableState<EnX>;
+// let arN: IObservableState<[12]>;
+//
+//
+// let stateS: IObservableStateSimple<EnX>;
+// let state1: IObservableStateComplex<EnX>;
+// let stateRn = luffState<EnX>(EnX.One);
+// stateRn.SValue = EnX.Two;
+//
+// function tryMe(s: IObservableState<number>) {
+//
+// }
+// function tryMeBool(s: IObservableState<boolean>) {
 //
 // }
 //
-// let stax = luffState(true);
 //
-// getS(stax);
-
-
-
-
+// let s = luffState(124);
+// let sBool = luffState(false);
+// tryMe(s);
+// tryMeBool(sBool);
+//
+//
+// //===
+// type TType = {
+//     Id: number;
+//     Value: string;
+// }
+//
+// let t = luffState<TType>({Id: 1, Value: ''});
+// >>>>>>> main-to-vite
 
 
 

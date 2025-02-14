@@ -1,4 +1,4 @@
-import Luff, {React, ComponentSimple, luffState, TContentCtor, IObservableStateSimple, State} from "luff";
+import Luff, {React, ComponentSimple, luffState, TContentCtor, IObservableStateSimple, State, IObservableOrValue} from "luff";
 
 import './TextBox.scss';
 import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
@@ -12,7 +12,7 @@ type TProps = {
     onChange?: (val?: number) => void;
     onClick?: (e: Luff.MouseEvent<HTMLInputElement>) => void;
 
-    placeholder?: string;
+    placeholder?: IObservableOrValue<string>;
     min?: number | IObservableStateSimple<number>;
     max?: number | IObservableStateSimple<number>;
     isHideInappropriateValue?: boolean;
@@ -96,7 +96,7 @@ export default class NumBox extends InputBoxBase<TProps> {
 
         return (
             <input type="number"
-                   className={"l-textbox " + this.props.className}
+                   className={Luff.State.Concat("l-textbox ", this.props.className)}
                    value={valueView}
                    onChange={e => {
                        let value = parseFloat(e.currentTarget.value);

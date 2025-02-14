@@ -16,7 +16,7 @@ type TProps = {
 
     mask?: IObservableOrValue<TInputMask>;
     type?: IObservableOrValue<string>;
-    className?: string;
+    className?: IObservableOrValue<string>;
     classDict?: Dict<IObservableStateSimple<boolean>>;
 
     onClick?: (e: Luff.MouseEvent) => void;
@@ -196,7 +196,7 @@ export default class TextBox extends InputBoxBase<TProps> {
 
         return (
             <input type={this.props.type}
-                   className={"l-textbox " + this.props.className}
+                   className={Luff.State.Concat("l-textbox", this.props.className)}
                    classDict={this.props.classDict}
                    value={this.props.value}
                    autocomplete={this.props.autocomplete}

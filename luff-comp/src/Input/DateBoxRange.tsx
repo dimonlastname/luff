@@ -1,7 +1,8 @@
-import Luff, {React, IObservableStateSimple, Culture} from "luff";
+import Luff, {React, IObservableStateSimple, Culture, IObservableOrValue} from "luff";
 import './TextBox.scss';
 import PeriodPicker from "../PeriodPicker/PeriodPicker";
 import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
+
 
 
 type TProps = {
@@ -13,7 +14,7 @@ type TProps = {
     formatDate?: string;
     className?: string;
     onChange?: (dateStart?: Date, dateFinish?: Date) => void;
-    placeholder?: string;
+    placeholder?: IObservableOrValue<string>;
     isTimePick?: boolean;
     noValueCaption?: string;
 }
