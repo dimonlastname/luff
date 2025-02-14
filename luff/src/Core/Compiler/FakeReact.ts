@@ -1,5 +1,6 @@
 import {IRenderElement} from "./ComponentFactory";
 import {JSXElement} from "../Components/IElement";
+import {State} from "../State";
 
 class React  {
     static createElement(tag: any, attrs: any, children: any) : JSXElement {
@@ -17,7 +18,7 @@ class React  {
             if (child === void 0 || child === null)
                 continue;
 
-            if (typeof child === 'string' || typeof child === 'number') {
+            if (typeof child === 'string' || typeof child === 'number' || child instanceof State) {
                 child = {
                     Tag: 'textNode',
                     Attributes: {textNode: child},
