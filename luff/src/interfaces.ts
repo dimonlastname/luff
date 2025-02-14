@@ -70,17 +70,14 @@ export type IObservableStateKeys<T> =
 type ExcludeProps<T extends object> = Exclude<T[keyof T], Function | Date | LuffDate>;
 
 export type IObservableState<T> = T extends object ? IObservableStateComplex<T>
-  : T extends (infer ElementType)[] ? IObservableStateArray<ElementType>
-  : T extends boolean ? IObservableStateSimple<boolean> //wtf typeScrypt???
-  //: T extends true | false ? IObservableStateSimple<boolean> //wtf typeScrypt???
-  : T extends string | number | Date ? IObservableStateSimple<T>
+  : T extends true | false ? IObservableStateSimple<boolean> //wtf typeScrypt???
   : IObservableStateSimple<T>;
 
 export type IObservableStateComplex<T> =
     IObservableStateKeys<T>
   & IObservableStateSingleObject<T>
   & IObservableStateSimple<T>
-  //& IObservableExtra<T>
+  & IObservableExtra<T>
 export type IObservableStateAny<T> = T extends object ? (T extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<T>) :
     T extends number ? IObservableStateSimple<number> :
     T extends true | false ? IObservableStateSimple<boolean> :

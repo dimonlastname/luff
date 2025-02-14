@@ -68,6 +68,7 @@ namespace Luff  {
     export type Content = _Content;
     export const ComponentSimple = _ComponentSimple;
     export type ComponentSimple = _ComponentSimple;
+    export type ComponentDynamic = DynamicRenderComponent;
     export type ComponentRawHtml = RawHtmlComponent;
     export type ContentCtor = TContentCtor;
     export type IContent = _IContent;

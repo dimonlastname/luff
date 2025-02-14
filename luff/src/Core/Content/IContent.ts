@@ -1,4 +1,4 @@
-import {Dict, IObservableState} from "../../interfaces";
+import {Dict, IObservableState, IObservableStateComplex} from "../../interfaces";
 import {Each} from "../Components/Each/Each";
 import {Route} from "../Application/Route";
 import {IElement} from "../Components/IElement";
@@ -8,7 +8,7 @@ import {ElementBase} from "../Components/ElementBase";
 interface IContent<TProps = {}, TState = {}> extends IElement {
 
     //new (props: TProps): any;
-    State: IObservableState<TState>;
+    State: IObservableStateComplex<TState>;
 
     //Ctor(): TContentCtor;
 

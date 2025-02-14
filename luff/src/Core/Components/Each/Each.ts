@@ -27,6 +27,8 @@ type TEachProps<T> = {
     renderOnEmpty?: (item: T) => any;
     pageSize?: number;
     disableRowCache?: boolean;
+
+    isDynamicRenderModeEnabled?: boolean;
 } | TPropsDefault;
 
 
@@ -86,6 +88,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     }
 
     private _IsRefreshOnAnyChange: boolean = false;
+    private _IsDynamicRenderModeEnabled: boolean = false;
 
     private _SortDelegate: (a: TIterationItem, b: TIterationItem) => number;
     private _Sorted: boolean = false;
@@ -304,6 +307,9 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 existsItem.Index.SValue = index;
                 index++;
                 this._HideItem(existsItem.Component); //to force mount element //fixme
+                if (this._IsDynamicRenderModeEnabled) {
+                    existsItem.Component._RenderUpdate(this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any as IRenderElement);
+                }
                 const isVisibleProp = existsItem.Component.props.isVisible;
                 if (isVisibleProp === void 0 || isVisibleProp === true || isVisibleProp.SValue === true){
                     this._ShowItem(existsItem.Component, false);
@@ -401,6 +407,10 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         this._IsRefreshOnAnyChange = rawComponent.Attributes['isRefreshOnAnyChange'];
         if (this._IsRefreshOnAnyChange !== true) {
             this._IsRefreshOnAnyChange = false;
+        }
+        this._IsDynamicRenderModeEnabled = rawComponent.Attributes['isDynamicRenderModeEnabled'];
+        if (this._IsDynamicRenderModeEnabled !== true) {
+            this._IsDynamicRenderModeEnabled = false;
         }
         this._ChildRender = rawComponent.Attributes['render'];
         this._ChildEmptyRender = rawComponent.Attributes['renderOnEmpty'];

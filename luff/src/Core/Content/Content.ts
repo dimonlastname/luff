@@ -1,5 +1,11 @@
 import {ContentTypes, IContent, TContentComponents, TContentCtor} from "./IContent";
-import {IObservableState, IObservableStateArray, IObservableStateSimple, IShowHideable} from "../../interfaces";
+import {
+    IObservableState,
+    IObservableStateArray,
+    IObservableStateComplex,
+    IObservableStateSimple,
+    IShowHideable
+} from "../../interfaces";
 import {DialogTools} from "./Dialog/DialogManager";
 import {outsideClickManager, TListener} from "./Dialog/DOM.OutsideClick";
 import AppRouter, {Route, Router} from "../Application/Route";
@@ -101,7 +107,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         this._RenderUpdate(null);
     }
     public _RenderUpdate(render): void {
-        console.log(`[Luff.Content] _RenderUpdate, `, this.Name);
+        //console.log(`[Luff.Content] _RenderUpdate, `, this.Name);
         if (!render)
             render = this.RenderSafe();
 
@@ -391,7 +397,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
     RouteName: string;
     GroupType: string;
 
-    State: IObservableState<TState>;
+    State: IObservableStateComplex<TState>;
 
     get Permission() {
         return this._Permission;

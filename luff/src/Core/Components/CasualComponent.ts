@@ -188,9 +188,9 @@ class CasualComponent extends CasualMountingBase {
             return;
         }
 
-        let classState = luffState('');
+        //let classState = luffState('');
         if (classAttValue instanceof State) {
-            classState.SValue = classAttValue.SubState(cls => cls + '');
+            //classState.SValue = classAttValue.SubState(cls => cls + '');
 
         } else {
             this._CompileClassDictAttribute(classDictAttValue);
