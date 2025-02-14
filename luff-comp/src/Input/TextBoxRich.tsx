@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple} from "luff";
+import Luff, {React, IObservableStateSimple, IObservableOrValue} from "luff";
 
 import './TextBox.scss';
 import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
@@ -6,9 +6,9 @@ import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 type TProps = {
     value: IObservableStateSimple<string>;
-    className?: string;
+    className?: IObservableOrValue<string>;
     onChange?: (val?: string) => void;
-    placeholder?: string;
+    placeholder?: IObservableOrValue<string>;
 
     onKeyUp?: (e: Luff.KeyboardEvent) => void;
     onKeyDown?: (e: Luff.KeyboardEvent) => void;
@@ -53,7 +53,7 @@ export default class TextBoxRich extends InputBoxBase<TProps> {
 
         return (
             <textarea
-                   class={"l-textbox l-textarea " + this.props.className}
+                   class={Luff.State.Concat("l-textbox l-textarea", this.props.className)}
                    value={this.props.value}
                    onChange={e => {
                        let value = e.currentTarget.value;

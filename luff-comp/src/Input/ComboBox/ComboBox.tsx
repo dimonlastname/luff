@@ -7,7 +7,7 @@ import Luff, {
     IObservableStateArray,
     IObservableStateSimple,
     LibraryString,
-    luffState, IObservableState, DynamicRenderComponent,
+    luffState, IObservableState, DynamicRenderComponent, IObservableOrValue
 } from "luff";
 import BusyLocker from "../../BusyLocker/BusyLocker";
 
@@ -17,7 +17,7 @@ import {IDisableSwitchable, initDisabled, TDisableSwitchableProps} from "../_Dis
 type TComboBoxProps<TDataItem, TValue> = {
     value: IObservableStateSimple<TValue>;
     notFoundValue?: string;
-    listEmptyText?: string;
+    listEmptyText?: IObservableOrValue<string>;
     className?: string | IObservableStateSimple<string>;
 
     data?: IObservableStateArray<TDataItem>;
@@ -49,7 +49,7 @@ type TComboBoxProps<TDataItem, TValue> = {
     //IsShowFullHintListOnFocus?: boolean;             //default: false. reset hint list filter on focus
     //IsHideFullHintListOnEmpty?: boolean;             //default: false. reset hint list filter on emty
 
-    placeholder?: string;                            //default: ''. works when IsSearhEnabled or IsInputMode
+    placeholder?: IObservableOrValue<string>;                            //default: ''. works when IsSearhEnabled or IsInputMode
 
     //OfferData?: any[];                                    //default: []. offer list
     //OfferDataGetter?: (value: any) => Promise<any[]>;     //default: null. get offer list from server on input

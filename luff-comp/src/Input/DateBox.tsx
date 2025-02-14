@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple, Culture, State} from "luff";
+import Luff, {React, IObservableStateSimple, Culture, State, IObservableOrValue} from "luff";
 import './TextBox.scss';
 import PeriodPicker from "../PeriodPicker/PeriodPicker";
 import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
@@ -11,9 +11,9 @@ type TProps = {
     format?: string;
     formatTime?: string;
     isTimePick?: boolean;
-    className?: string;
+    className?: IObservableOrValue<string>;
     onChange?: (val?: Date) => void;
-    placeholder?: string;
+    placeholder?: IObservableOrValue<string>;
 }
 
 
@@ -88,7 +88,8 @@ export default class DateBox extends InputBoxBase<TProps> {
         this.PeriodPicker.Run(date, date, null);
     }
     Render(): any {
-        let classState = this._IsDisabled.SubState(isDis => 'l-textbox ' + this.props.className + (isDis ? '': ' l-pointer'));
+        let isDisab = this._IsDisabled.SubState(isDis => isDis ? '': ' l-pointer');
+        let classState = Luff.State.Concat("l-textbox", this.props.className, isDisab);
         const dateMin = this.props.min ? Luff.Date(this.GetMin()) : void 0;
         const dateMax = this.props.max ? Luff.Date(this.GetMax()) : void 0;
 

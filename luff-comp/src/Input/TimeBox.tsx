@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple, Culture, State, TContentCtor, Route} from "luff";
+import Luff, {React, IObservableStateSimple, Culture, State, TContentCtor, Route, IObservableOrValue} from "luff";
 import './TextBox.scss';
 import PeriodPicker from "../PeriodPicker/PeriodPicker";
 import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
@@ -10,7 +10,7 @@ type TProps = {
     max?: Date | IObservableStateSimple<Date>;
     className?: string;
     onChange?: (val?: Date) => void;
-    placeholder?: string;
+    placeholder?: IObservableOrValue<string>;
     hourStep?: number;
     minuteStep?: number;
 }
