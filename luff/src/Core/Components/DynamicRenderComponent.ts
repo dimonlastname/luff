@@ -24,7 +24,7 @@ export class DynamicRenderComponent extends ElementBase<TProps>  {
     }
 
     public _RenderUpdate(render): void {
-        console.log(`[DynamicRenderComponent] _RenderUpdate`);
+        //console.log(`[DynamicRenderComponent] _RenderUpdate`);
         this._Child._RenderUpdate(render);
     }
     private Refresh(): void {
