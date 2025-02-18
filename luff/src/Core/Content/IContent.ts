@@ -39,6 +39,9 @@ interface IContent<TProps = {}, TState = {}> extends IElement {
 
     _IsShown: boolean;
     _RawContent: TContentCtor;
+
+    RenderForce(): void;
+    _CheckLazy(): void;
 }
 export type TContentComponents = {
     //ComboBox: Dict<ComboBoxComponent>;
@@ -99,6 +102,8 @@ namespace ContentTypes {
 
         Debug?: boolean;
         OnOutSideClick?: (e: MouseEvent) => void;
+
+        IsLazyRenderEnabled?: boolean;
     }
 
     export type Animation = {

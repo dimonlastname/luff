@@ -17,6 +17,8 @@ import {LuffLoadNative} from "../../System/Load/LoadNative";
 import {LuffContentUserPermission, appUserPermission, PermissionManager} from "./Permission";
 import {LibraryCSS} from "../../Library/CSS";
 import {CasualFragmentComponent} from "../Components/CasualFragmentComponent";
+import Application from "../Application/Application";
+import {AppSettings} from "../Application/Settings";
 
 
 
@@ -99,10 +101,13 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
     _IsDialog: boolean = false;
 
     _ChildrenContent: Content[] = [];
+    private _IsLazyRenderDone = true;
+    Render() : JSXElement {return null};
+
+
     protected Ctor(): TContentCtor { return <TContentCtor>{};}
 
 
-    Render() : JSXElement {return null};
     public RenderForce(): void {
         this._RenderUpdate(null);
     }
@@ -142,6 +147,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
 
     /* #REGION #SHOW */
     public Show(isCalledDirectly: boolean = true) : void {
+        this._CheckLazy();
         //console.log('[Content.Show]', isCalledDirectly, this.RouteName, this);
         this._HideSameGroupTypeContents();
         const ctx = this._GetEndContentToShow(); //find last grouped child to show
@@ -204,18 +210,6 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
             p = p.ParentComponent;
         }
         return void 0;
-    }
-    _LazyCheck() {
-        console.warn("[_LazyCheck] " + this.Name);
-
-        if (!this._GenerateDOM) // done already
-            return;
-
-        this._InitializeComponent();
-        if (!this.HasPermission)
-            return;
-        this._GenerateDOM();
-        this._Mount(true);
     }
     _DoShow() {
         if (this._IsShowingParentRequired()) {
@@ -702,14 +696,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
 
 
         this.BeforeBuild();
-        this._TempRender = this.RenderSafe() as any as IRenderElement;
-        this._BeforeGenerateDOM();
 
-        let built = ComponentFactory.Build(this._TempRender, this, this);
-        delete this._TempRender;
 
-        if (!built)
-            return;
+
 
         if (this._RawContent.GroupType && (!this._RawContent.Visible || !this.ParentComponent) /*&& AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] !== this*/) {
             this._IsShown = false;
@@ -717,10 +706,25 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         else if (this._RawContent.GroupType && this._Route && AppRouter.ContentsByGroupType[this._RawContent.GroupType][0] === this) {
             this._Route.SetLinksActive(true);
         }
+        if (this._RawContent.IsLazyRenderEnabled === true) {
+            this._IsLazyRenderDone = false;
+            return ;
+        }
+
+        this._TempRender = this.RenderSafe() as any as IRenderElement;
+        this._BeforeGenerateDOM();
+
         if (this._IsHiddenByDefault)
             this._IsShown = false;
 
+        let built = ComponentFactory.Build(this._TempRender, this, this);
+        delete this._TempRender;
+
+        if (!built)
+            return;
+
         this.Children = [built];
+
         this.DOM = built._GenerateDOM();
         this._AfterGenerateDOM();
 
@@ -735,6 +739,33 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         // if (this._IsShown)
         //     built._Mount(true);
         return this.DOM;
+    }
+
+
+    _CheckLazy() : void {
+        if (this._IsLazyRenderDone) {
+            return;
+        }
+        if (Application.Debug) {
+            console.log(`%c[Content] lazy check: ${this.GetComponentPath(false)}`, "color: blueviolet;");
+        }
+        this._IsLazyRenderDone = true;
+        let render = this.RenderSafe();
+        this._BeforeGenerateDOM();
+        let built = ComponentFactory.Build(render, this, this);
+
+        this.Children = [built];
+        this.DOM = built._GenerateDOM();
+        this._AfterGenerateDOM();
+        //let dom = this.DOM;
+        if (this._RawContent.Dialog) {
+            this.DOM = this._MakeContentDialog();
+            this.AfterBuild();
+            return;
+        }
+
+        this.AfterBuild();
+        this._Mount(true);
     }
 
 
@@ -795,6 +826,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
         if (ctor.Target) {
             console.warn('[Luff.Content] "ctor.Target" is experimental property');
+        }
+        if (AppSettings.IsLazyRenderEnabledByDefault && ctor.IsLazyRenderEnabled != false && !!ctor.Route) {
+            this._RawContent.IsLazyRenderEnabled = true;
         }
 
         AppRouter.Register(this);

@@ -3,6 +3,7 @@ import {IRouteLink} from "../Components/IRouterLink";
 import {Dict} from "../../interfaces";
 import {PopLog} from "../../System/Pop/Pop";
 import {LibraryArray, LibraryDOM} from "../../Library";
+import Application from "./Application";
 
 export class Router {
     static Settings = {
@@ -125,11 +126,16 @@ export class Router {
         if (!e || !e.state) {
             //new path
 
-            console.log(`%c[Router]  Run new: ${routeString}`, "color: red;", e);
+            if (Application.Debug) {
+                console.log(`%c[Router]  Run new: ${routeString}`, "color: red;", e);
+            }
+
             return this.GoTo(routeString);
         }
         //back button:
-        console.log(`%c[Router]  Run back: ${routeString}`, "color: red;", e);
+        if (Application.Debug) {
+            console.log(`%c[Router]  Run back: ${routeString}`, "color: red;", e);
+        }
         this.GoTo(routeString, true);
 
     };
@@ -137,15 +143,27 @@ export class Router {
 
     GoTo(routeString: string, isBack: boolean = false) : number {
         //return
-        console.log(`%c[Router] GoTo:  ${routeString}`, "color: green;", /*'_Lock: ', this._Lock*/);
+        if (Application.Debug) {
+            console.log(`%c[Router] GoTo:  ${routeString}`, "color: green;", /*'_Lock: ', this._Lock*/);
+        }
         if (!routeString /*|| this._Lock || !Luff.Application.isRun*/)
             return this.GoToDefault();
 
         const [routeName, routeParam] = Router.GetRoutePropsFromString(routeString);
-        const ctx = this.ContentByRouteName[routeName];
+        let ctx = this.ContentByRouteName[routeName];
 
         if (!ctx) {
-            return this.GoToDefault();
+            // try root
+            let routeParent = routeName.substring(0, routeName.lastIndexOf("/"));
+            while (routeParent.length > 0 && !ctx) {
+                ctx = this.ContentByRouteName[routeParent];
+                routeParent = routeParent.substring(0, routeParent.lastIndexOf("/"));
+            }
+
+            if (!ctx)
+                return this.GoToDefault();
+            ctx._CheckLazy();
+            this.GoTo(routeString, isBack);
         }
         const currentContent = this.CurrentContent;
 
