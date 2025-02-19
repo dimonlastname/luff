@@ -160,7 +160,7 @@ export class Router {
                 routeParent = routeParent.substring(0, routeParent.lastIndexOf("/"));
             }
 
-            if (!ctx)
+            if (!ctx || !ctx.HasPermission)
                 return this.GoToDefault();
             ctx._CheckLazy();
             this.GoTo(routeString, isBack);
