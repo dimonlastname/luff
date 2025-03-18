@@ -5,6 +5,8 @@ import {PopLog} from "../../System/Pop/Pop";
 import {LibraryArray, LibraryDOM} from "../../Library";
 import Application from "./Application";
 
+const APP_ROUTE_ATTEMPTS_COUNT = 20; //max deep level
+
 export class Router {
     static Settings = {
         Auto: true,        //if true: any grouped Luff.Content will be mapped, except which got Route=false/null/undefined parameter
@@ -141,7 +143,8 @@ export class Router {
     };
 
 
-    GoTo(routeString: string, isBack: boolean = false) : number {
+    GoTo(routeString: string, isBack: boolean = false, attemptCount = 0) : number {
+        attemptCount++;
         //return
         if (Application.Debug) {
             console.log(`%c[Router] GoTo:  ${routeString}`, "color: green;", /*'_Lock: ', this._Lock*/);
@@ -160,10 +163,10 @@ export class Router {
                 routeParent = routeParent.substring(0, routeParent.lastIndexOf("/"));
             }
 
-            if (!ctx || !ctx.HasPermission)
+            if (!ctx || !ctx.HasPermission || attemptCount > APP_ROUTE_ATTEMPTS_COUNT)
                 return this.GoToDefault();
             ctx._CheckLazy();
-            this.GoTo(routeString, isBack);
+            return this.GoTo(routeString, isBack, attemptCount);
         }
         const currentContent = this.CurrentContent;
 
