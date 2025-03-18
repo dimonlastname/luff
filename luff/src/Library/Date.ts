@@ -1,4 +1,5 @@
 import {Culture} from "./Culture/Culture";
+import {findSourceMap} from "module";
 
 const _DayCountByMonthNum = {
     0: 31,
@@ -37,11 +38,11 @@ function _GetCountDays(date: Date) : number{
 }
 
 export class LuffDate {
-    static From(date?: Date | string | number | LuffDate, format?: string) : LuffDate {
+    static From(date?: Date | string | number | LuffDate, format?: string, refDate?: Date) : LuffDate {
         if (!date) {
             date = new Date();
         }
-        return new LuffDate(date, format);
+        return new LuffDate(date, format, refDate);
     }
     private _Date: Date;
     Format(format: string = Culture.Current.DateFormatFull) : string {
@@ -516,7 +517,7 @@ export class LuffDate {
         return (month === today.getMonth() && year === today.getFullYear())
     }
 
-    constructor(date : any, format : string = Culture.Current.DateFormatFull) {
+    constructor(date : any, format : string = Culture.Current.DateFormatFull, refDate: Date = new Date()) {
         if (date === null || typeof date === 'undefined') {
             // Luff.System.ShowError('[Luff.Date] Input Date is undefined or null');
             console.error(new Error('[Luff.Date] Input Date is undefined or null'));
@@ -575,7 +576,7 @@ export class LuffDate {
             let C = {
                 Y: 0,
                 M: 0,
-                D: 1,
+                D: 0,
                 H: 0,
                 m: 0,
                 s: 0,
@@ -589,14 +590,28 @@ export class LuffDate {
                         errorSum++;
                     }
                 }
-
+                return void 0;
             });
-            if (!C.Y)
+            if (!C.Y){
+                //errorSum++;
+                C.Y = refDate.getFullYear();
+            }
+            if (!C.M){
+                //errorSum++;
+                C.M = refDate.getMonth() + 1;
+            }
+            if (!C.D){
+                //errorSum++;
+                C.D = refDate.getDate();
+            }
+
+            if ((!C.M) && (C.D || C.H || C.m || C.s)){
                 errorSum++;
-            if ((!C.M) && (C.D || C.H || C.m || C.s))
+            }
+            if (C.M > 12 || C.H > 23 || C.m > 59 || C.s > 59) {
                 errorSum++;
-            if (C.M > 12 || C.H > 23 || C.m > 59 || C.s > 59)
-                errorSum++;
+            }
+
 
             this._Date = new Date(C.Y, C.M - 1, C.D, C.H, C.m, C.s);
             if (!isDateValid(this._Date) || errorSum > 0) {
@@ -644,8 +659,62 @@ export class LuffDate {
     }
 }
 
-export function luffDate(date?: Date | string | number | LuffDate, format?: string) : LuffDate {
-    return LuffDate.From(date, format);
+export function luffDate(date?: Date | string | number | LuffDate, format?: string, refDate?: Date) : LuffDate {
+    return LuffDate.From(date, format, refDate);
 }
 
 
+enum DateDiffUpTo {
+    Seconds    ,
+    Minutes,
+    Hours,
+    Days,
+    Months,
+    Years,//full
+}
+
+luffDate.DiffType = DateDiffUpTo;
+luffDate.Sum = function(date1: Date, date2: Date, sumUpTo: DateDiffUpTo) : Date {
+    let res = luffDate(date1);
+    const d = luffDate(date2);
+    res.AddMilliseconds(d.Milliseconds);
+    res.AddSeconds(d.Seconds);
+    if (sumUpTo >= DateDiffUpTo.Minutes){
+        res.AddMinutes(d.Minutes);
+        if (sumUpTo >= DateDiffUpTo.Hours){
+            res.AddHours(d.Hours);
+            if (sumUpTo >= DateDiffUpTo.Days){
+                res.AddDays(d.Day);
+                if (sumUpTo >= DateDiffUpTo.Months){
+                    res.AddMonths(d.Month);
+                    if (sumUpTo >= DateDiffUpTo.Years){
+                        res.AddYears(d.Year);
+                    }
+                }
+            }
+        }
+    }
+    return res.Date;
+};
+luffDate.Diff = function(date1: Date, date2: Date, diffUntil: DateDiffUpTo) : Date {
+    let res = luffDate(date1);
+    const d = luffDate(date2);
+    res.AddMilliseconds(-d.Milliseconds);
+    res.AddSeconds(-d.Seconds);
+    if (diffUntil >= DateDiffUpTo.Minutes){
+        res.AddMinutes(-d.Minutes);
+        if (diffUntil >= DateDiffUpTo.Hours){
+            res.AddHours(-d.Hours);
+            if (diffUntil >= DateDiffUpTo.Days){
+                res.AddDays(-d.Day);
+                if (diffUntil >= DateDiffUpTo.Months){
+                    res.AddMonths(-d.Month);
+                    if (diffUntil >= DateDiffUpTo.Years){
+                        res.AddYears(-d.Year);
+                    }
+                }
+            }
+        }
+    }
+    return res.Date;
+};
