@@ -72,7 +72,7 @@ export interface IElement<P = any> extends JSXElement<P> {
 }
 
 export type TRawComponent =  {
-    InnerIndex: number;
+    InnerIndex?: number;
     Tag?: string;
     Attributes?: Dict<any>;
 

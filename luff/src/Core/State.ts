@@ -711,6 +711,25 @@ export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T ex
 }
 luffState.Concat = stateStringConcatDefault;
 luffState.GetSubStateOrValue = trySubState;
+luffState.GetSValueOrValue = function<T>(potentialState: IObservableStateSimpleOrValue<T>) : T {
+    if (!potentialState)
+        return potentialState as T;
+
+    if (potentialState instanceof StateSingle || potentialState instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(potentialState)) )
+        return (potentialState as IObservableStateSimple<T>).SValue;
+
+    return potentialState as T;
+};
+luffState.TryAddOnChange = function<T>(potentialState: IObservableStateSimpleOrValue<T>, onChange: (val: T) => void) : boolean {
+    if (!potentialState)
+        return false;
+
+    if (potentialState instanceof StateSingle || potentialState instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(potentialState)) ){
+        (potentialState as IObservableStateSimple<T>).AddOnChange(onChange);
+        return true
+    }
+    return false;
+};
 luffState.ValueOf = function<T> (potentialState: IObservableStateSimpleOrValue<T>) : T {
     return potentialState.valueOf() as T;
 };
