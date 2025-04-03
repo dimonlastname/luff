@@ -8,8 +8,8 @@ import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 type TProps = {
     dateStart: IObservableStateSimple<Date>;
     dateFinish: IObservableStateSimple<Date>;
-    min?: Date;
-    max?: Date;
+    min?: IObservableOrValue<Date>;
+    max?: IObservableOrValue<Date>;
     formatTime?: string;
     formatDate?: string;
     className?: string;
@@ -43,8 +43,8 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
             this.props.dateStart.SValue = dateStart.Date;
             this.props.dateFinish.SValue = dateFinish.Date;
         }), {
-            dateMin: this.props.min ? Luff.Date(this.props.min) : void 0,
-            dateMax: this.props.max ? Luff.Date(this.props.max) : void 0,
+            dateMin: this.props.min ? Luff.Date(Luff.State.GetSValueOrValue(this.props.min)) : void 0,
+            dateMax: this.props.max ? Luff.Date(Luff.State.GetSValueOrValue(this.props.max)) : void 0,
             isShowTimePick: this.props.isTimePick,
         });
         //console.log('[Luff.DateBox] TODO DatePicker max min');

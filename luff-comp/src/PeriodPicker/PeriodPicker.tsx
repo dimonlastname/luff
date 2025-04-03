@@ -6,7 +6,7 @@ import Luff, {
     LibraryDOM,
     Culture,
     LibraryNumber,
-    IObservableStateArray, IObservableStateSimple
+    IObservableStateArray, IObservableStateSimple, IObservableOrValue
 } from "luff";
 
 import PPMonthQuarterYear from "./Parts/PPMonthQuarterYear";
@@ -48,8 +48,8 @@ type TPeriodPickerProps = {
     forbiddenDates?: IObservableStateArray<LuffDate>;
     // DatesDayOff?: Date[] | LuffDate[];
     //
-    dateMin?: LuffDate;
-    dateMax?: LuffDate;
+    dateMin?: IObservableOrValue<LuffDate>;
+    dateMax?: IObservableOrValue<LuffDate>;
     cells?: number[];
     //
     // Format?: string;
@@ -293,17 +293,19 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
             this._CurrentSelection.DateStart.SValue  = dateStart.DayStart;
             this._CurrentSelection.DateFinish.SValue = dateEnd.DayEnd;
         }
+        const dateMin = Luff.State.GetSValueOrValue(this.props.dateMin);
+        const dateMax = Luff.State.GetSValueOrValue(this.props.dateMax);
 
-        if (this.props.dateMin && dateEnd < this.props.dateMin.DayStart || this.props.dateMax && dateStart > this.props.dateMax.DayEnd){
+        if (dateMin && dateEnd < dateMin.DayStart || dateMax && dateStart > dateMax.DayEnd){
             this._CurrentSelection.DateStart.SValue = void 0;
             this._CurrentSelection.DateFinish.SValue = void 0;
             return;
         }
-        if (this.props.dateMin && dateStart < this.props.dateMin){
-            this._CurrentSelection.DateStart.SValue = this.props.dateMin.Clone();
+        if (dateMin && dateStart < dateMin){
+            this._CurrentSelection.DateStart.SValue = dateMin.Clone();
         }
-        if (this.props.dateMax && dateEnd > this.props.dateMax){
-            this._CurrentSelection.DateFinish.SValue = this.props.dateMax.Clone();
+        if (dateMax && dateEnd > dateMax){
+            this._CurrentSelection.DateFinish.SValue = dateMax.Clone();
         }
 
         // if (!this.props.isShowTimePick){
@@ -367,8 +369,8 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
         };
         //let current = this.State.CurrentSelection.SValue;
         let current = this._CurrentSelection.SValue;
-        const dateMin = this.props.dateMin;
-        const dateMax = this.props.dateMax;
+        const dateMin = Luff.State.GetSValueOrValue(this.props.dateMin);
+        const dateMax = Luff.State.GetSValueOrValue(this.props.dateMax);
 
         const forbidden =  this.props.forbiddenDates.SValue;
         while (cursor.Month === Date.Month){

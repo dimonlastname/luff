@@ -6,8 +6,8 @@ import InputBoxBase, {TInputValidResult} from "./_InputBoxBase";
 
 type TProps = {
     value: IObservableStateSimple<Date>;
-    min?: Date | IObservableStateSimple<Date>;
-    max?: Date | IObservableStateSimple<Date>;
+    min?: IObservableOrValue<Date>;
+    max?: IObservableOrValue<Date>;
     format?: string;
     formatTime?: string;
     isTimePick?: boolean;
@@ -90,8 +90,9 @@ export default class DateBox extends InputBoxBase<TProps> {
     Render(): any {
         let isDisab = this._IsDisabled.SubState(isDis => isDis ? '': ' l-pointer');
         let classState = Luff.State.Concat("l-textbox", this.props.className, isDisab);
-        const dateMin = this.props.min ? Luff.Date(this.GetMin()) : void 0;
-        const dateMax = this.props.max ? Luff.Date(this.GetMax()) : void 0;
+
+        const dateMin = this.props.min ? Luff.State.GetSubStateOrValue(this.props.min, v => Luff.Date(v)) : void 0;
+        const dateMax = this.props.max ? Luff.State.GetSubStateOrValue(this.props.max, v => Luff.Date(v)) : void 0;
 
         const luffDate = Luff.Date(this.props.value.SValue);
 

@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple, LuffDate, Culture} from "luff";
+import Luff, {React, IObservableStateSimple, LuffDate, Culture, IObservableOrValue} from "luff";
 import ComboBox from "../../Input/ComboBox/ComboBox";
 
 type TPPNavProps = {
@@ -7,8 +7,8 @@ type TPPNavProps = {
     yearRange: number[];
     isMonth: boolean;
     isQuarter: boolean;
-    dateMax: LuffDate;
-    dateMin: LuffDate;
+    dateMax: IObservableOrValue<LuffDate>;
+    dateMin: IObservableOrValue<LuffDate>;
 }
 
 const quarters = [
@@ -26,8 +26,13 @@ class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
         //yearRange: [1960, luffDate().Year + 5],
     };
 
-    Render(): any {
-        let {navDate, setNavDate, isMonth, isQuarter, yearRange, dateMin, dateMax} = this.props;
+    private Years = Luff.State<number[]>([]);
+    private CalculateYears() {
+        const {navDate, yearRange} = this.props;
+
+        const dateMin = Luff.State.GetSValueOrValue(this.props.dateMin);
+        const dateMax = Luff.State.GetSValueOrValue(this.props.dateMax);
+
         if (dateMin) {
             yearRange[0] = dateMin.Year;
         }
@@ -44,6 +49,13 @@ class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
             years.push(yearValue);
         }
         years = years.sort((a, b) => a < b ? 1: -1);
+    }
+
+    Render(): Luff.Node {
+        let {navDate, setNavDate, isMonth, isQuarter, yearRange, dateMin, dateMax} = this.props;
+        Luff.State.TryAddOnChange(dateMin, _ => this.CalculateYears());
+        Luff.State.TryAddOnChange(dateMax, _ => this.CalculateYears());
+        this.CalculateYears();
 
         return (
             <div className="l-pp-date-navigator l-row l-flex-center l-flexa-center">
@@ -82,7 +94,7 @@ class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
                 <div className="l-pp-nav-year">
                     <ComboBox<number>
                         value={navDate.SubState(date => date.Year)}
-                        dataStatic={years}
+                        data={this.Years}
                         onChange={ val => {
                             //navDate.SValue = navDate.SValue.SetYear(val);
                             setNavDate(navDate.SValue = navDate.SValue.SetYear(val));
