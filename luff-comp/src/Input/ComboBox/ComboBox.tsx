@@ -828,6 +828,7 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
             },
             Route: this.props.comboBox.RouteComboBoxOfferList,
             State: this.props.comboBox.State,
+            IsLazyRenderEnabled: false,
         }
     }
 }
