@@ -117,7 +117,7 @@ export class PermissionManager {
     }
     _CheckRoles(RolesRequired: number[] | Dict<number>[]){
 
-        if (!RolesRequired || RolesRequired.length < 1 || (<number[]><any[]>RolesRequired).includes(0) ){
+        if (!RolesRequired || RolesRequired.length < 1) {
             return true;
         }
         for (let i = 0; i < RolesRequired.length; i++){
@@ -130,7 +130,7 @@ export class PermissionManager {
     }
     _HasMainPermission(){
         let RolesRequired = this._ctor.Roles;
-        if (RolesRequired.length < 1 || (<number[]>RolesRequired).includes(0)){
+        if (RolesRequired.length < 1){
             return true;
         }
         for (let i = 0; i < RolesRequired.length; i++){
@@ -145,7 +145,7 @@ export class PermissionManager {
     }
     _HasMainWritePermission(){
         let RolesRequired = this._ctor.Write;
-        if (RolesRequired.length < 1 || (<number[]>RolesRequired).includes(0)){
+        if (RolesRequired.length < 1){
             return true;
         }
         for (let i = 0; i < RolesRequired.length; i++){
