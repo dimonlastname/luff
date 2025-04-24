@@ -841,7 +841,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         AppRouter.UnRegister(this);
         this._InitializeComponent = void 0;
         //this.Dispose();
-        if (this.RouteName)
+        if (this.RouteName && Application.Debug)
             console.log(`%c[Luff.Permission] Not allowed ${this.RouteName}`, 'color: darkorange',  this);
     }
     _InitializeComponent(props?: TProps) {
