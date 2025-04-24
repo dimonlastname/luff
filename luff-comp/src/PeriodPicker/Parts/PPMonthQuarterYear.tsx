@@ -48,7 +48,7 @@ class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
         if (!years.includes(yearValue)) {
             years.push(yearValue);
         }
-        years = years.sort((a, b) => a < b ? 1: -1);
+        this.Years.SValue = years.sort((a, b) => a < b ? 1: -1);
     }
 
     Render(): Luff.Node {
