@@ -76,6 +76,18 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     public GetFilteredKeys() : number[] {
         return this._FilteredKeys;
     }
+    public GetFilterPassedItems() : TIterationItem[] {
+        return this._StateArray.filter((x, index) => this._FilteredKeys.includes(index)) as any;
+    }
+    public GetFilterNotPassedItems() : TIterationItem[] {
+        return this._StateArray.filter((x, index) => !this._FilteredKeys.includes(index)) as any;
+    }
+    public GetFilterPassedItemsStates() : IObservableState<TIterationItem>[] {
+        return this._StateArray.filterState((x, index) => this._FilteredKeys.includes(index)) as any;
+    }
+    public GetFilterNotPassedItemsStates() : IObservableState<TIterationItem>[] {
+        return this._StateArray.filterState((x, index) => !this._FilteredKeys.includes(index)) as any;
+    }
     public GetAllItems<TypeOf extends IElement>() : TypeOf[] {
         return this._CompList as TypeOf[];
     }
