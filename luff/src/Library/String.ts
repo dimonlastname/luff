@@ -24,6 +24,8 @@ export namespace LibraryString {
     export function Capitalize(string: string) : string{
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    /** isIgnoreCase default = false */
     export function Contains(string: string, part: string, isIgnoreCase: boolean = false) : boolean {
         return (isIgnoreCase && string.toLowerCase().indexOf(part.toLowerCase()) > -1) || (string.indexOf(part) > -1)
     }

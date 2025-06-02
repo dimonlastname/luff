@@ -5,7 +5,6 @@ import {ComponentFactory} from "../Compiler/ComponentFactory";
 
 export class CasualFragmentComponent extends ElementBase {
     public _RenderUpdate(render): void {
-        console.log(`[Luff.CasualFragmentComponent] _RenderUpdate, `, this.Name);
         if (render.Children) {
             for (let i = 0; i < render.Children.length; i++) {
                 let renderNewChild = render.Children[i];
