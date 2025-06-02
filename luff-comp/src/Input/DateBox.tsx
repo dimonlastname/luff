@@ -31,7 +31,9 @@ export default class DateBox extends InputBoxBase<TProps> {
     private minSt;
     private maxSt;
 
-    private PeriodPicker: PeriodPicker;
+    private get PeriodPicker() : PeriodPicker  {
+        return ___LuffGlobal.PeriodPicker.GlobalSinglePicker;
+    }
 
     protected BeforeBuild(): void {
         super.BeforeBuild();
@@ -43,7 +45,7 @@ export default class DateBox extends InputBoxBase<TProps> {
         this.maxSt = max as IObservableStateSimple<Date>;
     }
     AfterBuild(): void {
-        this.PeriodPicker = this.GetComponentByName('PeriodPicker');
+
     }
     public IsInputValidDefault() : TInputValidResult {
         const { value, min, max } = this.props;
@@ -85,16 +87,15 @@ export default class DateBox extends InputBoxBase<TProps> {
         if (this._IsDisabled.SValue)
             return;
         const date = this.props.value.SValue;
-        this.PeriodPicker.Run(date, date, null);
+        this.PeriodPicker.Run(date, date, null, {
+            dateMin: this.props.min ? Luff.Date(Luff.State.GetSValueOrValue(this.props.min)) : void 0,
+            dateMax: this.props.max ? Luff.Date(Luff.State.GetSValueOrValue(this.props.max)) : void 0,
+            isShowTimePick: this.props.isTimePick
+        });
     }
     Render(): any {
         let isDisab = this._IsDisabled.SubState(isDis => isDis ? '': ' l-pointer');
         let classState = Luff.State.Concat("l-textbox", this.props.className, isDisab);
-
-        const dateMin = this.props.min ? Luff.State.GetSubStateOrValue(this.props.min, v => Luff.Date(v)) : void 0;
-        const dateMax = this.props.max ? Luff.State.GetSubStateOrValue(this.props.max, v => Luff.Date(v)) : void 0;
-
-        const luffDate = Luff.Date(this.props.value.SValue);
 
         return (
             <div className={classState}
@@ -103,19 +104,6 @@ export default class DateBox extends InputBoxBase<TProps> {
                  }}
                  onClick={() => this.CallDatePicker()}
             >
-                <PeriodPicker
-                    dates={[luffDate, luffDate]}
-                    dateMin={dateMin}
-                    dateMax={dateMax}
-                    isOnlyDay={true}
-                    onChange={(dateStart, dateFinish) => {
-                        if (this.props.onChange) {
-                            this.props.onChange(dateStart.Date);
-                            return;
-                        }
-                        this.props.value.SValue = dateStart.Date;
-                    }}
-                />
                 {this.props.value.SubState(x => x ? Luff.Date(x).Format(this.props.format) : this.props.placeholder)}
             </div>
         )
