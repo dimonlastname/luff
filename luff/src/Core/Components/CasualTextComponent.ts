@@ -8,6 +8,7 @@ function decodeHtmlEntities(text: string) {
     return testArea.value;
 }
 class CasualTextComponent extends CasualMountingBase {
+    Tag = "textNode";
     _NodeValue: string;
     _NodeValueGetter: () => any = null;
     _IsDynamic : boolean = false;

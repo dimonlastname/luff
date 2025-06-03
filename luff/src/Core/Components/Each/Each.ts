@@ -131,8 +131,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     private _FilterByManager: TFilterFn<TIterationItem>;
 
     _RenderUpdate(renderNew: IRenderElement) : void {
-        if (Application.Debug)
-            console.warn(`[Each._RenderUpdate] triggered by parent but no action required`, this);
+        this.Refresh();
     }
 
     private _GenerateItem(state: State, lineID: number, index: number): TEachValue {

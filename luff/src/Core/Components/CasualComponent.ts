@@ -1,5 +1,5 @@
 import {Dict, IObservableStateSimple, IObservableState, IObservableStateArray} from "../../interfaces";
-import {TRawComponent} from "./IElement";
+import {IElement, TRawComponent} from "./IElement";
 import {ComponentFactory, IRenderElement} from "../Compiler/ComponentFactory";
 import {luffState, State} from "../State";
 import {LibraryDOM, LibraryObject} from "../../Library";
@@ -445,14 +445,16 @@ class CasualComponent extends CasualMountingBase {
     }
     protected _RenderUpdateChildren(children: IRenderElement[]) : void {
         if (children) {
-            let used: number[] = [];
+            let used: IElement[] = [];
+
+
             for (let index = 0; index < children.length; index++) {
                 let renderNewChild = children[index];
                 if (!renderNewChild)
                     continue;
 
                 let current = this.Children.find(c => c._InnerIndex == index);
-                if (!current) {
+                if (!current || current.Tag != renderNewChild.Tag) {
                     console.log(`[_RenderUpdateChildren]`, this.GetComponentPath(false), index);
                     let newChild = ComponentFactory.Build(renderNewChild, this, this.ParentComponent, index);
                     this.Children.splice(index, 0, newChild);
@@ -460,18 +462,25 @@ class CasualComponent extends CasualMountingBase {
                         newChild._GenerateDOM();
                         newChild._ShowTransitionFunction();
                         newChild._Appear();
-                        used.push(index);
+                        used.push(newChild);
                     }
                     continue;
                 }
                 current._RenderUpdate(renderNewChild);
-                current._ShowTransitionFunction();
-                current._Appear();
-                used.push(index);
+                let c : any = current;
+                if (!c._IsHiddenByDefault && !c._IsDialog) {
+                    current._ShowTransitionFunction();
+                    current._Appear();
+                }
+
+                used.push(current);
             }
             //hide unused items:
             for (let c of this.Children) {
-                if (used.includes(c._InnerIndex)){
+                // if (used.includes(c._InnerIndex)){
+                //     continue;
+                // }
+                if (used.includes(c)){
                     continue;
                 }
                 c._HideTransitionFunction();
@@ -479,6 +488,7 @@ class CasualComponent extends CasualMountingBase {
             }
         }
     }
+
     constructor(rawComponent: TRawComponent) {
         super(rawComponent);
         if (!this.HasPermission) {
