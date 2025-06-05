@@ -87,7 +87,13 @@ export default class DateBox extends InputBoxBase<TProps> {
         if (this._IsDisabled.SValue)
             return;
         const date = this.props.value.SValue;
-        this.PeriodPicker.Run(date, date, dateStart => { this.props.value.SValue = dateStart.Date}, {
+        this.PeriodPicker.Run(date, date, dateStart => {
+            if (this.props.onChange) {
+                this.props.onChange(dateStart.Date);
+                return;
+            }
+            this.props.value.SValue = dateStart.Date
+        }, {
             dateMin: this.props.min ? Luff.Date(Luff.State.GetSValueOrValue(this.props.min)) : void 0,
             dateMax: this.props.max ? Luff.Date(Luff.State.GetSValueOrValue(this.props.max)) : void 0,
             isShowTimePick: this.props.isTimePick
