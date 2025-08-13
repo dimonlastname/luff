@@ -599,7 +599,9 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
                                 let si = state.SelectedItem.SValue;
                                 if (!si || !si.Original)
                                     return (
-                                        <span>{this.props.notFoundValue}</span>
+                                        <div>
+                                            <span>{this.props.notFoundValue}</span>
+                                        </div>
                                     );
 
                                 return this.props.dataRender(state.SelectedItem.Original as IObservableState<TDataItem>)
