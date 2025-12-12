@@ -12,7 +12,7 @@ export default class EditableText extends EditableBase<string, {mask?: IObservab
         this.TextBox = this.GetComponentByName('editableTextBox');
     }
 
-    protected GoToEdit(e) {
+    GoToEdit(e) {
         super.GoToEdit(e);
         this.TextBox.Focus();
         this.TextBox.Select();

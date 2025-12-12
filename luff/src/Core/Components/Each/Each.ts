@@ -30,6 +30,7 @@ type TEachProps<T> = {
     disableRowCache?: boolean;
 
     isDynamicRenderModeEnabled?: boolean;
+    isStateToRowBindingMode?: boolean;
 } | TPropsDefault;
 
 
@@ -102,6 +103,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
 
     private _IsRefreshOnAnyChange: boolean = false;
     private _IsDynamicRenderModeEnabled: boolean = false;
+    private _IsStateToRowBindingMode: boolean = false;
 
     private _SortDelegate: (a: TIterationItem, b: TIterationItem) => number;
     private _Sorted: boolean = false;
@@ -301,6 +303,79 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         } else {
             this._HideEmptyChildren();
         }
+
+        let index = 0;
+        if (this._EachPaging) {
+            index = this._EachPaging.Paging.Skip.SValue + 1;
+        }
+
+        // let stateHashSet = new Set();
+        // let extistsStates = this._MapElements.keys();
+        // for (let xxx of extistsStates) {
+        //     stateHashSet.add(xxx);
+        // }
+
+
+        if (this._IsStateToRowBindingMode) {
+            for (let i = 0; i < eachData.length; i++ ) {
+                let state = eachData._GetChildByKey(i);
+                let existsItem = this._MapElements.get(state);
+                if (!filteredKeys.includes(i)) {
+                    if (existsItem) {
+                        this._HideItem(existsItem.Component);
+                    }
+                    continue;
+                }
+                if (existsItem) {
+                    const isVisibleProp = existsItem.Component.props.isVisible;
+                    if (isVisibleProp === void 0 || isVisibleProp === true || isVisibleProp.SValue === true){
+                        this._ShowItem(existsItem.Component, false);
+                    }
+                    continue;
+                }
+                // i in filteredKeys and new item:
+
+                let valueState = eachData._GetChildByKey(i);
+                if (!valueState) {
+                    console.error('[Luff.Each] Probably value of StateArray has been changed not by set SValue. Or using .Add(item) to multiple StateArrays with the same value. \nBroken StateArray:', eachData, '\nBroken Each:', this);
+                    continue;
+                }
+
+                let value = valueState.SValue;
+                if (value === void 0){
+                    continue;
+                }
+                const newItem = this._GenerateItem(valueState, i, index);
+                this._MapElements.set(valueState, newItem);
+                this._ShowItem(newItem.Component, true);
+                index++;
+
+            }
+            //remove other:
+            let rendStates = new Set();
+
+            for (let i of filteredKeys) {
+                let v = eachData._GetChildByKey(i);
+                if (v){
+                    rendStates.add(v);
+                }
+            }
+            const generatedKeys = this._MapElements.keys();
+            for (let key of generatedKeys) {
+                console.log("Check", key._ID, key.SValue.WidgetTypeId);
+                if (!rendStates.has(key)) {
+                    console.log("remove", key._ID, key.SValue.WidgetTypeId);
+                    const item = this._MapElements.get(key);
+                    this._HideItem(item.Component);
+                }
+            }
+            return;
+        }
+
+
+
+
+
         const generatedKeys = this._MapElements.keys();
         let eachItems : DictN<TEachValue> = {};
 
@@ -313,10 +388,10 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             eachItems[item.LineID] = item;
         }
 
-        let index = 0;
-        if (this._EachPaging) {
-            index = this._EachPaging.Paging.Skip.SValue + 1;
-        }
+        // let index = 0;
+        // if (this._EachPaging) {
+        //     index = this._EachPaging.Paging.Skip.SValue + 1;
+        // }
         for (let key of filteredKeys) {
             const existsItem = eachItems[key];
             if (existsItem) {
@@ -324,7 +399,12 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 index++;
                 this._HideItem(existsItem.Component); //to force mount element //fixme
                 if (this._IsDynamicRenderModeEnabled) {
-                    existsItem.Component._RenderUpdate(this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any as IRenderElement);
+                    //existsItem.Component._RenderUpdate(this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any as IRenderElement);
+                    //existsItem.Component.Dispose()
+                    const childItem = this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any;// as any as ComponentBase;//TODO check each!!!
+                    existsItem.Component = ComponentFactory.Build(childItem, this, this.ParentComponent);
+                    existsItem.Component._GenerateDOM();
+
                 }
                 const isVisibleProp = existsItem.Component.props.isVisible;
                 if (isVisibleProp === void 0 || isVisibleProp === true || isVisibleProp.SValue === true){
@@ -427,6 +507,10 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         this._IsDynamicRenderModeEnabled = rawComponent.Attributes['isDynamicRenderModeEnabled'];
         if (this._IsDynamicRenderModeEnabled !== true) {
             this._IsDynamicRenderModeEnabled = false;
+        }
+        this._IsStateToRowBindingMode = rawComponent.Attributes['isStateToRowBindingMode'];
+        if (this._IsStateToRowBindingMode !== true) {
+            this._IsStateToRowBindingMode = false;
         }
         this._ChildRender = rawComponent.Attributes['render'];
         this._ChildEmptyRender = rawComponent.Attributes['renderOnEmpty'];

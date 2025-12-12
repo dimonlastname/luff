@@ -45,6 +45,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     }
 
     HasPermission: boolean = true;
+    public AppendChild(elem: IRenderElement) : IElement { return null };
 
     private _SetProps(props: Dict<any>) : void {
         if (!props)
@@ -293,10 +294,14 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
         this._GenerateDOM = void 0;
         return null;
     }
+    protected IsAppeared = false;
     protected OnAppear(){}
     protected OnDisappear(){}
 
     _Appear() : void {
+        if (this.IsAppeared)
+            return;
+        this.IsAppeared = true;
         //console.info('ElementBase _Appear');
         //todo: optimize onAppear
         this.OnAppear();
@@ -306,6 +311,9 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
         }
     }
     _Disappear(): void {
+        if (!this.IsAppeared)
+            return;
+        this.IsAppeared = false;
         //todo: optimize OnDisappear
         this.OnDisappear();
         for (let ch of this.Children) {
@@ -354,12 +362,29 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             LibraryArray.Remove(this.ParentElement.Children, x => x === this);
         }
         if (this.ParentComponent) {
-            LibraryArray.Remove(this.ParentElement.Children, x => x === this);
+            LibraryArray.Remove(this.ParentComponent.Children, x => x === this);
         }
         // let keys = Object.keys(this);
         // for (let k of keys) {
         //     delete this[k];
         // }
+    }
+    Dispose() : void {
+        if (this.ParentElement) {
+            LibraryArray.Remove(this.ParentElement.Children, x => x === this);
+        }
+        if (this.ParentComponent) {
+            LibraryArray.Remove(this.ParentComponent.Children, x => x === this);
+        }
+        const chs = [...this.Children]; //dispose removes item from this.Children array
+        for (let ch of chs) {
+            ch.Dispose();
+        }
+        this._Dismount();
+        let keys = Object.keys(this);
+        for (let key of keys) {
+            delete this[key];
+        }
     }
     constructor(rawComponent?: TRawComponent) {
         this._InnerIndex = rawComponent?.InnerIndex ?? 0;

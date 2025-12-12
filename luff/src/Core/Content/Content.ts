@@ -19,6 +19,7 @@ import {LibraryCSS} from "../../Library/CSS";
 import {CasualFragmentComponent} from "../Components/CasualFragmentComponent";
 import Application from "../Application/Application";
 import {AppSettings} from "../Application/Settings";
+import {LibraryArray} from "../../Library";
 
 
 
@@ -340,17 +341,22 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
             // else {
             //
             // }
+            //console.log(`[Content] Subs ${this.Name}`, this._ID, this._OutsideClickListenerID)
             this._OutsideClickListenerID = outsideClickManager.Add(this.DOM, this._OutsideClickListener);
 
         }
     }
     _UnsubscribeOutsideClickListener() {
         if (this._OutsideClickListener && !this._IsDialog) {
+            //console.log(`[Content] Unsubs ${this.Name}`, this._ID, this._OutsideClickListenerID)
             outsideClickManager.Remove(this._OutsideClickListenerID);
         }
     }
 
     _Appear() : void {
+        if (this.IsAppeared)
+            return;
+        this.IsAppeared = true;
         this._SubscribeOutsideClickListener();
 
 
@@ -364,6 +370,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         }
     }
     _Disappear() : void {
+        if (!this.IsAppeared)
+            return;
+        this.IsAppeared = false;
         this._UnsubscribeOutsideClickListener();
 
         // if (this._IsShown)
@@ -844,6 +853,16 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         if (this.RouteName && Application.Debug)
             console.log(`%c[Luff.Permission] Not allowed ${this.RouteName}`, 'color: darkorange',  this);
     }
+    Dispose(): void {
+        AppRouter.UnRegister(this);
+        if (this.ParentComponent) {
+            LibraryArray.Remove(this.ParentComponent._ChildrenContent, x => x === this);
+        }
+        this._Disappear();
+        super.Dispose();
+
+    }
+
     _InitializeComponent(props?: TProps) {
         const ctor = this._RawContent;
         if (!this.HasPermission) { //dropped by permission attribute (ElementBase)

@@ -29,15 +29,15 @@ class CasualMountingBase<ExtraProps = {}> extends ElementBase<ExtraProps> {
             return;
         }
 
-        // if (isFirstMount){
-        //     try {
-        //         container.appendChild(this.DOM);
-        //     }
-        //     catch (e) {
-        //         debugger;
-        //     }
-        //     return;
-        // }
+        if (isFirstMount){
+            try {
+                container.appendChild(this.DOM);
+            }
+            catch (e) {
+                debugger;
+            }
+            return;
+        }
 
         const nextDomTreeSibling = this.GetNextSibling();
         if (nextDomTreeSibling) {

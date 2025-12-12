@@ -756,23 +756,43 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
 
 
 ___LuffGlobal.PeriodPicker = PeriodPicker;
-document.addEventListener('DOMContentLoaded', () => {
-    PeriodPicker.GlobalSinglePicker = new PeriodPicker({
-        InnerIndex: void 0,
-        Attributes: {
-            //Target: document.body,
-            isOnlyDay: true,
-        } as TPeriodPickerProps
-    });
-    PeriodPicker.GlobalRangePicker = new PeriodPicker({
-        InnerIndex: void 0,
-        Attributes: {
-            //Target: document.body,
-            isOnlyDay: false,
-        } as TPeriodPickerProps
-    });
-
-
+PeriodPicker.GlobalSinglePicker = new PeriodPicker({
+    InnerIndex: void 0,
+    Attributes: {
+        //Target: document.body,
+        isOnlyDay: true,
+    } as TPeriodPickerProps
 });
+PeriodPicker.GlobalRangePicker = new PeriodPicker({
+    InnerIndex: void 0,
+    Attributes: {
+        //Target: document.body,
+        isOnlyDay: false,
+    } as TPeriodPickerProps
+});
+// document.addEventListener('DOMContentLoaded', () => {
+//     PeriodPicker.GlobalSinglePicker = new PeriodPicker({
+//         InnerIndex: void 0,
+//         Attributes: {
+//             //Target: document.body,
+//             isOnlyDay: true,
+//         } as TPeriodPickerProps
+//     });
+//     PeriodPicker.GlobalRangePicker = new PeriodPicker({
+//         InnerIndex: void 0,
+//         Attributes: {
+//             //Target: document.body,
+//             isOnlyDay: false,
+//         } as TPeriodPickerProps
+//     });
+//     console.log(`PeriodPicker document.addEventListener('DOMContentLoaded`);
+//     // PeriodPicker.GlobalSinglePicker = new PeriodPicker();
+//     // PeriodPicker.GlobalSinglePicker.props.isOnlyDay = true;
+//     //
+//     // PeriodPicker.GlobalSinglePicker._GenerateDOM();
+//     // PeriodPicker.GlobalSinglePicker._Mount(true);
+//     //Luff.Application.RootComps.push(PeriodPicker.GlobalSinglePicker);
+//     //Luff.Application.RootComps.push(PeriodPicker.GlobalRangePicker);
+// });
 
 export default PeriodPicker;

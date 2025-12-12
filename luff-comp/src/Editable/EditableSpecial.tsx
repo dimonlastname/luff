@@ -47,7 +47,7 @@ export class EditableSpecialArr<T> extends Luff.Content<TEditableSpecialArrProps
         //this.ValueView = this.props.value.SubState(v => this.props.getValueView(v));
     }
 
-    protected GoToEdit(e: Luff.MouseEvent<HTMLElement>) {
+    GoToEdit(e: Luff.MouseEvent<HTMLElement>) {
         this.ValueTemp.SValue = this.props.value.SValue;
         this.Mode.SValue = 1;
         //setTimeout(() => this.Mode.SValue = 1); // prevent outside click;

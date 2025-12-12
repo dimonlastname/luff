@@ -12,7 +12,8 @@ export namespace LibraryTree {
         let res = [];
         for (let item of tree) {
             res.push(selector(item));
-            res.push(...Flatten(item[subKey] as any as T[], subKey, selector));
+            if (item[subKey])
+                res.push(...Flatten(item[subKey] as any as T[], subKey, selector));
         }
         return res;
     }

@@ -83,16 +83,18 @@ class CasualComponent extends CasualMountingBase {
         }
     }
     private _SetAttribute(attName: string, attributeType: AttributeType, attValue: any) : void {
-        if (attributeType === AttributeType.Casual)
-            this.DOM.setAttribute(attName, attValue);
-        else if (attributeType === AttributeType.Property)
-            this.DOM[attName] = attValue;
-        else if (attributeType === AttributeType.StyleProperty)
-            this.DOM.style[attName] = attValue;
-        else if (attributeType === AttributeType.CSSVariable)
-            this.DOM.style.setProperty(attName, attValue);
-        else if (attributeType === AttributeType.ClassName)
-            this._SetClassName(attName, attValue);
+        switch (attributeType) {
+            case AttributeType.Casual:
+                return this.DOM.setAttribute(attName, attValue);
+            case AttributeType.Property:
+                return this.DOM[attName] = attValue;
+            case AttributeType.StyleProperty:
+                return this.DOM.style[attName] = attValue;
+            case AttributeType.CSSVariable:
+                return this.DOM.style.setProperty(attName, attValue);
+            case AttributeType.ClassName:
+                return this._SetClassName(attName, attValue);
+        }
     }
     private _RefreshAttributeValue(attName: string, attributeType: AttributeType) : void {
         if (!this.DOM) //if state updated before first render called
@@ -397,9 +399,11 @@ class CasualComponent extends CasualMountingBase {
                 });
                 continue
             }
-            this.DOM.addEventListener(eventName, (e: Event) => {
+            const wrappedFn = (e: Event) => {
                 fn.call(this.ParentComponent, e);
-            });
+            };
+            this.DOM.addEventListener(eventName, wrappedFn);
+            this._EventListeners[eventName] = wrappedFn; //save for remove event on dispose
         }
     }
     private _GenerateChildren(){
@@ -409,6 +413,16 @@ class CasualComponent extends CasualMountingBase {
             ch._GenerateDOM();
             ch._Mount(true);
         }
+    }
+    private RemoveEventListeners() : void {
+        for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
+            let fn = this._EventListeners[eventName];
+            this.DOM.removeEventListener(eventName, fn);
+        }
+    }
+    Dispose(): void {
+        this.RemoveEventListeners();
+        super.Dispose();
     }
 
     _Dismount() : void {

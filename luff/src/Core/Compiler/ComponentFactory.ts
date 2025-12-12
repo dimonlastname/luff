@@ -65,6 +65,8 @@ export class ComponentFactory {
             renderElement.ParentComponent = parentComponent;
             renderElement.ParentElement = parentElement;
             renderElement._InitializeComponent();
+            ///note: cannot add method to ElementBase due to circular dependencies ElementBase<=>ComponentFactory
+            renderElement.AppendChild = (el: IRenderElement) => appendChild(renderElement, el);
             return renderElement;
         }
         else if (renderElement.Tag === void 0) { //fragment
@@ -114,7 +116,8 @@ export class ComponentFactory {
             element._RemoveComponent('factory');
             return;
         }
-
+        ///note: cannot add method to ElementBase due to circular dependencies ElementBase<=>ComponentFactory
+        element.AppendChild = (el: IRenderElement) => appendChild(element, el);
         return element;
     }
     static ConvertReact(children: IRenderElement[]) : any[] {
@@ -136,4 +139,16 @@ export class ComponentFactory {
             }
         })
     }
+}
+function appendChild($this: IElement, elem: IRenderElement) : IElement {
+    const isThisContent = !!($this as any)._CheckLazy;
+    let built = ComponentFactory.Build(elem, $this, isThisContent ? $this as any: $this.ParentComponent);
+    built._GenerateDOM();
+    //console.log("appendChild built._Mount");
+    built._Mount(true);
+    if (built._IsShown && built._IsMount){
+        built._Appear();
+    }
+    $this.Children.push(built);
+    return built;
 }

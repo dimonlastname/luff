@@ -18,7 +18,7 @@ export default class EditableNumber extends EditableBase<number, TExtraProps> {
         this.TextBox = this.GetComponentByName('editableTextBox');
     }
 
-    protected GoToEdit(e) {
+    GoToEdit(e) {
         super.GoToEdit(e);
         this.TextBox.Focus();
         this.TextBox.Select();

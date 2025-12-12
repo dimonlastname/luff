@@ -70,23 +70,23 @@ input, select {
 
 /* ScrollBar */
 /* width */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-/* Track (background) */
-::-webkit-scrollbar-track {
-  background: #ddd;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #629cc0;
-  &:hover {
-    background: #2e83b8;
-  }
-}
+//::-webkit-scrollbar {
+//  width: 10px;
+//  height: 10px;
+//}
+//
+///* Track (background) */
+//::-webkit-scrollbar-track {
+//  background: #ddd;
+//}
+//
+///* Handle */
+//::-webkit-scrollbar-thumb {
+//  background: #629cc0;
+//  &:hover {
+//    background: #2e83b8;
+//  }
+//}
 
 /* Atomics */
 

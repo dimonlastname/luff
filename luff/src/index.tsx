@@ -39,12 +39,12 @@ import {JSXElement, IElement, TRawComponent, TPropsDefault} from "./Core/Compone
 import {ComponentSimple as _ComponentSimple} from "./Core/Components/ComponentSimple";
 import {CasualFragmentComponent} from "./Core/Components/CasualFragmentComponent";
 import {IElementBase, ElementBase} from "./Core/Components/ElementBase";
+import {ComponentFactory, IRenderElement} from "./Core/Compiler/ComponentFactory";
 
 import { State as LuffState } from "./Core/State";
 
 
 import {TPositionObject} from "./interfaces";
-import {ComponentFactory, IRenderElement} from "./Core/Compiler/ComponentFactory";
 import {FilePicker} from "./Library/other";
 
 import {luffConfirm, luffConfirmPromise} from "./Library/Confirm/Confirm";

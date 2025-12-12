@@ -56,6 +56,17 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
     protected ValueTemp  = Luff.State<T>('default' as any) as IObservableStateSimple<T>;
     protected ValueView: IObservableStateSimple<string>;
 
+    public GoToEdit(e?: Luff.MouseEvent<HTMLElement>) {
+        this.ValueTemp.SValue = this.props.value.SValue;
+        this.Mode.SValue = 1;
+        //setTimeout(() => this.Mode.SValue = 1); // prevent outside click;
+        //if (e.target.classList.contains())
+        e?.stopPropagation();
+    }
+    public GoToView() {
+        this.Mode.SValue = -1;
+    }
+
     protected BeforeBuild(): void {
         //this.ValueTemp.SValue = this.props.value.SValue;
         // this.props.value.AddOnChange(v => {
@@ -64,13 +75,7 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
         this.ValueView = this.props.value.SubState(v => this.props.getValueView(v));
     }
 
-    protected GoToEdit(e: Luff.MouseEvent<HTMLElement>) {
-        this.ValueTemp.SValue = this.props.value.SValue;
-        this.Mode.SValue = 1;
-        //setTimeout(() => this.Mode.SValue = 1); // prevent outside click;
-        //if (e.target.classList.contains())
-        e.stopPropagation();
-    }
+
     private SetOriginalValue(newValue: T) {
         if (this.props.onChange) {
             this.props.onChange(newValue);
@@ -107,9 +112,7 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
                 })
         }
     }
-    protected GoToView() {
-        this.Mode.SValue = -1;
-    }
+
 
 
     RenderContent(): Luff.Node {

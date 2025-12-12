@@ -33,6 +33,7 @@ export interface IElement<P = any> extends JSXElement<P> {
     ParentElement: IElement;
     ParentComponent: IContent;
     Children: IElement[];
+    Dispose() : void;
 
     _TargetDOM: Element; //GetTargetDOM cache;
     _TargetRenderComp: IElement;
@@ -58,6 +59,7 @@ export interface IElement<P = any> extends JSXElement<P> {
     _RemoveComponent(c?:string) : void;
     _Mount(isFirstMount: boolean): void;
     _Dismount(): void;
+    AppendChild(elem: IRenderElement) : IElement;
 
     GetComponentByName<T extends IElement>(name: string) : T;
 
