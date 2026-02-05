@@ -46,7 +46,8 @@ class OutsideClickManager {
             {
                 //await event bubbling then call callback:
                 //TODO: fix crutch;
-                setTimeout(() => onOutsideClick(e), 0)
+                //setTimeout(() => onOutsideClick(e), 0)
+                onOutsideClick(e)
                 //console.log("[outside.click]", e);
             }
         };
