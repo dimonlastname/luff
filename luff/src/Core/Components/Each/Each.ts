@@ -95,6 +95,8 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     }
     public GetDOMByItemState(itemState: IObservableState<TIterationItem>) : HTMLElement {
         let item = this._MapElements.get(itemState as any as State);
+        if (!item)
+            return null;
         return item.Component.GetFirstDOM();
     }
     public GetItemStateByIndex(index: number) : IObservableState<TIterationItem> {
