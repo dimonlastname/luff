@@ -83,9 +83,10 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
         };
     }
 
-    Render(): any {
+    Render(): Luff.Node {
+        const isTimePick = this.props.isTimePick;
         let classState = this._IsDisabled.SubState(isDis => 'l-textbox ' + this.props.className + (isDis ? '': ' l-pointer'));
-        const formatFull = `${this.props.formatDate} ${this.props.formatTime}`;
+        const formatFull = `${this.props.formatDate} ${isTimePick ? this.props.formatTime: ""}`;
 
         return (
             <div className={classState}
@@ -107,7 +108,7 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
                     let luffDateStart = Luff.Date(dateStart);
                     let luffDateFinish = Luff.Date(dateFinish);
 
-                    if (luffDateStart.IsSameDate(luffDateFinish)) {
+                    if (luffDateStart.IsSameDate(luffDateFinish) && this.props.isTimePick) {
                         return `${luffDateStart.Format(this.props.formatDate)} с ${luffDateStart.Format(this.props.formatTime)} по ${luffDateFinish.Format(this.props.formatTime)}`;
                     }
 
