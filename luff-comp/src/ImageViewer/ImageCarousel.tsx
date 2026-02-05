@@ -114,10 +114,10 @@ export class ImageCarousel extends Luff.Content<TProps> {
                         <div className="l-iv-control l" onClick={() => this.NextImage(-1)} isVisible={issArrowsVisible} >
                             <div className="l-iv-control-arrow l-iv-control-arrow-left"/>
                         </div>
-                        <div className="l-iv-body l-iv-carousel" name="l-iv-body">
-                            <div className="l-iv-carousel_items" name="l-iv-carousel_items">
+                        <div className="l-iv-body l-iv-carousel" compName="l-iv-body">
+                            <div className="l-iv-carousel_items" compName="l-iv-carousel_items">
                                 <Each
-                                    name="l-iv-carousel_each"
+                                    compName="l-iv-carousel_each"
                                     source={this.ImageSrcList}
                                     render={(src, index, each) => {
                                         return (
@@ -133,7 +133,7 @@ export class ImageCarousel extends Luff.Content<TProps> {
                                 {
                                     extraRender
                                     &&
-                                    <div className="l-iv-image-holder" name="l-iv-image-holder">
+                                    <div className="l-iv-image-holder" compName="l-iv-image-holder">
                                         {extraRender()}
                                     </div>
                                 }

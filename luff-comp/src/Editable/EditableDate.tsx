@@ -28,7 +28,7 @@ export default class EditableDate extends EditableBase<Date, TExtraProps> {
         //return this.props.children;
         return (
             <DateBox
-                name="editableTextBox"
+                compName="editableTextBox"
                 className="l-edit l-edit-editor l-edit-date"
                 value={this.ValueTemp}
                 min={this.props.min}

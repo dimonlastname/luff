@@ -8,6 +8,7 @@ export type TPropsAttributesDefault<TState = {}> = {
     state?: IObservableStateSimple<TState> | IObservableState<TState>;
     //children?: any; //IRenderElement
     permission?: string;
+    compName?: string;
 }
 type TPropsChildren = {
     children?: any; //IRenderElement

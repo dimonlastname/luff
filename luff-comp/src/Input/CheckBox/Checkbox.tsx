@@ -62,7 +62,7 @@ export default class CheckBox extends Luff.Content<CheckBoxProps, TState> implem
                        className="l-checkbox"
                        id={"l-checkbox-id-" + this._ID}
                        //checkboxGroup={this.props.radioGroup}
-                       name={this.props.checkBoxGroup}
+                       compName={this.props.checkBoxGroup}
                        onChange={(e) => {
                            const isChecked = e.target.checked;
                            e.target.checked = !isChecked; //prevent value;

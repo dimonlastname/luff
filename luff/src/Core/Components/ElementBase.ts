@@ -338,7 +338,9 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             state.AddOnChange(isVisible => {
                 if (isVisible){
                     this._ShowTransitionFunction();
-                    this._Appear(); //todo: fix _Appear to onMount
+                    if (!this.ParentElement || (this.ParentElement as ElementBase<any, any>).IsAppeared){
+                        this._Appear(); //todo: fix _Appear to onMount
+                    }
                 }
                 else {
                     this._HideTransitionFunction();
@@ -398,7 +400,14 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             this.Tag = rawComponent.Tag;
 
             if (rawComponent.Attributes) {
-                const name = rawComponent.Attributes['name'];
+                let name = rawComponent.Attributes['compName'];
+                if (!name) {
+                    name = rawComponent.Attributes['name']; //TODO: DEPRECATED;
+                    if (name) {
+                        console.warn(`[Luff] attribute 'name' is deprecated for naming components, use 'compName'\r\n${this.GetComponentPath(true)} > ${name}`);
+                    }
+                }
+
                 if (name)
                     this.Name = name;
                 //register component

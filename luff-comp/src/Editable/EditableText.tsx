@@ -21,7 +21,7 @@ export default class EditableText extends EditableBase<string, {mask?: IObservab
     RenderContent(): Luff.Node {
         return (
             <TextBox
-                name="editableTextBox"
+                compName="editableTextBox"
                 className="l-edit l-edit-editor l-edit-textbox"
                 value={this.ValueTemp as IObservableStateSimple<string>}
                 onKeyEnter={() => this.Confirm()}

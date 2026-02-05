@@ -23,7 +23,7 @@
 //     Render(): any {
 //         return (
 //             <button class={"l-button" + this.props.class} onClick={() => this.Click()}>
-//                 <input name="l-inputFile" type="file" style="display: none" accept={this.props.accept} onChange={() => this.OnChange()}/>
+//                 <input compName="l-inputFile" type="file" style="display: none" accept={this.props.accept} onChange={() => this.OnChange()}/>
 //                 {this.props.children}
 //             </button>
 //         )

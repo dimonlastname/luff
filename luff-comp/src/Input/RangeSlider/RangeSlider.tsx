@@ -145,13 +145,13 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
                 <div className="l-sr-head">
                     <div className="l-sr-line-part l-sr-empty" style={{width: widthView1}}/>
                     <div className="l-sr-line-part l-sr-caption" style={{flex: "1"}}>
-                        <div className="l-sr-value-view" name="l-sr-value-view-1">
+                        <div className="l-sr-value-view" compName="l-sr-value-view-1">
                             {this.props.renderView(this.props.value1)}
                         </div>
                         {
                             this.props.value2
                             &&
-                            <div className="l-sr-value-view" name="l-sr-value-view-2">
+                            <div className="l-sr-value-view" compName="l-sr-value-view-2">
                                 {this.props.renderView(this.props.value2)}
                             </div>
                         }
@@ -159,7 +159,7 @@ export class RangeSlider extends Luff.Content<TRangeSelectorProps> {
                     <div className="l-sr-line-part l-sr-empty" style={{width: widthView2}}/>
                 </div>
                 <div
-                    name="l-sr-body"
+                    compName="l-sr-body"
                     className="l-sr-body"
                     onMouseLeave={() => this.IsActive = false}
                     onMouseUp={() => this.IsActive = false}

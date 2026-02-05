@@ -27,7 +27,7 @@ export default class EditableNumber extends EditableBase<number, TExtraProps> {
     RenderContent(): Luff.Node {
         return (
             <NumBox
-                name="editableTextBox"
+                compName="editableTextBox"
                 className="l-edit l-edit-editor l-edit-textbox"
                 value={this.ValueTemp}
                 onKeyEnter={() => this.Confirm()}
