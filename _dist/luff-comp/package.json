@@ -1,6 +1,6 @@
 {
   "name": "luff-comp",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Luff's component library",
   "main": "index.js",
   "author": "Dmitrii Pupyrev",
