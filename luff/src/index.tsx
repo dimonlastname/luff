@@ -678,6 +678,7 @@ namespace Luff  {
         classDict?: Dict<IObservableStateSimple<boolean>>
         name?: string;
         permission?: string;
+        compName?: string;
     }
 
     export interface AnchorHTMLAttributes<T> extends HTMLAttributes<T> {
