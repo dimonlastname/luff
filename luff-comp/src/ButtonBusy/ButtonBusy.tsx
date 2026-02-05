@@ -110,7 +110,7 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
     Render() {
         let className;
         return (
-            <button name="button"
+            <button compName="button"
                     className={this.GetClassName()}
                     classDict={this.props.classDict}
                     onClick={e => this._onClick(e as any) }
