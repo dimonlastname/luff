@@ -37,7 +37,7 @@ type TComboBoxProps<TDataItem, TValue> = {
     listClassName?: string | IObservableStateSimple<string>;
     isUseParentPositionForList?: boolean;
 
-    isSearchEnabled?: boolean;                       //default: true.
+    isSearchEnabled?: boolean;                       //default: false.
     searchDelegate?: (val: string) => boolean;
     searchSuggestionDataAsync?: (val: string) => Promise<TDataItem[]>;
     searchSuggestionDataAsyncDelay?: number;
@@ -47,9 +47,9 @@ type TComboBoxProps<TDataItem, TValue> = {
     //ValueOnEmpty?: any;                               //default: null. sets this value when IsSearchEnabled and current value item is not found in data
 
     //IsShowFullHintListOnFocus?: boolean;             //default: false. reset hint list filter on focus
-    //IsHideFullHintListOnEmpty?: boolean;             //default: false. reset hint list filter on emty
+    //IsHideFullHintListOnEmpty?: boolean;             //default: false. reset hint list filter on empty
 
-    placeholder?: IObservableOrValue<string>;                            //default: ''. works when IsSearhEnabled or IsInputMode
+    placeholder?: IObservableOrValue<string>;                            //default: ''. works when IsSearchEnabled or IsInputMode
 
     //OfferData?: any[];                                    //default: []. offer list
     //OfferDataGetter?: (value: any) => Promise<any[]>;     //default: null. get offer list from server on input
@@ -555,7 +555,7 @@ class ComboBox<TDataItem = any, TValue = number, TExtraProps = object> extends L
             >
                 <BusyLocker isBusy={state.IsBusy}/>
                 <input className="l-cb-textbox l-textbox"
-                       name="l-cbx-textbox"
+                       compName="l-cbx-textbox"
                        type="text"
                        placeholder={placeholder}
                        autocomplete="off"
@@ -704,9 +704,11 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
         }
         const container = this.ListContainer;
         const rect = container.getBoundingClientRect();
+        this.DOM.classList.remove("__upper");
         if (window.innerHeight < rect.top + rect.height + window.scrollY + 1) {
             //container.style.bottom = '100%';
             this.DOM.style.top = this.Top - rect.height - 1 + 'px';
+            this.DOM.classList.add("__upper")
         }
         //this.AfterShow = () => {};
 
@@ -758,9 +760,9 @@ class ComboBoxOfferList<TDataItem> extends Luff.Content<TComboBoxOfferListProps,
         let itemRender = this.props.comboBox.props.dataRender;
         return (
             <div className={"l-cb-offer-list_wrap " + cbx.props.listClassName}>
-                <div className="l-cb-offer-list" name="offerListContainer" style={`--l-combobox-lines: ${this.props.comboBox.props.listVisibleLinesCount}`}>
+                <div className="l-cb-offer-list" compName="offerListContainer" style={`--l-combobox-lines: ${this.props.comboBox.props.listVisibleLinesCount}`}>
                     <Each
-                        name="EachCBOfferItems"
+                        compName="EachCBOfferItems"
                         source={state.OfferDataFiltered}
                         filter={x => {
                             return this.props.comboBox.props.isAlwaysShowAllList || LibraryString.IsTextIncludes(cbx.State.TextBoxValueSearch.SValue, x.View);
