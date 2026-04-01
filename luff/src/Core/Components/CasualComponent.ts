@@ -362,12 +362,15 @@ class CasualComponent extends CasualMountingBase {
                     break;
             }
         }
+        if (tag == "textarea") {
+            resetValue = function () { };
+        }
 
         for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
             let fn = this._EventListeners[eventName];
 
 
-            if (eventName == 'change' && tag === 'input') {
+            if (eventName == 'change' && (tag === 'input' || tag === 'textarea')) {
 
                 if (this._AttributeByName['value']) {
                     if (dom.type === 'text') {
