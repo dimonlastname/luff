@@ -63,7 +63,7 @@ class OutsideClickManager {
     }
     constructor() {
         //LibraryDOM.AddEventListenerGlobal('click', documentListener);
-        document.addEventListener('click', documentListener, {capture: true});
+        document.addEventListener('mousedown', documentListener, {capture: true});
     }
 }
 
