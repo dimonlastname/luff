@@ -364,7 +364,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         //TODO: use IntersectionObserver
         // if (this._IsShown)
         this.OnAppear();
-        for (let ch of this._ChildrenContent) {
+        for (let ch of this.Children) {
             if (ch._IsShown)
                 ch._Appear();
         }
@@ -377,7 +377,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
 
         // if (this._IsShown)
         this.OnDisappear();
-        for (let ch of this._ChildrenContent) {
+        for (let ch of this.Children) {
             ch._Disappear();
         }
     }
