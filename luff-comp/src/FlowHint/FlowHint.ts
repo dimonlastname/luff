@@ -150,15 +150,16 @@ export class LuffHint {
 
     _ListenToShow(e: MouseEvent){
         const eventTarget = e.target as HTMLElement;
-        if (LibraryDOM.IsQuery(eventTarget, this.Config.QuerySelector)){
-            const hintID : number = parseInt(eventTarget.dataset['luffHintID']);
+        const hint = eventTarget.closest(this.Config.QuerySelector) as HTMLElement;
+        if (hint){
+            const hintID : number = parseInt(hint.dataset['luffHintID']);
             let hintPack : THintPack;
             if (hintID > 0) {
                 hintPack = this._HintDict[hintID];
             } else {
                 hintPack = {
                     ID: this._HintCounter++,
-                    Target: eventTarget,
+                    Target: hint,
                     Hint: null,
                     TimeoutToShow: null,
                     TimeoutToHide: null,

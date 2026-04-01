@@ -15,6 +15,7 @@ type TProps = {
     placeholder?: IObservableOrValue<string>;
     min?: number | IObservableStateSimple<number>;
     max?: number | IObservableStateSimple<number>;
+    step?: number | IObservableStateSimple<number>;
     isHideInappropriateValue?: boolean;
 
     onKeyUp?: (e: Luff.KeyboardEvent) => void;
@@ -114,6 +115,7 @@ export default class NumBox extends InputBoxBase<TProps> {
                    placeholder={this.props.placeholder}
                    min={this.props.min}
                    max={this.props.max}
+                   step={this.props.step}
                    disabled={this._IsDisabled}
             />
         )
