@@ -532,7 +532,7 @@ export class StateArray<T> extends State<T> {
         }
         return null;
     }
-    Add(item: T) : void {
+    Add(item: T) : State<T> {
         let data = this.__SValue;
         let i = data.length;
         let ss = [];
@@ -546,6 +546,7 @@ export class StateArray<T> extends State<T> {
         this._Sort();
         this._OnChange(this, ss);
         this._UpdateParents(this, ss);
+        return childState;
     }
     _Add(item: T, ss: TSubscriber[]) : void {
         let data = this.__SValue;

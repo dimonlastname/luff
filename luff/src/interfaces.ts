@@ -129,7 +129,7 @@ export type IObservableStateArray<T> = {
 
     MakeSortable(compareFn: (a: T, b: T) => number) : void
     MakeFilterable(predicate: (item: T, index?: number) => boolean) : void
-    Add(obj: T): void;
+    Add(obj: T): IObservableState<T>;
     AddState(state: IObservableState<T> | IObservableStateSimple<T>) : void;
     AddRange(obj: T[]): void;
     Remove(value: T): void;
