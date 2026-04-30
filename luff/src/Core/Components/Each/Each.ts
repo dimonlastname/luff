@@ -91,7 +91,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         return this._StateArray.filterState((x, index) => !this._FilteredKeys.includes(index)) as any;
     }
     public GetAllItems<TypeOf extends IElement>() : TypeOf[] {
-        return this._CompList as TypeOf[];
+        return Array.from(this._MapElements.values()).map(x => x.Component) as TypeOf[];
     }
     public GetDOMByItemState(itemState: IObservableState<TIterationItem>) : HTMLElement {
         let item = this._MapElements.get(itemState as any as State);
@@ -125,7 +125,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     private _StateArray: StateArray<any>;
 
     //_EachItemList: TEachItem[] = [];
-    private _CompList: IElement[] = [];
+    //private _CompList: IElement[] = [];
     private _CompEmptyList: IElement[] = [];
     //private _DOMList: HTMLElement[] = [];
     //private _DOMEmptyList: HTMLElement[] = [];
@@ -153,7 +153,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
             Component: childElement,
         };
         this._MapElements.set(state, item);
-        this._CompList.push(childElement);
+        //this._CompList.push(childElement);
 
         // let lastDOM;
         // if (prevEachItem !== void 0) {
@@ -221,8 +221,8 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         }
     }
     private _HideEachChildren(/*since: number*/): void {
-        for (let ch of this._CompList){
-            this._HideItem(ch);
+        for (let ch of this._MapElements.values()){
+            this._HideItem(ch.Component);
         }
     }
 
@@ -403,6 +403,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 if (this._IsDynamicRenderModeEnabled) {
                     //existsItem.Component._RenderUpdate(this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any as IRenderElement);
                     //existsItem.Component.Dispose()
+                    existsItem.Component.Dispose();
                     const childItem = this._ChildRender(eachData._GetChildByKey(key), existsItem.Index, this) as any;// as any as ComponentBase;//TODO check each!!!
                     existsItem.Component = ComponentFactory.Build(childItem, this, this.ParentComponent);
                     existsItem.Component._GenerateDOM();
