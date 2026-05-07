@@ -1,4 +1,4 @@
-.l-textbox {
+  .l-textbox {
   border: 1px var(--l-clr-component-border) solid;
   width: 100%;
   //height: 2em;
@@ -51,5 +51,32 @@
         font-weight: bold;
       }
     }
+  }
+}
+.l-datebox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  .l-datebox-value {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 20px;
+    &.__no-value {
+      opacity: 0.66;
+    }
+  }
+  .l-datebox-remove-btn {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background: var(--l-clr-active);
+    mask-image: url(../../../luff/src/img/icon-x.svg);
+    mask-size: 12px;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    margin-right: 0.3em;
   }
 }

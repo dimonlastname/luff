@@ -14,6 +14,8 @@ type TProps = {
     className?: IObservableOrValue<string>;
     onChange?: (val?: Date) => void;
     placeholder?: IObservableOrValue<string>;
+
+    hasRemoveButton?: boolean;
 }
 
 
@@ -87,6 +89,21 @@ export default class DateBox extends InputBoxBase<TProps> {
         if (this._IsDisabled.SValue)
             return;
         const date = this.props.value.SValue;
+        let dateMin;
+        let dateMax;
+        if (this.props.min){
+            const minVal = Luff.State.GetSValueOrValue(this.props.min);
+            if (minVal){
+                dateMin = Luff.Date(minVal);
+            }
+        }
+        if (this.props.max){
+            const minVal = Luff.State.GetSValueOrValue(this.props.max);
+            if (minVal){
+                dateMax = Luff.Date(minVal);
+            }
+        }
+
         this.PeriodPicker.Run(date, date, dateStart => {
             if (this.props.onChange) {
                 this.props.onChange(dateStart.Date);
@@ -94,15 +111,19 @@ export default class DateBox extends InputBoxBase<TProps> {
             }
             this.props.value.SValue = dateStart.Date
         }, {
-            dateMin: this.props.min ? Luff.Date(Luff.State.GetSValueOrValue(this.props.min)) : void 0,
-            dateMax: this.props.max ? Luff.Date(Luff.State.GetSValueOrValue(this.props.max)) : void 0,
+            dateMin: dateMin,
+            dateMax: dateMax,
             isShowTimePick: this.props.isTimePick
         });
     }
     Render(): any {
-        let isDisab = this._IsDisabled.SubState(isDis => isDis ? '': ' l-pointer');
-        let classState = Luff.State.Concat("l-textbox", this.props.className, isDisab);
+        const { className, onChange, hasRemoveButton } = this.props;
 
+        let isDisab = this._IsDisabled.SubState(isDis => isDis ? '': ' l-pointer');
+        let classState = Luff.State.Concat("l-textbox l-datebox", className, isDisab);
+
+        const hasValue = this.props.value.SubState(v => v != null);
+        const noValue = hasValue.SubState(s => !s);
         return (
             <div className={classState}
                  classDict={{
@@ -110,7 +131,31 @@ export default class DateBox extends InputBoxBase<TProps> {
                  }}
                  onClick={() => this.CallDatePicker()}
             >
-                {this.props.value.SubState(x => x ? Luff.Date(x).Format(this.props.format) : this.props.placeholder)}
+                <div
+                    className="l-datebox-value"
+                    classDict={{
+                        "__no-value": noValue
+                    }}
+                >
+                    {this.props.value.SubState(x => x ? Luff.Date(x).Format(this.props.format) : this.props.placeholder)}
+                </div>
+                {
+                    hasRemoveButton
+                    &&
+                    <div
+                        className="l-datebox-remove-btn"
+                        isVisible={hasValue}
+                        onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (onChange){
+                                onChange(null);
+                                return;
+                            }
+                            this.props.value.SValue = null;
+                        }}
+                    />
+                }
             </div>
         )
 
