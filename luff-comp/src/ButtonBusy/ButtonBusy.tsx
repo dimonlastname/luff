@@ -45,6 +45,9 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
     private UnLock(isBtnDisabled: boolean) {
         clearTimeout(this.TimeoutLock);
         const btn = this.Button;
+        if (!this.props) { //if disposed
+            return;
+        }
 
         if (!this.props.disabled)
             btn.disabled = isBtnDisabled;
