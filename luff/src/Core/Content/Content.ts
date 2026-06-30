@@ -162,9 +162,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         this._DoShow();
     }
     _GetEndContentToShow() : IContent {
-        let firstChild : Content = this._ChildrenContent.find(child => child._IsShown && child._Route && child._Route.IsRoutingEnabled);
+        let firstChild : Content = this._ChildrenContent.find(child => (child._IsShown || AppSettings.IsContentWithChildrenGroupsOpenFirstAlways) && child._Route && child._Route.IsRoutingEnabled);
         if (firstChild) {
-            firstChild._DoShow();
+            //firstChild.Show(true);
             return firstChild._GetEndContentToShow();
         }
 
@@ -356,6 +356,7 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
     _Appear() : void {
         if (this.IsAppeared)
             return;
+        this._CheckLazy();
         this.IsAppeared = true;
         this._SubscribeOutsideClickListener();
 

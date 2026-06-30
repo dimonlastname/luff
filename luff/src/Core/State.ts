@@ -8,6 +8,7 @@ import {
 } from "../interfaces";
 import {LibraryArray} from "../Library/Array";
 import {LibraryNumber} from "../Library";
+import {IElement} from "./Components/IElement";
 
 type TStateCtor = {
     State?: any;
@@ -16,6 +17,7 @@ type TStateCtor = {
     Parent?: State;
     OnChange?: TStateOnChange<any>;
 
+    Context?: IElement;
     //Dependencies?: State[];
 }
 type TSubscriberFn = (changedState: State) => void;
@@ -36,6 +38,53 @@ export class State<T = any> {
     _Parent: State;
     _Property: string = 'root';
     _Subscribers: TStateOnChange<T>[];// = [];
+    _Context: IElement;
+    private _IsDisposed = false;
+
+    constructor(ctor: TStateCtor){
+        if (ctor.Context) {
+            this._Context = ctor.Context;
+            ctor.Context.AddDisposeCallback(() => this.Dispose());
+        }
+
+    }
+    private _GetChildStates() : State[] {
+        const children: State[] = [];
+        const value = this.__SValue;
+        if (value == null)
+            return children;
+
+        const type = PropTypes.GetType(value);
+        if (type === 'array') {
+            for (let i = 0; i < value.length; i++) {
+                const child = this.__GetChildByKey(i);
+                if (child instanceof State)
+                    children.push(child);
+            }
+        } else if (type === 'object' && value.constructor.name === 'Object') {
+            for (const k of Object.getOwnPropertyNames(value)) {
+                const child = this.__GetChildByKey(k);
+                if (child instanceof State)
+                    children.push(child);
+            }
+        }
+        return children;
+    }
+    protected Dispose() : void {
+        if (this._IsDisposed)
+            return;
+        this._IsDisposed = true;
+
+        for (const child of this._GetChildStates()) {
+            child.Dispose();
+            delete (this as any)[child._Property];
+        }
+
+        this._Subscribers = void 0;
+        this.__SValue = void 0;
+        this._Parent = void 0;
+        this._Context = void 0;
+    }
 
     private _GetFullPath() : string {
         let p = this._Parent;
@@ -87,16 +136,23 @@ export class State<T = any> {
         this._Update(this.SValue);
     }
 
-    public AddOnChange(onChange: TStateOnChange<T>) : void {
-        this._AddOnChange(onChange);
+    public AddOnChange(onChange: TStateOnChange<T>, disposeContext?: IElement) : void {
+        this._AddOnChange(onChange, disposeContext);
     }
 
-    _AddOnChange(onChange: TStateOnChange<T>) : void {
+    _AddOnChange(onChange: TStateOnChange<T>, disposeContext?: IElement) : void {
         if (!this._Subscribers)
             this._Subscribers = [];
         this._Subscribers.push(onChange);
+        if (disposeContext) {
+            disposeContext.AddDisposeCallback(() => {
+                this.RemoveOnChange(onChange);
+            })
+        }
     }
     public RemoveOnChange(onChange: TStateOnChange<T>): void {
+        if (!this._Subscribers)
+            return; //disposed already
         LibraryArray.Remove(this._Subscribers, x => x === onChange);
     }
     _UpdateValue(childState: State, changedState: State, subscribes: TSubscriber[]): void {
@@ -240,30 +296,32 @@ export class State<T = any> {
     }
 
 
-    SubState<U>(render: (value: T) => U, deps?: State[]) : IObservableState<U> {
+    SubState<U>(render: (value: T) => U, deps?: State[], disposeContext?: IElement) : IObservableState<U> {
         let renderState;
         let renderValue = render(this.SValue);
+
+        const onChange = () => {
+            renderState.SValue = render(this.SValue);
+        };
 
         if (!(Array.isArray(renderValue))) {
             renderState = new StateSingle({
                 State: render(this.SValue),
+                Context: this._Context,
             });
         } else {
             renderState = new StateArray({
                 State: render(this.SValue as any),
+                Context: this._Context,
             })
         }
-        this._AddOnChange(() => {
-            renderState.SValue = render(this.SValue);
-
-        });
+        this._AddOnChange(onChange, disposeContext);
         if (deps) {
             for (let st of deps){
                 if (!st._AddOnChange)
                     continue;
-                st._AddOnChange(() => {
-                    renderState.SValue = render(this.SValue);
-                })
+                st._AddOnChange(onChange, disposeContext)
+                //NOTE: be sure no need removeOnChange when dispose
             }
         }
         return renderState as any;
@@ -347,7 +405,7 @@ export class StateSingle<T = any> extends State<T> {
         this._SValue = value;
     }
     constructor(ctor: TStateCtor){
-        super();
+        super(ctor);
         this._InitCtor(ctor);
     }
 }
@@ -642,7 +700,7 @@ export class StateArray<T> extends State<T> {
         return this.__SValue.length;
     }
     constructor(ctor: TStateCtor){
-        super();
+        super(ctor);
         this._InitCtor(ctor);
     }
 }
@@ -694,21 +752,28 @@ function trySubState<T, U>(potentialState: IObservableStateSimpleOrValue<T>, sel
 
 }
 //export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : IObservableState<T> {
-export function luffState<T>(state: T, params: TStateCtor = {State: ''}) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+export function luffState<T>(state: T, params: TStateCtor = {State: ''}, context?: IElement) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
   T extends object ? IObservableState<T> :
   T extends true | false ? IObservableStateSimple<boolean> :
     IObservableStateSimple<T>) {
-    if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
-        return state as any;
-    if (Array.isArray(state))
-        return new StateArray<T>({
+    try {
+        if (state instanceof StateSingle || state instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(state)) )
+            return state as any;
+        if (Array.isArray(state))
+            return new StateArray<T>({
+                ...params,
+                State: state,
+                Context: context,
+            }) as any;
+        return new StateSingle<T>({
             ...params,
-            State: state
+            State: state,
+            Context: context,
         }) as any;
-    return new StateSingle<T>({
-        ...params,
-        State: state
-    }) as any;
+    } catch (e) {
+        console.error("luffState");
+        console.error(e);
+    }
 }
 luffState.Concat = stateStringConcatDefault;
 luffState.GetSubStateOrValue = trySubState;
@@ -721,18 +786,21 @@ luffState.GetSValueOrValue = function<T>(potentialState: IObservableStateSimpleO
 
     return potentialState as T;
 };
-luffState.TryAddOnChange = function<T>(potentialState: IObservableStateSimpleOrValue<T>, onChange: (val: T) => void) : boolean {
+luffState.TryAddOnChange = function<T>(potentialState: IObservableStateSimpleOrValue<T>, onChange: (val: T) => void, disposeContext?: IElement) : boolean {
     if (!potentialState)
         return false;
 
     if (potentialState instanceof StateSingle || potentialState instanceof State  || (StateSingle.isPrototypeOf && StateArray.isPrototypeOf(potentialState)) ){
-        (potentialState as IObservableStateSimple<T>).AddOnChange(onChange);
+        (potentialState as IObservableStateSimple<T>).AddOnChange(onChange, disposeContext);
         return true
     }
     return false;
 };
 luffState.ValueOf = function<T> (potentialState: IObservableStateSimpleOrValue<T>) : T {
     return potentialState.valueOf() as T;
+};
+luffState.IsState = function<T>(potentialState: IObservableStateSimpleOrValue<T>) : boolean {
+    return potentialState instanceof State
 };
 
 export function luffStateArr<T>(state: T[], params: TStateCtor = {State: ''}) : IObservableStateArray<T> {

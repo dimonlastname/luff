@@ -2,6 +2,7 @@ import {ContentTypes, IContent} from "./IContent";
 import {Dict, DictN} from "../../interfaces";
 import {PropTypes} from "../../Library/PropTypes";
 import {LibraryObject} from "../../Library/Object";
+import PermissionRule = ContentTypes.PermissionRule;
 
 const PermissionActionTypes= {
     Hide: 1,
@@ -50,6 +51,9 @@ export class PermissionManager {
     _IsAllow: boolean = true;
     _IsAllowWrite: boolean = true;
 
+    get ContentPermission(): ContentTypes.Permission {
+        return this._ctor;
+    }
     get IsAllow() {
         return this._IsAllow;
     }
@@ -79,44 +83,35 @@ export class PermissionManager {
     get OnDeny() {
         return this._ctor.OnDeny;
     }
+    public OnDenyClickGet() {
+        if (this._ctor.OnDenyClick)
+            return this._ctor.OnDenyClick;
+        let p = this._Owner;
+        while (p) {
+            if (p.Permission._ctor.OnDenyClick)
+                return p.Permission._ctor.OnDenyClick;
+            p = p.ParentComponent;
+        }
+        return void 0;
+    }
+    public RuleGet(ruleName: string) : PermissionRule {
+        let p = this._Owner;
+        while (p) {
+            if (p.Permission._ctor.Rules && p.Permission._ctor.Rules[ruleName])
+                return p.Permission._ctor.Rules[ruleName];
+            p = p.ParentComponent;
+        }
+        return void 0;
+    }
 
     _Owner: IContent;
     _ctor: ContentTypes.Permission;
 
-    _CheckRole(role: number | Dict<number>) : boolean {
-        const content = this._Owner;
+    _CheckRole(role: number) : boolean {
         const appUser = appUserPermission;
-        if (PropTypes.GetType(role) === 'number'){
-            const numericRole = <number>role;
-            return  (appUser.Roles.includes(numericRole) || (appUser.Roles.includes[numericRole] && appUser.Roles.includes[numericRole].length > 0));
-        }
-        else {
-            const complexRole = <Dict<number>>role;
-
-            for (let subRoleProperty in complexRole){              //ex.  Role: {PropertyName: RoleWithSubID}, like:  Role = {'ID':1488} for proto, or {'.ID':228} for Controller item
-                if (complexRole.hasOwnProperty(subRoleProperty)){         //'ID'
-                    let RoleValue = complexRole[subRoleProperty];  //1488
-                    if (appUser.SubRolesByID[RoleValue]){     //ex. Luff.User.SubRoles = {1488:[12,13,15], 228:[5,10,13],...}
-                        let state;
-                        let Property = subRoleProperty;
-                        if (subRoleProperty.substring(0,1) === '.'){  // '.ID' - Controller.Data[i].ID
-                            Property = subRoleProperty.substring(1);
-                        }
-                        else {                                        //  'ID'  - Proto.Data.ID
-                            state = content.State.SValue;
-                        }
-                        let SubRoleValue = LibraryObject.GetProperty(state, Property);
-                        let isOk = appUser.SubRolesByID[complexRole[subRoleProperty]].includes(SubRoleValue) ||
-                            appUser.SubRolesByID[complexRole[subRoleProperty]].includes(-1) ;
-                        if (isOk)
-                            return isOk;
-                    }
-                }
-            }
-        }
+        return  (appUser.Roles.includes(role) || (appUser.Roles.includes[role] && appUser.Roles.includes[role].length > 0));
     }
-    _CheckRoles(RolesRequired: number[] | Dict<number>[]){
-
+    _CheckRoles(RolesRequired: number[]){
         if (!RolesRequired || RolesRequired.length < 1) {
             return true;
         }
@@ -196,6 +191,7 @@ export class PermissionManager {
             cfg.Rules[RuleName].Roles = cfg.Rules[RuleName].Roles !== void 0 ? cfg.Rules[RuleName].Roles : [];
             cfg.Rules[RuleName].Write = cfg.Rules[RuleName].Write !== void 0 ? cfg.Rules[RuleName].Write : [];
             //cfg.Rules[RuleName].Users = cfg.Rules[RuleName].Users !== void 0 ? cfg.Rules[RuleName].Users : [];
+            cfg.Rules[RuleName].IsHide = cfg.Rules[RuleName].IsHide !== false;
 
             this._IsAllowByRule[RuleName] = true;
             this._IsAllowWriteByRule[RuleName] = true;

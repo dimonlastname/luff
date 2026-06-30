@@ -194,9 +194,7 @@ input, select {
   user-select: none;
   text-align: center;
   &:active:not(:disabled){
-    position: relative;
-    left: 1px;
-    top:1px
+    transform: translate(1px, 1px);
   }
 }
 

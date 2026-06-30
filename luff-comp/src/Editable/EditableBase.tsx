@@ -172,7 +172,7 @@ export default class EditableBase<T, ExtraProps = {}> extends Luff.Content<TEdit
                     </div>
                 </EditableContent>
 
-                <div className="l-edit l-edit-controls" isVisible={isControlsVisible}>
+                <div className="l-edit l-edit-controls" isVisible={isControlsVisible} permission="Write">
                     <div className="l-edit l-edit-icon l-edit-proto l-edit-btn-edit" title="Изменить" onClick={(e) => this.GoToEdit(e)}/>
                     {/*<div className="l-edit l-edit-icon l-edit-controller l-edit-btn-remove" title="Удалить" onClick={remove}/>}*/}
                 </div>

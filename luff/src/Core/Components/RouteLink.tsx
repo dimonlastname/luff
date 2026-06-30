@@ -11,6 +11,7 @@ type TRouterProps = {
     route: Route;
     isUseToggle?: boolean;
     onChangeActive?(isActive: boolean, routeLink?: RouteLink) : void;
+    activeClass?: string;
     onPermissionFailed?: (routeLink: RouteLink) => void;
 
     disabled?: IObservableStateSimple<boolean>;
@@ -19,6 +20,9 @@ type TRouterProps = {
 }
 
 export class RouteLink extends ComponentSimple<TRouterProps> implements IRouteLink {
+    static defaultProps = {
+        activeClass: "active"
+    }
     public SetActive(isActive: boolean) : void {
         if (!this.DOM) {
             console.warn('removed link');
@@ -26,10 +30,10 @@ export class RouteLink extends ComponentSimple<TRouterProps> implements IRouteLi
         }
         if (this.DOM) {
             if (isActive) {
-                this.DOM.classList.add('active');
+                this.DOM.classList.add(this.props.activeClass);
             }
             else {
-                this.DOM.classList.remove('active');
+                this.DOM.classList.remove(this.props.activeClass);
             }
         }
 

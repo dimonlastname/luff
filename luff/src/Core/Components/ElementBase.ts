@@ -1,9 +1,9 @@
 import {IContent} from "../Content/IContent";
 import {LibraryNumber} from "../../Library/Number";
-import {JSXElement, IElement, TRawComponent} from "./IElement";
-import {Dict, IObservableStateSimple} from "../../interfaces";
+import {JSXElement, IElement, TRawComponent, DisposeCallback} from "./IElement";
+import {Dict, IObservableState, IObservableStateArray, IObservableStateSimple} from "../../interfaces";
 import {TPropsDefault} from "./IElement";
-import {State} from "../State";
+import {luffState, State} from "../State";
 import {LibraryArray} from "../../Library";
 import Application from "../Application/Application";
 import { IRenderElement} from "../Compiler/ComponentFactory";
@@ -13,6 +13,7 @@ export interface IElementBase<TProps = any> {
 
 }
 const PERMISSION_NAME_WRITE = 'Write';
+
 
 export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProps>, IElement<TProps> {
     props: TProps & TPropsDefault<TState>;
@@ -40,12 +41,29 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
     Children : IElement[] = [];
     _IsShown: boolean = true;
     _IsMount: boolean = false;
+    protected _BeforeDisposeCalls : DisposeCallback[];
+
+
     get _IsVisible() : boolean {
         return this._IsShown && this._IsMount;
     }
 
     HasPermission: boolean = true;
     public AppendChild(elem: IRenderElement) : IElement { return null };
+    public AddDisposeCallback(cb: DisposeCallback) {
+        if (!this._BeforeDisposeCalls) {
+            this._BeforeDisposeCalls = [];
+        }
+        this._BeforeDisposeCalls.push(cb);
+    }
+    public CreateState<T>(state: T) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+        T extends object ? IObservableState<T> :
+            T extends true | false ? IObservableStateSimple<boolean> :
+                IObservableStateSimple<T>)
+    {
+        return luffState(state, void 0, this);
+    }
+
 
     private _SetProps(props: Dict<any>) : void {
         if (!props)
@@ -335,7 +353,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             let state: State = isVisible as State;
             this._IsHiddenByDefault = !state.SValue;
             this._IsShown = state.SValue;
-            state.AddOnChange(isVisible => {
+            const isVisibleFn = isVisible => {
                 if (isVisible){
                     this._ShowTransitionFunction();
                     if (!this.ParentElement || (this.ParentElement as ElementBase<any, any>).IsAppeared){
@@ -347,7 +365,9 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
                     this._Disappear(); //todo: fix _Disappear to onDismount
                 }
 
-            })
+            };
+            state.AddOnChange(isVisibleFn);
+            this.AddDisposeCallback(() => state.RemoveOnChange(isVisibleFn))
         } else {
             this._IsHiddenByDefault = !(isVisible as boolean);
             this._IsShown = isVisible as boolean;
@@ -372,6 +392,11 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
         // }
     }
     Dispose() : void {
+        if (this._BeforeDisposeCalls && this._BeforeDisposeCalls.length > 0) {
+            for (const cb of this._BeforeDisposeCalls){
+                cb();
+            }
+        }
         if (this.ParentElement) {
             LibraryArray.Remove(this.ParentElement.Children, x => x === this);
         }
@@ -403,7 +428,7 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
                 let name = rawComponent.Attributes['compName'];
                 if (!name) {
                     name = rawComponent.Attributes['name']; //TODO: DEPRECATED;
-                    if (name) {
+                    if (name && this.Tag != "input" && this.ParentComponent && this.ParentComponent.Name != "RadioButton") {
                         console.warn(`[Luff] attribute 'name' is deprecated for naming components, use 'compName'\r\n${this.GetComponentPath(true)} > ${name}`);
                     }
                 }
@@ -420,6 +445,22 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
                 if (permissionName) {
                     const permission = rawComponent.ParentComponent.Permission;
                     this.HasPermission =  permissionName !== PERMISSION_NAME_WRITE ? permission.IsAllowByRule(permissionName) : permission.IsAllowWrite;
+                    const isHide = permission.RuleGet(permissionName)?.IsHide ?? true;
+                    if (!this.HasPermission && !isHide) {
+                        this.HasPermission = true;
+                        const onDenyClick = permission.OnDenyClickGet();
+                        if (onDenyClick) {
+                            rawComponent.Attributes['onClick'] = e => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onDenyClick(permissionName, this.ParentComponent);
+
+                            };
+                        }
+                        rawComponent.Attributes['data-permission-deny'] = "true";
+                        rawComponent.Attributes['disabled'] = true;
+                    }
+
                     if (!this.HasPermission) {
                         return;
                     }

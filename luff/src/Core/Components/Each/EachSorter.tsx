@@ -16,6 +16,7 @@ interface ISort {
 export interface ISortMan<T> {
     GenSortControl(comparer: SortFn<T>) : typeof EachSorter;
     GenSortControlByField(fieldName: keyof T) : typeof EachSorter;
+    SetDefaultSort(fieldName: keyof T) : void;
 }
 
 enum SortDirectionType {
@@ -39,7 +40,7 @@ export class EachSorterMan<DataItem> implements ISortMan<DataItem> {
     _SorterComps: ComponentSortControl[] = [];
     _DefaultSort: SortFn<DataItem>;
 
-    GenSortControl(comparer: SortFn<DataItem>) : typeof EachSorter {
+    public GenSortControl(comparer: SortFn<DataItem>) : typeof EachSorter {
         const sortMan = this;
         class EachSorterXXX extends EachSorter {
             static Sort(direction: number) {}
@@ -63,8 +64,14 @@ export class EachSorterMan<DataItem> implements ISortMan<DataItem> {
         };
         return EachSorterXXX;
     }
-    GenSortControlByField(fieldName: keyof DataItem) : typeof EachSorter  {
-        const comparer = (a: DataItem, b: DataItem) => {
+    public GenSortControlByField(fieldName: keyof DataItem) : typeof EachSorter  {
+        return this.GenSortControl(this.GetComparerByField(fieldName));
+    }
+    public SetDefaultSort(fieldName: keyof DataItem) : void {
+        this._DefaultSort = this.GetComparerByField(fieldName);
+    }
+    private GetComparerByField(fieldName: keyof DataItem)  {
+        return (a: DataItem, b: DataItem) => {
 
             let valueA = a[fieldName] as any;
             let valueB = b[fieldName] as any;
@@ -79,7 +86,6 @@ export class EachSorterMan<DataItem> implements ISortMan<DataItem> {
                 return -1;
             return 0;
         };
-        return this.GenSortControl(comparer);
     }
     constructor(defaultSort?: SortFn<DataItem>) {
         this._DefaultSort = defaultSort;

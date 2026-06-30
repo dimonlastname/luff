@@ -1,5 +1,5 @@
 import {IContent} from "../Content/IContent";
-import {Dict, IObservableState, IObservableStateSimple} from "../../interfaces";
+import {Dict, IObservableState, IObservableStateArray, IObservableStateSimple} from "../../interfaces";
 import {IRenderElement} from "../Compiler/ComponentFactory";
 
 export type TPropsAttributesDefault<TState = {}> = {
@@ -21,6 +21,7 @@ export interface JSXElement<P = any> /*extends React.ReactElement<any, any>*/ {
     props?: P;
     key?: any | null;
 }
+export type DisposeCallback = () => void;
 
 export interface IElement<P = any> extends JSXElement<P> {
     _ID: number;
@@ -35,6 +36,12 @@ export interface IElement<P = any> extends JSXElement<P> {
     ParentComponent: IContent;
     Children: IElement[];
     Dispose() : void;
+    AddDisposeCallback(cb: DisposeCallback): void;
+    CreateState<T>(state: T) : (T extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+        T extends object ? IObservableState<T> :
+            T extends true | false ? IObservableStateSimple<boolean> :
+                IObservableStateSimple<T>)
+
 
     _TargetDOM: Element; //GetTargetDOM cache;
     _TargetRenderComp: IElement;

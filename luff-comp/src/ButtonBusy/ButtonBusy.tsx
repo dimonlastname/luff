@@ -1,4 +1,4 @@
-import Luff, {React, IObservableStateSimple, Dict} from "luff";
+import Luff, {React, IObservableStateSimple, Dict, IObservableOrValue} from "luff";
 
 import './ButtonBusy.scss';
 
@@ -12,10 +12,10 @@ type ButtonBusyProps = {
     className?: string | IObservableStateSimple<string>;
     classDict?: Dict<IObservableStateSimple<boolean>>;
     onClick: (e: MouseEvent) => Promise<any>;
-    disabled?: IObservableStateSimple<boolean>;
+    disabled?: IObservableOrValue<boolean>;
     justLock?: boolean;
 
-    useConformationWindow?: () => TConformationWindow;
+    useConformationWindow?: (e: MouseEvent) => TConformationWindow;
     title?: string | IObservableStateSimple<string>;
 }
 
@@ -29,6 +29,7 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
     };
     private Button: HTMLButtonElement;
     private TimeoutLock: number;
+    //private _Disabled = Luff.State(this.props.disabled ?? false);
 
     protected AfterBuild(): void {
         this.Button = this.Components.AllByName['button'].DOM as HTMLButtonElement;
@@ -51,7 +52,7 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
 
         if (!this.props.disabled)
             btn.disabled = isBtnDisabled;
-        else if (this.props.disabled && !this.props.disabled.SValue) {
+        else if (this.props.disabled && !Luff.State.ValueOf(this.props.disabled)) {
             btn.disabled = false;
         }
         if (!this.props.justLock)
@@ -72,7 +73,7 @@ export default class ButtonBusy extends Luff.Content<ButtonBusyProps> {
 
         }
         else {
-            const form = this.props.useConformationWindow();
+            const form = this.props.useConformationWindow(e);
             if (!form) {
                 res = this.props.onClick(e);
             } else {

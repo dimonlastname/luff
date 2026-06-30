@@ -2,7 +2,7 @@ import {DictN, IObservableState, IObservableStateArray, IObservableStateSimple, 
 import {ElementBase} from "../ElementBase";
 import {IElement, TRawComponent, TPropsDefault, JSXElement} from "../IElement";
 import {ComponentFactory, IRenderElement} from "../../Compiler/ComponentFactory";
-import {State, StateArray, luffState} from "../../State";
+import {State, StateArray} from "../../State";
 import {EachSorter, EachSorterMan, ISortMan, SortFn} from "./EachSorter";
 import EachPaging from "./EachPaging";
 import {EachFilterMan, IFilterMan, TFilterFn} from "./FilterManager";
@@ -139,7 +139,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     }
 
     private _GenerateItem(state: State, lineID: number, index: number): TEachValue {
-        const numState = luffState(index);
+        const numState = this.CreateState(index);
 
         const childItem = this._ChildRender(state, numState, this) as any;// as any as ComponentBase;//TODO check each!!!
         const childElement = ComponentFactory.Build(childItem, this, this.ParentComponent);
@@ -436,7 +436,7 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
     }
 
 
-    private Refresh(): void {
+    public Refresh(): void {
         let targetDOM = this.GetTargetRenderDOM();
         if (!this._StateArray || this._StateArray.length === 0) {
             this._ShowEmptyChildren();
@@ -534,12 +534,14 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
                 this.Filter();
             })
         }
+        const depOnChange = () => {
+            this.Refresh();
+        };
         const deps = rawComponent.Attributes['deps'] as IObservableState<any>[];
         if (deps) {
             for (let dep of deps) {
-                dep.AddOnChange(() => {
-                    this.Refresh();
-                })
+                dep.AddOnChange(depOnChange);
+                this.AddDisposeCallback(() => dep.RemoveOnChange(depOnChange));
             }
         }
 
@@ -559,9 +561,8 @@ export class Each<TIterationItem = any> extends ElementBase<TEachProps<TIteratio
         if (filterMan) {
             filterMan._Each = this;
             for (let dep of filterMan._deps) {
-                dep.AddOnChange(() => {
-                    this.Refresh();
-                })
+                dep.AddOnChange(depOnChange);
+                this.AddDisposeCallback(() => dep.RemoveOnChange(depOnChange));
             }
             this._FilterByManager = (item, i) => {
                 for (let f of filterMan._filters) {

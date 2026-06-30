@@ -119,7 +119,9 @@ type TSelection = {
     DateFinish: LuffDate
 }
 
-const dateTimeDelegateView = i => (String(i).length == 2) ? i : '0' + i;
+function dateTimeDelegateView(i: number) : string {
+    return (String(i).length == 2) ? i.toString() : '0' + i;
+}
 
 class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> {
     static defaultProps : TPeriodPickerProps = {
@@ -729,7 +731,9 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
                         </div>
 
                         <div className="button-holder row flex-end">
-                            <button className="l-button btn-l-pp-ok" onClick={() => this._TryConfirm()}>Ok</button>
+                            <button className="l-button btn-l-pp-ok" onClick={() => this._TryConfirm()}>
+                                {Culture.Current.Lang.Ok}
+                            </button>
                         </div>
                     </div>
                 </div>

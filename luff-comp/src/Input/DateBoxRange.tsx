@@ -85,7 +85,7 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
 
     Render(): Luff.Node {
         const isTimePick = this.props.isTimePick;
-        let classState = this._IsDisabled.SubState(isDis => 'l-textbox ' + this.props.className + (isDis ? '': ' l-pointer'));
+        let classState = this._IsDisabled.SubState(isDis => 'l-textbox l-datebox ' + this.props.className + (isDis ? '': ' l-pointer'));
         const formatFull = `${this.props.formatDate} ${isTimePick ? this.props.formatTime: ""}`;
 
         return (
@@ -99,24 +99,28 @@ export default class DateBoxRange extends InputBoxBase<TProps> {
                  //       }
                  //       this.props.value.SValue = value;
                  //   }}
-            >{this.props.dateStart.SubState(dateStart => {
-                const dateFinish = this.props.dateFinish.SValue;
-                if (!dateFinish) {
-                    return this.props.noValueCaption;
-                }
-                if (dateStart && dateFinish) {
-                    let luffDateStart = Luff.Date(dateStart);
-                    let luffDateFinish = Luff.Date(dateFinish);
+            >
+                <div className="l-datebox-value">
+                    {this.props.dateStart.SubState(dateStart => {
+                        const dateFinish = this.props.dateFinish.SValue;
+                        if (!dateFinish) {
+                            return this.props.noValueCaption;
+                        }
+                        if (dateStart && dateFinish) {
+                            let luffDateStart = Luff.Date(dateStart);
+                            let luffDateFinish = Luff.Date(dateFinish);
 
-                    if (luffDateStart.IsSameDate(luffDateFinish) && this.props.isTimePick) {
-                        return `${luffDateStart.Format(this.props.formatDate)} с ${luffDateStart.Format(this.props.formatTime)} по ${luffDateFinish.Format(this.props.formatTime)}`;
-                    }
+                            if (luffDateStart.IsSameDate(luffDateFinish) && this.props.isTimePick) {
+                                return `${luffDateStart.Format(this.props.formatDate)} с ${luffDateStart.Format(this.props.formatTime)} по ${luffDateFinish.Format(this.props.formatTime)}`;
+                            }
 
-                    return `${luffDateStart.Format(formatFull)} — ${luffDateFinish.Format(formatFull)}`
+                            return `${luffDateStart.Format(formatFull)} — ${luffDateFinish.Format(formatFull)}`
 
-                }
-                return this.props.placeholder;
-            }, [this.props.dateFinish])}</div>
+                        }
+                        return this.props.placeholder;
+                    }, [this.props.dateFinish])}
+                </div>
+            </div>
         )
 
     }

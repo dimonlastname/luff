@@ -4,7 +4,12 @@ import {ComponentSimple} from "../ComponentSimple";
 import {JSXElement} from "../IElement";
 import {luffState} from "../../State";
 import {Culture, luffDate, LibraryString} from "../../../Library";
-import {IObservableState, IObservableStateSimple, IObservableStateArray} from "../../../interfaces";
+import {
+    IObservableState,
+    IObservableStateSimple,
+    IObservableStateArray,
+    IObservableStateAny
+} from "../../../interfaces";
 
 export type TFilterFn<T> = (item: T, lineID?: number) => boolean;
 type TCustomFilterProps<T> = {
@@ -48,7 +53,7 @@ class ComponentFilterControl extends ComponentSimple {
 export class EachFilterMan<DataItem> implements IFilterMan<DataItem> {
     _Each: Each;
     _SorterComps: ComponentFilterControl[] = [];
-    _deps = [];
+    _deps: IObservableStateAny<any>[] = [];
     _filters: TFilterFn<DataItem>[] = [];
 
     GenFilter(render: (outProps: TCustomFilterProps<DataItem>) => JSXElement) {

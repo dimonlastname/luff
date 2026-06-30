@@ -4,7 +4,6 @@
   border: 1px var(--l-clr-component-border) solid;
   //&:hover,
   color: var(--l-clr-text-default);
-  width: 22ch;
 
   &:focus-within {
     border: 1px var(--l-clr-component-focus) solid;
@@ -25,14 +24,8 @@
   &.l-cb-disabled{
     border: 1px var(--clr-disabled) solid;
   }
-  .l-cb-offer-list_wrap {
-    //opacity: 0.1;
-    display: none;
-  }
   .l-cb-textbox,
-  .l-cb-render,
-  .l-cb-screen,
-  {
+  .l-cb-render {
     //height: 2em;
     width: calc(100% - 1.75em);
     display: block;
@@ -94,15 +87,28 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    //width: 20ch;
+    position: relative;
 
+    width: 100%;
+    height: 2em;
+
+    background-color: #fff;
+    border: 1px #ddd solid;
+    box-sizing: border-box;
     &.l-cb-disabled{
-      //background-color: #ebebe4;
-      opacity: 0.66;
+      background-color: #ebebe4;
     }
+    .l-cb-screen-text{
+      padding-left: 0.7em;
 
-    .l-cbt-prefix {
-      display: none;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-right: 1.35em;
+    }
+    &.active:before{
+      margin-top: -0.15em;
+      transform: rotate(45deg);
     }
   }
 
@@ -112,22 +118,10 @@
 }
 .l-cb-offer-list_wrap {
   position: absolute;
-  left: 0;
-  top: 100%;
   background-color: var(--l-clr-background-clean);
   box-shadow: 1px 1px 5px var(--l-clr-shadow);
   width: 100%;
   z-index: 1000;
-
-  &.--open-up {
-    top: auto;
-    bottom: 100%;
-  }
-
-  &.--portaled {
-    position: fixed;
-    z-index: 10000;
-  }
 }
 .l-cb-offer-list {
   --l-combobox-lines: 5;

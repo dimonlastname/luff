@@ -1,5 +1,6 @@
 import {luffState, State, TStateOnChange} from "./Core/State";
 import {LuffDate} from "./Library";
+import {IElement} from "./Core/Components/IElement";
 
 
 
@@ -84,7 +85,7 @@ export type IObservableStateAny<T> = T extends object ? (T extends (infer Elemen
     IObservableStateSimple<T>;
 
 type IObservableExtra<T> = {
-    AddOnChange(onChange: TStateOnChange<T>) : void;
+    AddOnChange(onChange: TStateOnChange<T>, disposeContext?: IElement) : void;
     RemoveOnChange(onChange: TStateOnChange<T>) : void;
     ForceUpdate() : void;
 }
@@ -101,11 +102,11 @@ export type IObservableStateSimple<T> = {
     SValue: T;
     //SValue: (T extends ExcludeProps<[T]> ? Readonly<T> : T);
     //SubStateCommon<U>(render: (value: T) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<U>);
-    SubState<U>(render: (value: T) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+    SubState<U>(render: (value: T) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[], disposeContext?: IElement) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
         U extends object ? IObservableState<U> :
         U extends true | false ? IObservableStateSimple<boolean> :
           IObservableStateSimple<U>);
-    SubStateArr<U>(render: (value: T) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableStateArray<U>;
+    SubStateArr<U>(render: (value: T) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[], disposeContext?: IElement) : IObservableStateArray<U>;
     readonly SProperty: string;
     SParentState: IObservableState<any> | IObservableStateArray<any> | IObservableStateSimple<any>;
 
@@ -117,13 +118,13 @@ export type IObservableStateArray<T> = {
     SValue: T[];
     //SValue: ReadonlyArray<T>;
     //SubStateCommon<U>(render: (value: T[]) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType> : IObservableState<U>);
-    SubState<U>(render: (value: T[]) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
+    SubState<U>(render: (value: T[]) => U, deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[], disposeContext?: IElement) : (U extends (infer ElementType)[] ? IObservableStateArray<ElementType>:
       U extends object ? IObservableState<U> :
         U extends true | false ? IObservableStateSimple<boolean> :
           IObservableStateSimple<U>);
-    SubStateArr<U>(render: (value: T[]) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[]) : IObservableStateArray<U>;
+    SubStateArr<U>(render: (value: T[]) => U[], deps?: (IObservableState<any> | IObservableStateSimple<any> | IObservableStateArray<any>)[], disposeContext?: IElement) : IObservableStateArray<U>;
 
-    AddOnChange(onChange: (newValue?: T[], changedState?: State<T>) => void) : void;
+    AddOnChange(onChange: (newValue?: T[], changedState?: State<T>) => void, disposeContext?: IElement) : void;
     RemoveOnChange(onChange: TStateOnChange<T>) : void;
     ForceUpdate() : void;
 

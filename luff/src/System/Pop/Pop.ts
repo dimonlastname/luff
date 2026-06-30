@@ -1,29 +1,29 @@
 import './Pop.scss';
 
-type TPopDefaults = {
-    AnimationDuration: number;
-    Duration: number;
-}
-type TPopCtor = {
-    Target?: HTMLElement;
-    AnimationDuration?: number;
-    Duration?: number;
-    Style?: any;
-    IsNewInstance?: boolean;
-}
-type TShowMessageOptions = {
-    Duration?: number;
-    LogItem?: any;
-    OnClick?: (ctx: IElemContext, e: MouseEvent) => void;
-}
+    type TPopDefaults = {
+        AnimationDuration: number;
+        Duration: number;
+    }
+    type TPopCtor = {
+        Target?: HTMLElement;
+        AnimationDuration?: number;
+        Duration?: number;
+        Style?: any;
+        IsNewInstance?: boolean;
+    }
+    type TShowMessageOptions = {
+        Duration?: number;
+        LogItem?: any;
+        OnClick?: (ctx: IElemContext, e: MouseEvent) => void;
+    }
 
-type IElemContext = {
-    DOM: HTMLElement;
-    Hide(): void;
-}
+    type IElemContext = {
+        DOM: HTMLElement;
+        Hide(): void;
+    }
 
 
-let popLogInstanceCounter = 0;
+    let popLogInstanceCounter = 0;
 function createElementFromString(string: string, ownerTagName: string = "div"): HTMLElement {
     let documentFragment = document.createDocumentFragment();
     let containerElement = document.createElement(ownerTagName);

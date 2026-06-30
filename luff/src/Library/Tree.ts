@@ -8,12 +8,14 @@ export namespace LibraryTree {
         }
         return false;
     }
-    export function Flatten<T, U>(tree: T[], subKey: (keyof T), selector: (item: T) => U = item => item as any as U) : U[] {
+    export function Flatten<T, U>(tree: T[], subKey: (keyof T), selector: (item: T, index: number, level: number) => U = item => item as any as U, lvl: number = 0) : U[] {
         let res = [];
+        let i = 0;
         for (let item of tree) {
-            res.push(selector(item));
+            res.push(selector(item, i, lvl));
+            i++;
             if (item[subKey])
-                res.push(...Flatten(item[subKey] as any as T[], subKey, selector));
+                res.push(...Flatten(item[subKey] as any as T[], subKey, selector, lvl++));
         }
         return res;
     }

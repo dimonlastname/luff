@@ -1,39 +1,77 @@
-import ComboBox, {TComboBoxOfferItem} from "../ComboBox/ComboBox";
+import Luff, { React, IObservableState, IObservableStateSimple, IObservableStateArray, Each } from "luff";
+import ComboBox from "../ComboBox/ComboBox";
+
+import "./ComboBoxTree.scss";
+
 type TExtraProps<TDataItem> = {
     subKey: keyof TDataItem;
 }
-export class ComboBoxTree<TDataItem = any, TValue = number> extends ComboBox<TDataItem, TValue, TExtraProps<TDataItem>> {
-    _GetPreparedData(data: TDataItem[], lvl : number = 0): TComboBoxOfferItem<TDataItem>[] {
-        let prepared = [];
-        //let data = dataState;
-        const subKey = this.props.subKey;
 
-        for (let i = 0; i < data.length; i++){
-            let d = data[i];
-            let val = this.props.dataDelegateValue(d, i);
-            let view = this.props.dataDelegateView(d, i);
+function getList<TDataItem>(key: string) : IObservableStateArray<TDataItem> {
+    const list = this.props.data ? this.props.data : Luff.State<TDataItem[]>(this.props.dataStatic);
+    list.SubState(xx => Luff.Tree.Flatten(xx, key));
+    return ;
+}
+const branchLast = "└─ ";
+const branchIntermediate  = "├─ ";
+const branchAncestor = "│ ";
+const branchHorizontal = "── ";
+const indentWidth = branchIntermediate.length;
 
-            let indent = '';
-            if (lvl > 0) {
-                indent =  '|— '.repeat(lvl) + ' ';
-            }
-
-            let item: TComboBoxOfferItem<TDataItem> = {
-                Original: d,
-                Value: val,
-                View: indent + String(view),
-                LineID: i,
-                DOMRef: null,//React.createRef(),
-            };
-            prepared.push(item);
-            const subItems = d[subKey] as any as TDataItem[];
-            prepared = prepared.concat(this._GetPreparedData(subItems, lvl + 1));
-        }
-        return prepared;
-    }
-    _PrepareData(data: TDataItem[]): TComboBoxOfferItem<TDataItem>[] {
-        return this._GetPreparedData(data, 0);
-    }
+function getAncestorSegment(hasMoreSiblings: boolean): string {
+    return hasMoreSiblings
+        ? branchAncestor.padEnd(indentWidth, " ")
+        : " ".repeat(indentWidth);
 }
 
-export default ComboBoxTree;
+function getTreeChildren<T>(item: T, subKey: keyof T): T[] {
+    const raw = Luff.State.GetSValueOrValue(item[subKey] as any);
+    return Array.isArray(raw) ? raw : [];
+}
+
+function flattenTreeWithIndent<T>(tree: T[], subKey: keyof T, indentMap: Map<T, string>, ancestorNotLast: boolean[] = []): T[] {
+    const res: T[] = [];
+    for (let i = 0; i < tree.length; i++) {
+        const item = tree[i];
+        const isLast = i === tree.length - 1;
+        let prefix = "";
+
+        if (ancestorNotLast.length > 0) {
+            for (let j = 0; j < ancestorNotLast.length - 1; j++)
+                prefix += getAncestorSegment(ancestorNotLast[j + 1]);
+            prefix += isLast ? branchLast : branchIntermediate;
+        }
+
+        indentMap.set(item, prefix);
+        res.push(item);
+
+        const children = getTreeChildren(item, subKey);
+        if (children.length)
+            res.push(...flattenTreeWithIndent(children, subKey, indentMap, [...ancestorNotLast, !isLast]));
+    }
+    return res;
+}
+
+export class ComboBoxTree<TDataItem = any, TValue = number> extends ComboBox<TDataItem, TValue, TExtraProps<TDataItem>> {
+    private IndentMap = new Map<TDataItem, string>();
+
+    protected ListItems = (this.props.data ? this.props.data : Luff.State<TDataItem[]>(this.props.dataStatic)).SubState(list => {
+        this.IndentMap.clear();
+        return flattenTreeWithIndent(list, this.props.subKey, this.IndentMap);
+    });
+
+    protected RenderOfferItemDefault(item: IObservableState<TDataItem>, classDict, onClick) : Luff.Node {
+        const indent = item.SubState(it => this.IndentMap.get(it) ?? "");
+
+        return (
+            <div
+                className="l-cb-offer-item l-cbt-offer-item"
+                classDict={classDict}
+                onClick={onClick}
+            >
+                <span className="l-cbt-prefix">{indent}</span>
+                <span className="l-cbt-label">{item.SubState(it => this.props.dataDelegateView(it))}</span>
+            </div>
+        )
+    }
+}

@@ -133,11 +133,13 @@ namespace ContentTypes {
         ActionType?: number;
         OnDeny?: () => void;
         IsHideControls?: boolean;
+        OnDenyClick?: (ruleFailed: string, ctx?: IContent) => void;
     }
     export type PermissionRule = {
         Roles: number[];
         Write?: number[];
         //Users?: number[];
+        IsHide?: boolean; //default true
     }
     // export type PermissionRuleObject ={
     //     [Key: string]: PermissionRule;

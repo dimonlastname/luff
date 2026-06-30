@@ -3,4 +3,5 @@ export class AppSettings {
         IsShowEmptyRouteLink: true,
     };
     static IsLazyRenderEnabledByDefault : boolean = false;
+    static IsContentWithChildrenGroupsOpenFirstAlways: boolean = false;
 }

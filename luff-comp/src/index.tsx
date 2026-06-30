@@ -1,5 +1,5 @@
 import ComboBox from "./Input/ComboBox/ComboBox";
-import ComboBoxTree from "./Input/ComboBoxTree/ComboBoxTree";
+import {ComboBoxTree} from "./Input/ComboBoxTree/ComboBoxTree";
 import RadioButton from "./Input/Radio/Radio";
 import ButtonBusy from "./ButtonBusy/ButtonBusy";
 import LuffChart from "./Chart/Chart";
