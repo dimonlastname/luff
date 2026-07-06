@@ -4,7 +4,8 @@
   border: 1px var(--l-clr-component-border) solid;
   //&:hover,
   color: var(--l-clr-text-default);
-  width: 22ch;
+  //width: 22ch;
+  max-width: 100%;
 
   &:focus-within {
     border: 1px var(--l-clr-component-focus) solid;
@@ -50,6 +51,21 @@
     &:focus{
       outline: none;
       border: none;
+    }
+  }
+  .l-cb-screen {
+    //width: fit-content;
+    padding-right: 30px; //drop-icon ~width
+    //max-width: 100%;
+  }
+  .l-cb-placeholder,
+  .l-cb-offer-item {
+    line-height: normal;
+    //width: fit-content;
+    white-space: nowrap;
+    &:empty:after { // for taking height if empty
+      content: ".";
+      color: transparent;
     }
   }
 

@@ -18,7 +18,7 @@ const quarters = [
     {ID: 4, Name:'IV квартал'},
 ];
 
-
+const months = Culture.Current.MonthNames.map((x, i) => ({Value: i, Name: x}));
 
 class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
     static defaultProps = {
@@ -80,14 +80,15 @@ class PPMonthQuarterYear extends Luff.Content<TPPNavProps> {
                     isMonth
                     &&
                     <div className="l-pp-nav-month">
-                        <ComboBox<string> value={navDate.SubState(date => date.Month)}
-                                          dataStatic={Culture.Current.MonthNames}
-                                          dataDelegateValue={ (month, i) => i}
-                                          onChange={ val => {
-                                              //navDate.SValue = navDate.SValue.SetMonth(val);
-                                              setNavDate(navDate.SValue = navDate.SValue.SetMonth(val));
-                                              return Promise.resolve(1);
-                                          }}
+                        <ComboBox value={navDate.SubState(date => date.Month)}
+                                  dataStatic={months}
+                                  dataDelegateValue={x => x.Value}
+                                  dataDelegateView={x => x.Name}
+                                  onChange={ val => {
+                                      //navDate.SValue = navDate.SValue.SetMonth(val);
+                                      setNavDate(navDate.SValue = navDate.SValue.SetMonth(val));
+                                      return Promise.resolve(1);
+                                  }}
                         />
                     </div>
                 }
