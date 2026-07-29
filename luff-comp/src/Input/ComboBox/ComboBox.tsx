@@ -24,8 +24,8 @@ type TComboBoxProps<TDataItem, TValue> = {
     data?: IObservableStateArray<TDataItem>;
     dataStatic?: TDataItem[];
 
-    dataDelegateValue?: (item: TDataItem, i?: number) => TValue;
-    dataDelegateView?: (item: TDataItem, i?: number) => string;
+    dataDelegateValue?: (item: TDataItem) => TValue;
+    dataDelegateView?: (item: TDataItem) => string;
 
     dataRender?: (item: IObservableState<TDataItem>, comboBox?: ComboBox<TDataItem, TValue, any>) => Luff.Node;
 
@@ -361,7 +361,10 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
         }
 
         const rect = anchor.getBoundingClientRect();
-        const maxLines = this.props.listVisibleLinesCount ?? defaultProps.listVisibleLinesCount;
+        let maxLines = this.props.listVisibleLinesCount ?? defaultProps.listVisibleLinesCount;
+        if (maxLines > this.ListItems.length) {
+            maxLines = this.ListItems.length;
+        }
 
         const wrap = this.OfferListWrapDom;
 
@@ -388,8 +391,9 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
 
 
             if (openUp) {
-                wrap.style.top = "auto";
-                wrap.style.bottom = `${window.innerHeight - rect.top}px`;
+                //wrap.style.top = "auto";
+                wrap.style.top = `${rect.top - listHeight - 1}px`;
+                //wrap.style.bottom = `${window.innerHeight - rect.top}px`;
             } else {
                 wrap.style.bottom = "auto";
                 wrap.style.top = `${rect.bottom}px`;
@@ -590,7 +594,8 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
             }
 
             if (isInputMode) {
-                return v;
+                const vv = (v == null || v == void 0) ? "" : v.toString();
+                return vv.length > 0 ? v : placeholder;
             }
 
 
