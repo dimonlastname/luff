@@ -1,24 +1,28 @@
 import {TRawComponent} from "./IElement";
 import {StateSingle} from "../State";
 import {CasualMountingBase} from "./CasualMountingBase";
+import Application from "../Application/Application";
+import {ICasualTextComponent} from "./ICasualTextComponent";
 
 function decodeHtmlEntities(text: string) {
     let testArea = document.createElement("textarea");
     testArea.innerHTML = text;
     return testArea.value;
 }
-class CasualTextComponent extends CasualMountingBase {
+class CasualTextComponent extends CasualMountingBase implements ICasualTextComponent {
     Tag = "textNode";
     _NodeValue: string;
     _NodeValueGetter: () => any = null;
     _IsDynamic : boolean = false;
+    public _TextState: StateSingle;
 
     _CompileNodeValue() : void {
         if (this._RawComponent){
             const nodeValue = this._RawComponent.Attributes['textNode'];
             if (nodeValue instanceof StateSingle) {
                 this._IsDynamic = true;
-                let state: StateSingle = this._RawComponent.Attributes['textNode'] as StateSingle;
+                let state: StateSingle = nodeValue as StateSingle;
+                this._TextState = state;
                 this._NodeValueGetter = () => {
                     return state.SValue;
                 };

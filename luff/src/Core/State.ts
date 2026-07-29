@@ -308,11 +308,13 @@ export class State<T = any> {
             renderState = new StateSingle({
                 State: render(this.SValue),
                 Context: this._Context,
+                Property: this._Property + "_SubState"
             });
         } else {
             renderState = new StateArray({
                 State: render(this.SValue as any),
                 Context: this._Context,
+                Property: this._Property + "_SubState"
             })
         }
         this._AddOnChange(onChange, disposeContext);

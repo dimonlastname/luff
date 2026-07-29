@@ -6,6 +6,7 @@ import {LibraryDOM, LibraryObject} from "../../Library";
 import {CasualMountingBase} from "./CasualMountingBase";
 import {ElementBase} from "./ElementBase";
 import Application from "../Application/Application";
+import {ICasualTextComponent} from "./ICasualTextComponent";
 
 const eventNames = ["onabort", "onblur", "oncancel", "oncanplay", "oncanplaythrough", "onchange", "onclick", "onclose",
     "oncontextmenu", "oncuechange", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover",
@@ -323,6 +324,32 @@ class CasualComponent extends CasualMountingBase {
         if (Application.Debug){
             this.DOM.setAttribute("data-comp-path", this.GetComponentPath(true));
             this.DOM["luffContent"] = this.ParentComponent;
+
+            if (this.DOM.tagName == "INPUT") {
+                if (this._RawComponent && this._RawComponent.Attributes) {
+                    let valState = this._RawComponent.Attributes["value"] ? this._RawComponent.Attributes["value"] : this._RawComponent.Attributes["checked"];
+                    if (valState && valState._Property) {
+                        this.DOM.setAttribute("data-state-key", valState._Property);
+                    }
+                    else if (valState && !valState._Property) {
+                        const compKeys = Object.getOwnPropertyNames(this.ParentComponent);
+                        for (let key of compKeys){
+                            if (this.ParentComponent[key] === valState){
+                                this.DOM.setAttribute("data-state-key", "this." + key);
+                                break;
+                            }
+                        }
+                    }
+                }
+                //console.log(`this.DOM.tagName == "INPUT"`);
+            } else {
+                if (this.Children) {
+                    const firstText = this.Children.find(c => c.Tag == "textNode") as any as ICasualTextComponent;
+                    if (firstText && firstText._TextState && firstText._TextState._Property){
+                        this.DOM.setAttribute("data-state-key", firstText._TextState._Property);
+                    }
+                }
+            }
         }
     }
     private _GenerateEventListeners(){
@@ -420,6 +447,7 @@ class CasualComponent extends CasualMountingBase {
     private RemoveEventListeners() : void {
         for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
             let fn = this._EventListeners[eventName];
+            console.log(`[${this.Name}.${this.ParentComponent.Name}] removeEventListener -${eventName}-`, this.DOM);
             this.DOM.removeEventListener(eventName, fn);
         }
     }
