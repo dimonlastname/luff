@@ -362,7 +362,7 @@ class PeriodPicker extends Luff.Content<TPeriodPickerProps, TPeriodPickerState> 
             MonthWeeks: [],
             IsDeny: false,
         };
-        let cursor = luffDate('01.'+Date.Format('MM.YYYY'));
+        let cursor = luffDate('01.'+Date.Format('MM.YYYY'), "DD.MM.YYYY");
         let CurrentWeek : TMonthWeek = {
             WeekSelectorVisible: this.props.isShowWeekSelector ?  '':'none',
             DateValue: cursor.Clone().SetWeekStart(),
