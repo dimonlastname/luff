@@ -370,12 +370,21 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
 
 
         //const listItemCount = this.OfferListDom.children;
-        const firstElement = this.OfferListDom.children.length > 0 ? this.OfferListDom.children[0] : null;
-        if (firstElement) {
-            const elementRect = firstElement.getBoundingClientRect();
+        const lastElem = this.OfferListDom.children.length > 0 ? this.OfferListDom.children[this.OfferListDom.children.length - 1] : null;
+
+        if (lastElem) {
+            const elementRect = lastElem.getBoundingClientRect();
             const lineHeight = elementRect.height;
 
-            const preferredHeight = maxLines * lineHeight;
+            const listCss = getComputedStyle(this.OfferListDom);
+            const chromeY =
+                parseFloat(listCss.borderTopWidth) +
+                parseFloat(listCss.borderBottomWidth) +
+                parseFloat(listCss.paddingTop) +
+                parseFloat(listCss.paddingBottom);
+            const isBorderBox = listCss.boxSizing === "border-box";
+
+            const preferredHeight = maxLines * lineHeight + chromeY;
 
             const spaceBelow = window.innerHeight - rect.bottom - 8;
             const spaceAbove = rect.top - 8;
@@ -384,22 +393,24 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
             this.IsListOpenUp.SValue = openUp;
 
             const availableSpace = Math.max(openUp ? spaceAbove : spaceBelow, lineHeight);
-            const visibleLines = Math.max(1, Math.min(maxLines, Math.floor((availableSpace) / lineHeight)));
-            const listHeight = visibleLines * lineHeight ;
+            const availableForContent = Math.max(lineHeight, availableSpace - chromeY);
+            const visibleLines = Math.max(1, Math.min(maxLines, Math.floor(availableForContent / lineHeight)));
+            const listHeight = visibleLines * lineHeight;
+            const listOuterHeight = listHeight + chromeY;
 
             wrap.style.setProperty("--l-combobox-lines", String(visibleLines));
 
 
             if (openUp) {
                 //wrap.style.top = "auto";
-                wrap.style.top = `${rect.top - listHeight - 1}px`;
+                wrap.style.top = `${rect.top - listOuterHeight - 1}px`;
                 //wrap.style.bottom = `${window.innerHeight - rect.top}px`;
             } else {
                 wrap.style.bottom = "auto";
                 wrap.style.top = `${rect.bottom}px`;
             }
 
-            this.OfferListDom.style.maxHeight = `${listHeight}px`;
+            this.OfferListDom.style.maxHeight = `${isBorderBox ? listOuterHeight : listHeight}px`;
         }
 
 
