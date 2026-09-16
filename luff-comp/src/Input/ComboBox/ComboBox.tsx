@@ -284,7 +284,7 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
                         const text = this.SearchText.SValue;
                         const view = this.props.dataDelegateView(x);
                         try {
-                            return Luff.String.Contains(view, text, true);
+                            return Luff.String.Contains(view, text, true) || Luff.String.Contains(view, Luff.String.KeyboardSwitch(text), true);
                         }
                         catch (e) {
                             console.error(this.GetComponentPath(false));
@@ -370,11 +370,17 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
 
 
         //const listItemCount = this.OfferListDom.children;
-        const lastElem = this.OfferListDom.children.length > 0 ? this.OfferListDom.children[this.OfferListDom.children.length - 1] : null;
 
-        if (lastElem) {
-            const elementRect = lastElem.getBoundingClientRect();
-            const lineHeight = elementRect.height;
+        if (this.OfferListDom.children.length > 0) {
+
+            /// here can be specific borders for first or last elem, but we do not want check all items
+            const firstElem = this.OfferListDom.children[0];
+            const lastElem = this.OfferListDom.children[this.OfferListDom.children.length - 1];
+
+
+            const h1 = firstElem.getBoundingClientRect().height;
+            const h2 = firstElem != lastElem ? lastElem.getBoundingClientRect().height : h1;
+            const lineHeight = Math.max(h1, h2);
 
             const listCss = getComputedStyle(this.OfferListDom);
             const chromeY =

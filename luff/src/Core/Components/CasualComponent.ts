@@ -230,6 +230,9 @@ class CasualComponent extends CasualMountingBase {
         const onChange = () => stateClass.SValue = getAtt.call(this);
 
         for (let dep of deps) {
+            if (!dep || !dep.AddOnChange)
+                continue;
+
             dep.AddOnChange(onChange);
         }
         this._CompileSingleAttribute('class', stateClass, AttributeType.Casual);
@@ -447,7 +450,7 @@ class CasualComponent extends CasualMountingBase {
     private RemoveEventListeners() : void {
         for( let eventName of Object.getOwnPropertyNames(this._EventListeners)){
             let fn = this._EventListeners[eventName];
-            console.log(`[${this.Name}.${this.ParentComponent.Name}] removeEventListener -${eventName}-`, this.DOM);
+            //console.log(`[${this.Name}.${this.ParentComponent.Name}] removeEventListener -${eventName}-`, this.DOM);
             this.DOM.removeEventListener(eventName, fn);
         }
     }
