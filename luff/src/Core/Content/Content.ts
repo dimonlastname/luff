@@ -137,6 +137,9 @@ class Content<TProps = {}, TState = {}> extends ElementBase<TProps, TState> impl
         this.Children[0]._RenderUpdate(render);
         //this.Children[0]._RenderUpdate(render.Children[0]);
     }
+    public GetComponentRoute() : string {
+        return this.GetComponentPathProcess(false, "/");
+    }
 
     protected BeforeShow() : void {}
     protected BeforeHide() : void {}

@@ -97,17 +97,20 @@ export class ElementBase<TProps = {}, TState = {}> implements IElementBase<TProp
             console.error(e);
         }
     };
-    GetComponentPath(isExcludedCurrent: boolean) : string {
+    protected GetComponentPathProcess(isExcludedCurrent: boolean, delimiter: string)  : string {
         let path = "";
         let p: IElement = this;
         if (isExcludedCurrent){
             p = this.ParentComponent;
         }
         while (p) {
-            path = p.Name + (path.length > 0 ? " > " + path : "");
+            path = p.Name + (path.length > 0 ? delimiter + path : "");
             p = p.ParentComponent;
         }
         return path;
+    }
+    GetComponentPath(isExcludedCurrent: boolean) : string {
+        return this.GetComponentPathProcess(isExcludedCurrent, " > ");
     }
 
 

@@ -265,6 +265,12 @@ export class Route<T = any> {
         this.Content._RouteParam = params;
         this.Content.OnRoute(params);
     }
+    GetComponentRoute(): string {
+        if (!this.Content)
+            return "";
+
+        return this.Content.GetComponentRoute();
+    }
     Go() : void {
         if (!this.Content)  {
             throw new Error("[Luff.Route] Route has not bound to LuffContent");

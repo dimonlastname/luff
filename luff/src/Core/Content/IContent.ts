@@ -34,6 +34,7 @@ interface IContent<TProps = {}, TState = {}> extends IElement {
     _RouteParam: any;
     OnRoute(params: any) : void;
     ShowByRoute() : void;
+    GetComponentRoute() : string;
 
     readonly HasRoute: boolean;
 
