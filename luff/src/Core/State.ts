@@ -618,6 +618,10 @@ export class StateArray<T> extends State<T> {
         });
         data.push(item);
     }
+    AddFirst(item: T) : State<T> {
+        this.SValue = [item, ...this.SValue];
+        return this._GetChildByKey(0);
+    }
     AddState(itemState: StateSingle<T>) : void {
         let data = this.__SValue;
         let i = data.length;
