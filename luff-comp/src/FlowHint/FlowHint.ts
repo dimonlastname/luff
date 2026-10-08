@@ -125,6 +125,8 @@ export class LuffHint {
             PosX += rect.x - rectHint.width + rect.width / 2 - margin.x + MARGIN_X;
             PosY += rect.y - rectHint.height - margin.y - MARGIN_Y;
         }
+        if (PosX < 0)
+            PosX = 0;
         return {
             x: PosX,
             y: PosY,
