@@ -281,7 +281,7 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
                     renderOnEmpty={() => <div className="l-cb-offer-empty">{this.props.listEmptyText}</div>}
                     deps={[this.SearchText]}
                     filter={x => {
-                        const text = this.SearchText.SValue;
+                        const text = this.SearchText.SValue.trim();
                         const view = this.props.dataDelegateView(x);
                         try {
                             return Luff.String.Contains(view, text, true) || Luff.String.Contains(view, Luff.String.KeyboardSwitch(text), true);
@@ -475,13 +475,13 @@ export default class ComboBox<TDataItem = any, TValue = number, TExtraProps = ob
         }
     }
     private HandleTextInput(value: string): void {
-        value = this.ApplyInputFilter(value.trim());
+        value = this.ApplyInputFilter(value);
         this.SearchText.SValue = value;
         if (this.props.isInputMode){
             this.CommitInputValue();
         }
         if (this.props.searchSuggestionDataAsync) {
-            this.RunAsyncSearch(value);
+            this.RunAsyncSearch(value.trim());
         }
 
         // const filtered = this.ApplyInputFilter(value);
